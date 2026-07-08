@@ -1,0 +1,37 @@
+id: deconvolution
+skill: bio-spatial-deconvolution-cell2location
+name: Spatial Deconvolution
+description: Deconvolve Visium-like spatial transcriptomics data into cell-type proportions per spot.
+
+prompt: |
+  ## 角色
+  空间转录组分析助手
+
+  ## 任务
+  对 Visium-like 空间数据进行细胞类型反卷积，输出每个 spot 的细胞类型比例 CSV。
+
+  ## 输入
+  - 目录路径：{input_dir}
+  - 目录下需包含 spatial.h5ad（空间数据）和 reference.h5ad（单细胞参考）
+
+  ## 输出要求
+  - 文件路径：{output_csv}
+  - 格式：CSV
+  - 行索引：spot IDs
+  - 列：cell types
+  - 每行和为 1（比例）
+
+  ## 约束
+  - 只使用输入目录中的文件
+  - 不要输出除结果文件以外的额外说明文字
+
+  ## 备注
+  你可以直接生成结果文件，也可以生成并执行代码。
+
+input:
+  format: directory
+  path: "{input_dir}"
+
+output:
+  format: csv
+  path: "{output_csv}"

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "scenario": "happy path",
+    "prompt": "Use the skill-prism skill to **SKILL.md**: the instruction document that teaches an Agent how to do something. under normal conditions.",
+    "expected": "The skill should follow its documented workflow and produce a correct result for skill-prism."
+  },
+  {
+    "id": 2,
+    "scenario": "ambiguous",
+    "prompt": "Use the skill-prism skill with an ambiguous or incomplete request related to: Unified Agent interface for skillPrism. Translates natural-language intents into the five core commands: evaluate-skill, test-skill, build-skill-test, improve-skill, and skill-pipeline. The engine itself never calls LLMs; Agent handles all LLM interactions when needed.",
+    "expected": "The skill should either ask for clarification or handle the ambiguity gracefully without making unsafe assumptions."
+  },
+  {
+    "id": 3,
+    "scenario": "boundary",
+    "prompt": "Use the skill-prism skill with edge-case input (empty, malformed, or at the boundary of its stated capabilities).",
+    "expected": "The skill should not crash; it should follow its failure-mode/fallback instructions if applicable."
+  }
+]

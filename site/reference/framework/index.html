@@ -1,0 +1,4413 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Project-agnostic framework for evaluating and optimizing AI agent skills">
+      
+      
+        <meta name="author" content="Skills Validation Team">
+      
+      
+        <link rel="canonical" href="https://nanobot-skills.github.io/Skills_Validation/reference/framework/">
+      
+      
+        <link rel="prev" href="../agent-command/">
+      
+      
+        <link rel="next" href="../benchmark-guide/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Skill 评估与持续优化框架 - skillPrism</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#skill" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="skillPrism" class="md-header__button md-logo" aria-label="skillPrism" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            skillPrism
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Skill 评估与持续优化框架
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/nanobot-skills/Skills_Validation" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    nanobot-skills/Skills_Validation
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/" class="md-tabs__link">
+          
+  
+  
+  🚀 Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorial/01-why-evaluate-skills/" class="md-tabs__link">
+          
+  
+  
+  📖 Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overview/" class="md-tabs__link">
+          
+  
+  
+  📚 Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="skillPrism" class="md-nav__button md-logo" aria-label="skillPrism" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    skillPrism
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/nanobot-skills/Skills_Validation" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    nanobot-skills/Skills_Validation
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🚀 Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🚀 Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    快速入门
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/hands-on/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🙌 手把手教程：用 skillPrism 评估并改进一个 Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安装与环境
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/evaluate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    评估一个 Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    测试一个 Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/improve/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    改进一个 Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/ci/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ci
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/cli-cheatsheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI 与自然语言速查表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📖 Tutorial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📖 Tutorial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/01-why-evaluate-skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第 1 章：为什么要评估 Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/02-install-and-first-skill/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第 2 章：安装与第一个 Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/03-understanding-the-rubric/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第 3 章：理解 Rubric 九维度
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/04-building-your-first-benchmark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 building your first benchmark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/05-optimization-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 optimization loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/06-quality-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第 6 章：质量流水线与 CI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/07-extending-skillprism/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第 7 章：扩展 skillPrism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/08-gradual-testing-and-real-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 gradual testing and real data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/full-cycle-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    skillPrism 全周期 Skill 评估优化 Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/langfuse-bio-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Langfuse 集成下的全周期 Skill 评估优化 Demo（生物信息示例）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/agent-langfuse-production-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    手把手：用 Langfuse + skillPrism 搭建线上 Skill 同步评估优化闭环
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📚 Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📚 Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    skillPrism 体系概览
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../natural-language-interaction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Natural-Language Interaction Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skill-prism-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill prism architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agent-command/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Agent Command
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill 评估与持续优化框架
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill 评估与持续优化框架
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rubric-pdca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、总体方法论：Rubric-PDCA 闭环
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rubric1-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、评估维度 Rubric（1-5 分制）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、评估维度 Rubric（1-5 分制）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 维度定义与评分标准
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 评分配置化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-d9-nvidia-skillspector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 安全维度 D9 与 NVIDIA SkillSpector
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、评估执行流程（Checklist）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、评估执行流程（Checklist）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 自动化初筛（脚本/CI）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 人工领域评审
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-llm-agent-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 LLM 驱动的验证（由 Agent / Skill 完成）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、Rubric 循环优化流程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、Rubric 循环优化流程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 周期建议
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 优化优先级矩阵
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 单次优化迭代步骤
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-benchmark-rubric-pdca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 金标准 Benchmark 与 Rubric-PDCA 的融合
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.4 金标准 Benchmark 与 Rubric-PDCA 的融合">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一致性评价方法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rubric-pdca_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        与 Rubric-PDCA 闭环的配合
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark 工具化
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、治理与基础设施
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、治理与基础设施">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 必须落地的自动化工具
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 报告与看板
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 准入与下线标准
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skill_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、附录：Skill 评分表模板
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、附录：快速启动命令
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skill_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、跨领域 Skill 泛化评估方法论
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、跨领域 Skill 泛化评估方法论">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-skill-taxonomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Skill 类型学（Taxonomy）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 通用维度 vs 类型适配维度
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 各类型 Skill 的验证策略
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.3 各类型 Skill 的验证策略">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#skill_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        分析型 Skill
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skill-genomics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        流程型 Skill（如 Genomics）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        数据库/API 型 Skill
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skill_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文档/编排型 Skill
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 跨领域 Rubric 模板
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85-vs-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 金标准 vs LLM 实测的取舍矩阵
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 通用评估执行流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#87" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.7 跨项目复用建议
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、独立体系设计：配置驱动的评估引擎
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="九、独立体系设计：配置驱动的评估引擎">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 为什么要独立化？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-meta-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 元模型（Meta-Model）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 当前实现
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 配置示例：增加一个新类型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 跨项目使用方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#96" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 内置类型是否足够泛化？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#97" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.7 类型不完善时的降级策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skilllens-skill-prism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、SkillLens 与 skill-prism 的融合
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、SkillLens 与 skill-prism 的融合">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-skilllens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 SkillLens 四维度
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1011-test-promptsruntime-neutrality-checkpoint-markers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1.1 补充检查：test-prompts、runtime neutrality 与 checkpoint markers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-skill-prism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 skill-prism 优化循环
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-ratchet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 棘轮模式（Ratchet）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skill_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十一、三层架构：引擎、可选能力与 Skill 入口
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十二、结语
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmark-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    金标准 Benchmark 构建与迭代优化指南（手把手版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmark-bioinformatics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    生物信息类 Skill 的 Benchmark 设计
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-building-decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark 数据构建决策速查表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adding-a-benchmark-task-type/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    新增 Benchmark 任务类型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../llm-judge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Judge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../langfuse-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    skillPrism × Langfuse 集成方案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmark-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark Metrics 参考与最佳实践
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test-prompts-verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test prompts verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../optimization-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    优化策略库
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiment-history/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    实验历史
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rubric-enhancements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rubric enhancements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dimension-clusters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dimension clusters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../edge-cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Edge cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runtime-neutrality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runtime neutrality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../visual-result-cards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    视觉成果卡片
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operational-playbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    skillPrism 自然语言交互操作手册
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gradual-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    渐进测试（Gradual Testing）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cell2location/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cell2location 示例完整指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API 参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TODO &amp; Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_26" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_26" id="__nav_4_26_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_26_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_26">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/scorecard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill Scorecard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/review-bio-single-cell-clustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill 评估报告：bio-single-cell-clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rubric-pdca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、总体方法论：Rubric-PDCA 闭环
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rubric1-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、评估维度 Rubric（1-5 分制）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、评估维度 Rubric（1-5 分制）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 维度定义与评分标准
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 评分配置化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-d9-nvidia-skillspector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 安全维度 D9 与 NVIDIA SkillSpector
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、评估执行流程（Checklist）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、评估执行流程（Checklist）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 自动化初筛（脚本/CI）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 人工领域评审
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-llm-agent-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 LLM 驱动的验证（由 Agent / Skill 完成）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、Rubric 循环优化流程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、Rubric 循环优化流程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 周期建议
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 优化优先级矩阵
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 单次优化迭代步骤
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-benchmark-rubric-pdca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 金标准 Benchmark 与 Rubric-PDCA 的融合
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.4 金标准 Benchmark 与 Rubric-PDCA 的融合">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一致性评价方法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rubric-pdca_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        与 Rubric-PDCA 闭环的配合
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark 工具化
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、治理与基础设施
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、治理与基础设施">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 必须落地的自动化工具
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 报告与看板
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 准入与下线标准
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skill_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、附录：Skill 评分表模板
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、附录：快速启动命令
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skill_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、跨领域 Skill 泛化评估方法论
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、跨领域 Skill 泛化评估方法论">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-skill-taxonomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Skill 类型学（Taxonomy）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 通用维度 vs 类型适配维度
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 各类型 Skill 的验证策略
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.3 各类型 Skill 的验证策略">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#skill_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        分析型 Skill
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skill-genomics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        流程型 Skill（如 Genomics）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        数据库/API 型 Skill
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skill_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文档/编排型 Skill
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 跨领域 Rubric 模板
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85-vs-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 金标准 vs LLM 实测的取舍矩阵
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 通用评估执行流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#87" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.7 跨项目复用建议
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、独立体系设计：配置驱动的评估引擎
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="九、独立体系设计：配置驱动的评估引擎">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 为什么要独立化？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-meta-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 元模型（Meta-Model）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 当前实现
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 配置示例：增加一个新类型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 跨项目使用方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#96" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 内置类型是否足够泛化？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#97" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.7 类型不完善时的降级策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skilllens-skill-prism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、SkillLens 与 skill-prism 的融合
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、SkillLens 与 skill-prism 的融合">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-skilllens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 SkillLens 四维度
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1011-test-promptsruntime-neutrality-checkpoint-markers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1.1 补充检查：test-prompts、runtime neutrality 与 checkpoint markers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-skill-prism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 skill-prism 优化循环
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-ratchet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 棘轮模式（Ratchet）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skill_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十一、三层架构：引擎、可选能力与 Skill 入口
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十二、结语
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="skill">Skill 评估与持续优化框架<a class="headerlink" href="#skill" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>适用于各类 AI Agent Skill（如生信分析、基因组学流程、数据库 API、科学写作等）的系统性评估、打分、迭代与维护。</p>
+<p>目标：建立一套可复现、可量化、可持续的 Skill Quality Assurance（SQA）体系。</p>
+<p>如果你是第一次接触 skillPrism，建议先阅读 <a href="../overview/">体系概览</a> 以理解整体架构，本文是深度参考手册。</p>
+</blockquote>
+<hr />
+<h2 id="rubric-pdca">一、总体方法论：Rubric-PDCA 闭环<a class="headerlink" href="#rubric-pdca" title="Permanent link">&para;</a></h2>
+<p>将每个 Skill 视为一个交付单元，采用 <strong>Rubric 多维评分 + PDCA 循环优化</strong> 的组合方法：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        ┌─────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        │  Plan：制定/更新 Rubric 与优化目标        │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        │  （定义「好技能」的标准与优先级）          │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        └─────────────────┬───────────────────────┘
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                          ▼
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        ┌─────────────────────────────────────────┐
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        │  Do：执行多维度评估（自动+人工）          │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        │  （结构、代码、文档、可运行性、LLM 效果）   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        └─────────────────┬───────────────────────┘
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                          ▼
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        ┌─────────────────────────────────────────┐
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        │  Check：汇总评分、定位短板、产出报告       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        │  （量化得分、识别关键缺陷、排序优化项）      │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        └─────────────────┬───────────────────────┘
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                          ▼
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        ┌─────────────────────────────────────────┐
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        │  Act：修复、验证、归档并更新基线           │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        │  （改什么、怎么改、改完如何验证）           │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        └─────────────────────────────────────────┘
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>                          │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                          └──────▶ 回到 Plan
+</code></pre></div>
+<p><strong>核心原则</strong>：</p>
+<ol>
+<li><strong>量化优先</strong>：每个维度必须给出 1-5 分的可解释分数，避免「感觉还行」。</li>
+<li><strong>自动为先</strong>：能用脚本/CI 检查的项，不要依赖人工；人工只做语义与领域判断。</li>
+<li><strong>以 LLM 最终效果为北极星</strong>：Skill 的好坏最终体现为 LLM Agent 调用该技能时能否一次正确完成用户任务。</li>
+<li><strong>小步快跑</strong>：每次优化聚焦 1-2 个最高收益维度，避免一次性重写。</li>
+</ol>
+<hr />
+<h2 id="rubric1-5">二、评估维度 Rubric（1-5 分制）<a class="headerlink" href="#rubric1-5" title="Permanent link">&para;</a></h2>
+<p>每个 Skill 从以下 <strong>9 个维度</strong>评估，每个维度 1-5 分。权重通过 <code>skill_rubric_types.yaml</code> 的 <code>scoring.weights</code> 配置，可直接修改而无需改引擎。</p>
+<h3 id="21">2.1 维度定义与评分标准<a class="headerlink" href="#21" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>权重建议</th>
+<th>1 分（差）</th>
+<th>3 分（及格）</th>
+<th>5 分（优秀）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>D1 目录与元数据规范</strong></td>
+<td>0.10</td>
+<td>缺少 SKILL.md 或 frontmatter 错误；命名不规范</td>
+<td>基本文件齐全，frontmatter 完整，命名合规</td>
+<td>目录结构完全符合模板；元数据精准；依赖锁定完整</td>
+</tr>
+<tr>
+<td><strong>D2 文档可理解性</strong></td>
+<td>0.15</td>
+<td>文档混乱，缺少输入输出说明，示例无法运行</td>
+<td>章节完整，示例可运行，参数表清晰</td>
+<td>文档自解释；决策树/选择表丰富；示例覆盖常见场景</td>
+</tr>
+<tr>
+<td><strong>D3 代码正确性</strong></td>
+<td>0.18</td>
+<td>存在明显 Bug 或语法错误；运行即报错</td>
+<td>主要流程可运行，偶发边界问题</td>
+<td>代码健壮；边界处理完善；异常信息明确；有单元测试</td>
+</tr>
+<tr>
+<td><strong>D4 工具依赖可复现</strong></td>
+<td>0.12</td>
+<td>requirements 缺失或版本冲突严重</td>
+<td>requirements/renv 存在且基本可安装</td>
+<td>提供 conda/renv/docker 锁定；CI 安装通过；版本兼容说明清晰</td>
+</tr>
+<tr>
+<td><strong>D5 领域准确性</strong></td>
+<td>0.15</td>
+<td>算法或参数使用明显错误；误导用户</td>
+<td>方法选择基本合理，参数范围合理</td>
+<td>方法经过文献/基准验证；参数建议有依据；pitfalls 完整</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>D5 的具体含义由 <code>skill_rubric_types.yaml</code> 中每个 <code>skill_type</code> 自行定义。例如生信类型可命名为“生物信息学准确性”，API 类型可命名为“API 准确性”，文档类型可命名为“文档准确性”。引擎检查通用要素（引用、参数、pitfalls），语义层面的准确性可由 Agent 或外部 judge 做第二意见（<code>--llm-judge</code>）。
+| <strong>D6 LLM 可调用性</strong> | 0.10 | Agent 无法识别何时该用该 Skill | description 清晰，keyword 充分 | 提供「何时使用/何时不用」决策表；示例可直接被 Agent 复制执行 |
+| <strong>D7 性能与资源友好</strong> | 0.08 | 默认参数内存/时间不可接受 | 中等数据集可在合理时间内跑完 | 提供性能提示；支持降采样；大内存步骤有警告 |
+| <strong>D8 可维护性</strong> | 0.04 | 函数无注释；逻辑耦合严重 | 函数模块化，有基础注释 | 代码风格一致；docstring 完整；CHANGELOG/维护者信息清晰 |
+| <strong>D9 安全与可信</strong> | 0.08 | 存在数据泄露、任意执行、硬编码密钥等高风险模式 | 无高风险模式；有基本数据隐私说明 | 通过外部安全扫描；明确声明数据隐私、随机种子、可复现性 |</p>
+<p><strong>评分实现说明</strong>：D2、D5、D7 以及 D9 的部分检查当前基于<strong>关键词、正则和简单结构启发式</strong>（如是否出现 <code>#</code>、<code>|</code>、<code>version</code>、<code>reference</code>、<code>memory</code>、特定风险模式等）。这些指标运行快速、无需 LLM，适合 CI 场景，但<strong>不是完美的质量代理</strong>——它们可能被关键词堆砌绕过，也可能对合法用法误报。建议将 Rubric 分数作为持续改进的指引，对关键技能结合 <code>--llm-judge</code>、benchmark 结果和人工复核进行综合判断。</p>
+</blockquote>
+<p><strong>总分计算</strong>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Score = Σ (维度得分 × 权重) / 5 × 100   # 转换为百分制
+</code></pre></div>
+<p><strong>等级划分</strong>（供参考）：</p>
+<ul>
+<li><strong>A（90-100）</strong>：标杆 Skill，可作为模板。</li>
+<li><strong>B（75-89）</strong>：良好，有少量优化空间。</li>
+<li><strong>C（60-74）</strong>：可用，但必须修复明显缺陷。</li>
+<li><strong>D（&lt;60）</strong>：不建议上线，需重写或下线。</li>
+</ul>
+<h3 id="22">2.2 评分配置化<a class="headerlink" href="#22" title="Permanent link">&para;</a></h3>
+<p>所有权重、等级阈值均写入 <code>skill_rubric_types.yaml</code>。引擎只做客观评分，不涉及 LLM 实测融合：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">scoring</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">weights</span><span class="p">:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">D1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.10</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">D2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.15</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">D3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.18</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">D4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.12</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">D5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.15</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nt">D6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.10</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nt">D7</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.08</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">D8</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.04</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nt">D9</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.08</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="nt">grade_thresholds</span><span class="p">:</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="nt">A</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="nt">B</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">75</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="nt">C</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+</code></pre></div>
+<p>最终显示分 = 静态 Rubric 分。LLM 驱动的验证/优化由 Agent 通过 Skill 入口完成，不混入引擎评分。</p>
+<h3 id="23-d9-nvidia-skillspector">2.3 安全维度 D9 与 NVIDIA SkillSpector<a class="headerlink" href="#23-d9-nvidia-skillspector" title="Permanent link">&para;</a></h3>
+<p>D9 的设计参考了 NVIDIA SkillSpector（2026）的两阶段安全扫描思想：</p>
+<ol>
+<li><strong>静态模式扫描</strong>：检测环境变量收集、外部网络传输、任意代码执行（eval/exec/subprocess/os.system）、硬编码密钥、路径遍历、提示注入标记、过度代理声明等。</li>
+<li><strong>外部扫描器集成</strong>（可选）：如果安装了 <code>skillspector</code>，评估引擎可调用其 CLI 并将结果合并到 D9。</li>
+</ol>
+<p>D9 不是替代安全审计，而是把安全作为 Skill 质量的一个可量化维度纳入 Rubric。</p>
+<hr />
+<h2 id="checklist">三、评估执行流程（Checklist）<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h2>
+<h3 id="31-ci">3.1 自动化初筛（脚本/CI）<a class="headerlink" href="#31-ci" title="Permanent link">&para;</a></h3>
+<p>对目标项目的 skills 目录批量运行以下检查（具体命令需根据项目实际工具链调整）：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. 元数据与结构检查（示例）</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>python<span class="w"> </span>validate_skill.py<span class="w"> </span>skills/&lt;skill-name&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># 2. 代码静态检查</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ruff<span class="w"> </span>check<span class="w"> </span>skills/&lt;skill-name&gt;/scripts/python/<span class="w">      </span><span class="c1"># Python</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>lintr<span class="w"> </span>skills/&lt;skill-name&gt;/scripts/r/<span class="w">                </span><span class="c1"># R</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># 3. 依赖可安装性检查</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>skills/&lt;skill-name&gt;/requirements.txt<span class="w"> </span>--dry-run
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Rscript<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;renv::restore(lockfile=&#39;skills/&lt;skill-name&gt;/renv/renv.lock&#39;)&quot;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># 4. 示例可运行性（冒烟测试）</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>pytest<span class="w"> </span>tests/<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span>&lt;skill-name&gt;
+</code></pre></div>
+<p><strong>自动化产出</strong>：</p>
+<ul>
+<li>每个 Skill 的 PASS/FAIL 列表</li>
+<li>关键错误汇总（frontmatter 非法、依赖冲突、代码语法错误等）</li>
+</ul>
+<h3 id="32">3.2 人工领域评审<a class="headerlink" href="#32" title="Permanent link">&para;</a></h3>
+<p>由具备生物信息学背景的人员，依据 Rubric 逐项打分。建议两人独立打分后取平均或讨论校准。</p>
+<p><strong>评审工具</strong>：使用本框架附带的评分表（见第 6 节）。</p>
+<h3 id="33-llm-agent-skill">3.3 LLM 驱动的验证（由 Agent / Skill 完成）<a class="headerlink" href="#33-llm-agent-skill" title="Permanent link">&para;</a></h3>
+<p>引擎本身不调用 LLM。LLM 效果验证应作为 Agent 工作流的一部分，由 <code>skills/skill-prism</code> 或类似的 Agent Skill 完成：</p>
+<ol>
+<li>Agent 读取 SKILL.md。</li>
+<li>Agent 使用自身 LLM 模拟真实调用场景：</li>
+<li><strong>直接任务</strong>：「用 X 工具对 PBMC 数据做 Y 分析」</li>
+<li><strong>边界任务</strong>：「数据没有 label，如何处理？」</li>
+<li><strong>错误恢复任务</strong>：「运行时报 Z 错误，怎么解决？」</li>
+<li>Agent 检查生成的代码/命令是否合理、可运行。</li>
+<li>将发现的问题反馈到 SKILL.md 优化循环。</li>
+</ol>
+<p><strong>任务模板参考</strong>：可在 <code>skill_rubric_types.yaml</code> 的 <code>llm_tasks</code> 段保存常用 prompt 模板，供 Agent Skill 引用。</p>
+<hr />
+<h2 id="rubric">四、Rubric 循环优化流程<a class="headerlink" href="#rubric" title="Permanent link">&para;</a></h2>
+<h3 id="41">4.1 周期建议<a class="headerlink" href="#41" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>活动</th>
+<th>频率</th>
+<th>责任人</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自动化初筛</td>
+<td>每次 PR / 每周一次</td>
+<td>CI / 维护脚本</td>
+</tr>
+<tr>
+<td>全量 Rubric 评分</td>
+<td>每季度一次</td>
+<td>领域专家 + QA</td>
+</tr>
+<tr>
+<td>LLM 驱动验证</td>
+<td>每季度一次 + 新 Skill 上线前</td>
+<td>Agent / LLM 评测小组</td>
+</tr>
+<tr>
+<td>标杆 Skill 评选</td>
+<td>每半年一次</td>
+<td>项目委员会</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42">4.2 优化优先级矩阵<a class="headerlink" href="#42" title="Permanent link">&para;</a></h3>
+<p>根据评分结果，将 Skill 落入以下矩阵：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>            高影响（常用/核心）
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>                   ▲
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>                   │  重点优化区      标杆候选区
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>                   │  (Fix First)     (Promote)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>                   │
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    低使用率 ◄─────┼────────────────────────►  高使用率
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>                   │
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>                   │  观察/下线区     快速修补区
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>                   │  (Deprecate)     (Quick Patch)
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>                   ▼
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>            低影响（边缘/少用）
+</code></pre></div>
+<p><strong>处理策略</strong>：</p>
+<ul>
+<li><strong>标杆候选区</strong>：整理为模板，推广最佳实践。</li>
+<li><strong>重点优化区</strong>：投入主要资源，按 Rubric 短板逐项修复。</li>
+<li><strong>快速修补区</strong>：修复关键缺陷即可，不必追求完美。</li>
+<li><strong>观察/下线区</strong>：评估是否保留；若无维护价值，移入 <code>skills_bak/</code> 或归档。</li>
+</ul>
+<h3 id="43">4.3 单次优化迭代步骤<a class="headerlink" href="#43" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>定位短板</strong>：从评分表中找出得分最低的 1-2 个维度。</li>
+<li><strong>制定修复计划</strong>：明确改动点、预期得分提升、验证方式。</li>
+<li><strong>执行修复</strong>：优先修改 SKILL.md、示例代码、依赖配置。</li>
+<li><strong>验证</strong>：</li>
+<li>自动化检查通过</li>
+<li>示例代码可运行</li>
+<li>Rubric 复评得分提升</li>
+<li>LLM 实测任务通过</li>
+<li><strong>归档</strong>：更新 <code>SKILL_REVIEW_REPORT.md</code> 或创建版本化审计报告。</li>
+</ol>
+<h3 id="44-benchmark-rubric-pdca">4.4 金标准 Benchmark 与 Rubric-PDCA 的融合<a class="headerlink" href="#44-benchmark-rubric-pdca" title="Permanent link">&para;</a></h3>
+<p>金标准 Benchmark 不是独立于 Rubric 的「另一套测试」，而是为 D3（可执行性/正确性）和 D5（领域准确性）提供<strong>客观证据</strong>的输入。</p>
+<h4 id="_1">一致性评价方法<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h4>
+<p>对每次 Skill 修改，比较当前输出与金标准参考结果的一致性：</p>
+<table>
+<thead>
+<tr>
+<th>一致性层级</th>
+<th>含义</th>
+<th>判定方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>L1 结构一致</strong></td>
+<td>输出文件/格式与 expected 一致</td>
+<td>文件存在、列名/obs 名匹配</td>
+</tr>
+<tr>
+<td><strong>L2 指标一致</strong></td>
+<td>关键量化指标在阈值范围内</td>
+<td>metric spec 全部通过</td>
+</tr>
+<tr>
+<td><strong>L3 分布一致</strong></td>
+<td>输出分布与参考分布无显著偏移</td>
+<td>tolerance / relative gate</td>
+</tr>
+<tr>
+<td><strong>L4 LLM 可用</strong></td>
+<td>LLM 能用当前输出完成下游任务</td>
+<td>LLM 实测下游任务通过</td>
+</tr>
+</tbody>
+</table>
+<h4 id="rubric-pdca_1">与 Rubric-PDCA 闭环的配合<a class="headerlink" href="#rubric-pdca_1" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Plan: 设定 Benchmark 通过标准（metric thresholds）和 Rubric 目标分
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>   │
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>   ▼
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Do:  修改 Skill + 跑自动化 Rubric + 跑 Benchmark 回归
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>   │
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>   ▼
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Check: 比较当前指标 vs 基线；Rubric 短板是否改善；LLM 实测是否通过
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>   │
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>   ▼
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Act:   通过则更新 baseline；失败则回滚或继续优化
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>   │
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>   └────▶ 回到 Plan
+</code></pre></div>
+<p><strong>操作要点</strong>：</p>
+<ul>
+<li>Benchmark 回归测试必须在 PR 合并前通过（Hard Gate）。</li>
+<li>Rubric 复评在每次修改后执行，量化「改了多少分」。</li>
+<li>LLM 实测每季度/重大修改后执行，验证「Agent 还能不能用它干活」。</li>
+<li>基线（baseline）只应在 Benchmark 全部通过且 Rubric 得分不下降时更新。</li>
+</ul>
+<h4 id="benchmark">Benchmark 工具化<a class="headerlink" href="#benchmark" title="Permanent link">&para;</a></h4>
+<p>本体系将 Benchmark 基础设施打包为可复用模块：</p>
+<ul>
+<li><code>skillprism.benchmark.runner</code>：读取 <code>benchmarks/&lt;skill&gt;/registry.yaml</code> 并运行测试</li>
+<li><code>skillprism.benchmark.metrics</code>：计算任务指标（clustering、table 等）</li>
+<li><code>skillprism.benchmark.regression</code>：与 baseline 对比</li>
+<li>CLI：<code>test-skill --mode single</code></li>
+</ul>
+<p>Benchmark 注册表采用与 Skill 类型解耦的设计：每个 skill 拥有独立的注册表 <code>benchmarks/&lt;skill&gt;/registry.yaml</code>，其中每个 benchmark 条目声明 <code>task</code>、<code>dataset</code>/<code>input</code>、<code>expected</code>、<code>metrics</code> 和可选的 <code>metrics.py</code>（私有 metric 注册）；任务契约（prompt、输入输出格式等）定义在 <code>benchmarks/&lt;skill&gt;/tasks/&lt;task&gt;.yaml</code> 中。</p>
+<hr />
+<h2 id="_2">五、治理与基础设施<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h3 id="51">5.1 必须落地的自动化工具<a class="headerlink" href="#51" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>作用</th>
+<th>建议集成</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>evaluate-skill</code> / <code>evaluate_skill_rubric.py</code></td>
+<td>Rubric 多维评分、类型检测、生成 Scorecard</td>
+<td>GitHub Actions / CI</td>
+</tr>
+<tr>
+<td><code>skillprism.optimize_skill</code></td>
+<td>测量、识别短板、保留/回滚编辑（不调用 LLM）</td>
+<td>Agent 驱动优化循环</td>
+</tr>
+<tr>
+<td><code>test-skill --mode single</code></td>
+<td>金标准 Benchmark 运行</td>
+<td>CI / 每次修改相关 Skill</td>
+</tr>
+<tr>
+<td><code>skill-pipeline</code></td>
+<td>Rubric + Benchmark + 识别最差 skill</td>
+<td>全量质量审计</td>
+</tr>
+<tr>
+<td><code>security_evaluator.py</code></td>
+<td>D9 安全维度静态扫描 + SkillSpector 集成</td>
+<td>CI / 安全审计</td>
+</tr>
+<tr>
+<td><code>smoke_test_runner.py</code></td>
+<td>按类型执行轻量级可执行性验证（含边界/异常处理检查）</td>
+<td>CI / 本地开发</td>
+</tr>
+<tr>
+<td><code>dependency_checker.py</code></td>
+<td>requirements/environment 可安装性检查</td>
+<td>CI</td>
+</tr>
+<tr>
+<td><code>skill_lens_checks.py</code></td>
+<td>SkillLens 四维度检查（失败编码、具体性、风险黑名单、显性检查点）</td>
+<td>CI / 优化前</td>
+</tr>
+<tr>
+<td><code>skillprism.testing.boundary</code></td>
+<td>边界/异常输入测试框架；level 0 benchmark 自动调用</td>
+<td>CI / level 0 benchmark</td>
+</tr>
+<tr>
+<td><code>test_prompts.py</code></td>
+<td>管理 <code>test-prompts.json</code>，为 LLM 效果验证提供标准提示</td>
+<td>CI / 优化前</td>
+</tr>
+<tr>
+<td><code>runtime_neutrality.py</code></td>
+<td>检查 SKILL.md / README 是否绑定特定 Agent runtime</td>
+<td>CI / 优化前</td>
+</tr>
+<tr>
+<td><code>pytest tests/</code></td>
+<td>分阶段功能测试</td>
+<td>CI / 本地开发</td>
+</tr>
+<tr>
+<td><code>ruff</code> / <code>lintr</code></td>
+<td>代码风格与静态检查</td>
+<td>pre-commit / CI</td>
+</tr>
+<tr>
+<td><code>pip --dry-run</code> / <code>renv::restore</code></td>
+<td>依赖可安装性验证</td>
+<td>CI</td>
+</tr>
+<tr>
+<td><code>templates/regression_test.py</code></td>
+<td>Benchmark 结果与基线对比</td>
+<td>CI / 优化验证</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52">5.2 报告与看板<a class="headerlink" href="#52" title="Permanent link">&para;</a></h3>
+<p>建议维护以下文档：</p>
+<ul>
+<li><code>docs/SKILL_SCORECARD.md</code>：每个 Skill 的当前得分与历史趋势。</li>
+<li><code>SKILL_OPTIMIZATION_BACKLOG.md</code>：待优化 Skill 与优先级。</li>
+<li><code>SKILL_REVIEW_REPORT_YYYY-MM.md</code>：每次全量评审的详细报告。</li>
+</ul>
+<h3 id="53">5.3 准入与下线标准<a class="headerlink" href="#53" title="Permanent link">&para;</a></h3>
+<p><strong>新 Skill 上线标准</strong>：</p>
+<ul>
+<li>Rubric 显示总分 ≥ 75</li>
+<li>D1、D2、D3、D9 单项 ≥ 4</li>
+<li>LLM 实测 3 个用例全部通过，且 LLM 实测分 ≥ 60</li>
+<li>CI 自动化检查通过</li>
+<li>若该 Skill 有 Benchmark，所有指标通过且不下降</li>
+</ul>
+<p><strong>Skill 下线触发条件</strong>：</p>
+<ul>
+<li>连续两个季度评分 &lt; 60</li>
+<li>依赖工具已停止维护且无法替代</li>
+<li>与另一个 Skill 高度重复且质量更差</li>
+</ul>
+<hr />
+<h2 id="skill_1">六、附录：Skill 评分表模板<a class="headerlink" href="#skill_1" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="gu">## Skill 评分表</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>| Skill 名称 | 评估日期 | 评估人 | 版本 |
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>|---|---|---|---|
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>| <span class="sb">`bio-xxx-xxx`</span> | YYYY-MM-DD | Name | v1.0 |
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="gu">### 维度得分</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>| 维度 | 得分 (1-5) | 证据/问题 | 优化建议 |
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>|---|---|---|---|
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>| D1 目录与元数据规范 |  |  |  |
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>| D2 文档可理解性 |  |  |  |
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>| D3 代码正确性 |  |  |  |
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>| D4 工具依赖可复现 |  |  |  |
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>| D5 生物信息学准确性 |  |  |  |
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>| D6 LLM 可调用性 |  |  |  |
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>| D7 性能与资源友好 |  |  |  |
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>| D8 可维护性 |  |  |  |
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="gu">### 总分</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="k">-</span><span class="w"> </span>加权总分：__ / 100
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="k">-</span><span class="w"> </span>等级：A / B / C / D
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="k">-</span><span class="w"> </span>优先优化维度：__
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="k">-</span><span class="w"> </span>预计下次复评日期：YYYY-MM-DD
+</code></pre></div>
+<hr />
+<h2 id="_3">七、附录：快速启动命令<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>假设 <code>evaluate_skill_rubric.py</code> 与 <code>skill_rubric_types.yaml</code> 位于 <code>/path/to/Skills_Validation/</code>。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. 对单个 Skill 做 Rubric 评估（自动检测类型）</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>python<span class="w"> </span>/path/to/Skills_Validation/evaluate_skill_rubric.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>skills/bio-single-cell-clustering<span class="w"> </span>--detailed
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># 2. 强制指定类型进行评估</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>python<span class="w"> </span>/path/to/Skills_Validation/evaluate_skill_rubric.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>skills/bio-single-cell-fastq2mtx<span class="w"> </span>--type<span class="w"> </span>cmd<span class="w"> </span>--detailed
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># 3. 批量生成全项目评分卡</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>python<span class="w"> </span>/path/to/Skills_Validation/evaluate_skill_rubric.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span>--all<span class="w"> </span>--skills-dir<span class="w"> </span>./skills<span class="w"> </span>--output<span class="w"> </span>docs/SKILL_SCORECARD.md<span class="w"> </span>--verbose
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># 4. 跨项目复用：评估另一个项目的 skills</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>python<span class="w"> </span>/path/to/Skills_Validation/evaluate_skill_rubric.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span>--all<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">    </span>--skills-dir<span class="w"> </span>/path/to/Genomics-Skills/skills<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">    </span>--output<span class="w"> </span>/path/to/Genomics-Skills/docs/SKILL_SCORECARD.md
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="c1"># 5. 使用自定义类型配置</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>python<span class="w"> </span>/path/to/Skills_Validation/evaluate_skill_rubric.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">    </span>--config<span class="w"> </span>./my_types.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">    </span>--all<span class="w"> </span>--skills-dir<span class="w"> </span>./skills
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="c1"># 6. 运行项目已有分阶段功能测试（示例）</span>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>python<span class="w"> </span>tests/run_tests.py<span class="w"> </span>all
+</code></pre></div>
+<hr />
+<h2 id="skill_2">八、跨领域 Skill 泛化评估方法论<a class="headerlink" href="#skill_2" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>本节把上述 Rubric-PDCA 体系从生信分析 Skill 扩展到其他类型的 Skill，如论文写作、基因组学流程、数据库 API 等。核心思想是：<strong>通用维度保持不变，执行层检查根据 Skill 类型做适配</strong>。</p>
+</blockquote>
+<h3 id="81-skill-taxonomy">8.1 Skill 类型学（Taxonomy）<a class="headerlink" href="#81-skill-taxonomy" title="Permanent link">&para;</a></h3>
+<p>根据已考察的多个 <code>./skills</code> 目录，可将 Skill 归为四大类：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>代表项目</th>
+<th>核心交付物</th>
+<th>可执行性特征</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>分析型（Analysis）</strong></td>
+<td>NanoResearch-Skills</td>
+<td>Python/R 分析代码、notebook</td>
+<td>在数据上运行，产生统计/可视化结果</td>
+</tr>
+<tr>
+<td><strong>命令型（cmd/CLI）</strong></td>
+<td>Genomics-Skills</td>
+<td>shell 脚本、命令行调用、WDL/CWL</td>
+<td>依赖参考基因组、BAM/VCF 等中间文件</td>
+</tr>
+<tr>
+<td><strong>数据库/API 型</strong></td>
+<td>database-Skills</td>
+<td>REST API 调用、查询语法、客户端</td>
+<td>依赖外部服务可用性、网络、认证</td>
+</tr>
+<tr>
+<td><strong>文档/编排型（Document/Orchestration）</strong></td>
+<td>paperwriting-Skills</td>
+<td>写作模板、引用规范、报告结构</td>
+<td>输出文本/文档， correctness 更难量化</td>
+</tr>
+</tbody>
+</table>
+<h3 id="82-vs">8.2 通用维度 vs 类型适配维度<a class="headerlink" href="#82-vs" title="Permanent link">&para;</a></h3>
+<p><strong>对所有类型都适用的通用维度（Universal Dimensions）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>通用含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>UD1 元数据规范</strong></td>
+<td>SKILL.md frontmatter 完整、命名规范、目录结构清晰</td>
+</tr>
+<tr>
+<td><strong>UD2 文档可理解性</strong></td>
+<td>输入/输出/用途明确，示例充足，章节组织合理</td>
+</tr>
+<tr>
+<td><strong>UD3 LLM 可调用性</strong></td>
+<td>description 精准，keywords 充分，何时使用/不使用的决策指引清晰</td>
+</tr>
+<tr>
+<td><strong>UD4 可维护性</strong></td>
+<td>代码/模板模块化，有注释/说明，版本兼容信息清晰</td>
+</tr>
+<tr>
+<td><strong>UD5 安全与稳健性</strong></td>
+<td>有错误处理、边界提示、数据备份/不破坏输入等意识</td>
+</tr>
+</tbody>
+</table>
+<p><strong>需要按类型适配的维度（Adaptive Dimensions）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>适配后的核心检查项</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>分析型</strong></td>
+<td>代码语法、单元测试、benchmark 数据集、结果指标（ARI、准确率等）</td>
+</tr>
+<tr>
+<td><strong>流程型</strong></td>
+<td>命令语法、参数完整性、参考数据/索引要求、资源（CPU/GPU/内存）声明</td>
+</tr>
+<tr>
+<td><strong>数据库/API 型</strong></td>
+<td>API endpoint 可用性、查询语法正确性、认证方式、速率限制与错误码处理</td>
+</tr>
+<tr>
+<td><strong>写作/编排型</strong></td>
+<td>模板完整性、引用格式正确性、输出风格一致性、事实可验证性</td>
+</tr>
+</tbody>
+</table>
+<h3 id="83-skill">8.3 各类型 Skill 的验证策略<a class="headerlink" href="#83-skill" title="Permanent link">&para;</a></h3>
+<h4 id="skill_3">分析型 Skill<a class="headerlink" href="#skill_3" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>自动化</strong>：语法检查、静态分析、依赖安装、单元测试。</li>
+<li><strong>金标准 Benchmark</strong>：对聚类、注释、批次校正等客观任务，用已知标签数据集做回归测试。详见 <a href="../benchmark-guide/">Benchmark 指南</a>。</li>
+<li><strong>LLM 实测</strong>：让 Agent 根据 SKILL.md 生成完整分析代码并执行，检查是否选对方法、参数是否合理。</li>
+</ul>
+<h4 id="skill-genomics">流程型 Skill（如 Genomics）<a class="headerlink" href="#skill-genomics" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>自动化</strong>：shellcheck/bash 语法检查、命令参数模板校验、Docker/conda 环境可安装性。</li>
+<li><strong>轻量级冒烟测试</strong>：不跑全量 WGS/WES（太耗时/耗资源），而是用 <code>samtools view -H</code>、<code>gatk --help</code>、<code>bcftools --version</code> 等验证工具可调用。</li>
+<li><strong>输入/输出规范检查</strong>：每个步骤是否声明了必需的输入文件、参考基因组版本、输出格式。</li>
+<li><strong>资源声明检查</strong>：是否声明 CPU、内存、GPU、运行时间预估。</li>
+</ul>
+<h4 id="api-skill">数据库/API 型 Skill<a class="headerlink" href="#api-skill" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>自动化</strong>：查询语法检查（如 UniProt query syntax）、Python 客户端语法检查。</li>
+<li><strong>API 可用性探测</strong>：用 <code>curl -I</code> 或轻量请求验证 endpoint 可达（注意频率控制，避免滥用）。</li>
+<li><strong>示例响应检查</strong>：示例中的 URL/参数是否能在当前 API 版本下返回合理结果。</li>
+<li><strong>认证与限制</strong>：是否说明 API key、速率限制、超时处理。</li>
+</ul>
+<h4 id="skill_4">文档/编排型 Skill<a class="headerlink" href="#skill_4" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>自动化有限</strong>：主要检查 frontmatter、目录结构、模板文件存在性。</li>
+<li><strong>专家评审为主</strong>：由领域专家检查写作流程、引用规范、期刊格式要求是否完整。</li>
+<li><strong>LLM 一致性测试</strong>：同一提示多次调用，检查输出风格/格式是否稳定、是否符合模板。</li>
+<li><strong>事实可验证性</strong>：对涉及具体期刊格式、统计报告标准的内容，抽样验证是否正确。</li>
+</ul>
+<h3 id="84-rubric">8.4 跨领域 Rubric 模板<a class="headerlink" href="#84-rubric" title="Permanent link">&para;</a></h3>
+<p>在实际评估时，建议保留 8 个维度的外壳，但根据 Skill 类型调整每个维度内部的检查项：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>分析型</th>
+<th>命令型</th>
+<th>数据库/API 型</th>
+<th>文档/编排型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>D1 结构与元数据</strong></td>
+<td>SKILL.md、examples、requirements</td>
+<td>SKILL.md、examples、reference data 声明</td>
+<td>SKILL.md、API docs、client scripts</td>
+<td>SKILL.md、templates、style guides</td>
+</tr>
+<tr>
+<td><strong>D2 文档可理解性</strong></td>
+<td>输入数据状态、参数表、pipelines</td>
+<td>输入文件、参考基因组、参数表</td>
+<td>Query syntax、返回格式、认证</td>
+<td>写作流程、格式要求、检查清单</td>
+</tr>
+<tr>
+<td><strong>D3 可执行性/正确性</strong></td>
+<td>代码语法、单元测试、benchmark</td>
+<td>命令语法、工具 <code>--help</code> 通过</td>
+<td>API endpoint 可达、查询可执行</td>
+<td>模板可渲染、格式符合规范</td>
+</tr>
+<tr>
+<td><strong>D4 环境/依赖可复现</strong></td>
+<td>conda/pip/renv/Docker</td>
+<td>conda/Docker、参考数据下载</td>
+<td>API key、SDK 版本</td>
+<td>模板依赖、字体/引用样式</td>
+</tr>
+<tr>
+<td><strong>D5 领域准确性</strong></td>
+<td>算法/参数正确性</td>
+<td>流程顺序、参数符合 GATK/bwa 等规范</td>
+<td>查询字段、ID 映射规则正确</td>
+<td>期刊格式、统计报告标准正确</td>
+</tr>
+<tr>
+<td><strong>D6 LLM 可调用性</strong></td>
+<td>description、keywords、决策表</td>
+<td>description、keywords、WDL/CWL 选择</td>
+<td>description、keywords、何时用 REST</td>
+<td>description、keywords、写作阶段匹配</td>
+</tr>
+<tr>
+<td><strong>D7 性能/资源</strong></td>
+<td>内存、时间、降采样提示</td>
+<td>CPU/GPU/内存/磁盘、运行时间</td>
+<td>批处理大小、分页、缓存策略</td>
+<td>输出长度控制、迭代次数</td>
+</tr>
+<tr>
+<td><strong>D8 可维护性</strong></td>
+<td>函数模块化、docstring</td>
+<td>脚本模块化、日志/错误处理</td>
+<td>客户端封装、错误码处理</td>
+<td>模板模块化、版本更新机制</td>
+</tr>
+</tbody>
+</table>
+<h3 id="85-vs-llm">8.5 金标准 vs LLM 实测的取舍矩阵<a class="headerlink" href="#85-vs-llm" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Skill 类型</th>
+<th>是否推荐金标准</th>
+<th>推荐方式</th>
+<th>主要验证手段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>分析型-客观任务</td>
+<td>✅ 强推荐</td>
+<td>已知标签 benchmark 数据集 + 量化指标</td>
+<td>自动化 benchmark + LLM 实测</td>
+</tr>
+<tr>
+<td>分析型-探索性任务</td>
+<td>⚠️ 有限推荐</td>
+<td>专家共识集 + 稳定性指标</td>
+<td>LLM 实测 + 专家评审</td>
+</tr>
+<tr>
+<td>命令型</td>
+<td>⚠️ 有限推荐</td>
+<td>轻量级 reference 数据冒烟测试</td>
+<td>命令/工具可用性 + 小规模端到端测试</td>
+</tr>
+<tr>
+<td>数据库/API 型</td>
+<td>❌ 不适用</td>
+<td>无</td>
+<td>API 探测 + 示例响应验证 + LLM 实测</td>
+</tr>
+<tr>
+<td>文档/编排型</td>
+<td>❌ 不适用</td>
+<td>无</td>
+<td>LLM 一致性 + 专家评审 + 模板渲染检查</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>如何具体构建和维护金标准 Benchmark，详见 <a href="../benchmark-guide/">Benchmark 指南</a>。</p>
+</blockquote>
+<h3 id="86">8.6 通用评估执行流程<a class="headerlink" href="#86" title="Permanent link">&para;</a></h3>
+<p>无论哪种类型，单次完整评估都遵循以下步骤：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>1. 类型识别
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>   └── 判断 Skill 属于分析型/命令型/数据库型/文档型
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>2. 结构检查（自动化）
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>   └── SKILL.md、frontmatter、目录结构、必需文件
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>3. 可执行性检查（按类型适配）
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>   └── 分析型：py_compile / R CMD check
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>   └── 命令型：shellcheck / command --help
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>   └── API 型：语法检查 + 轻量 endpoint 探测
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>   └── 文档型：模板存在性 + 格式样例检查
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>4. 领域准确性检查（人工 + 工具辅助）
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>   └── 分析型：benchmark 指标
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>   └── 命令型：参数与 best practice 对照
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>   └── API 型：查询结果与官方文档对照
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>   └── 文档型：专家抽样评审
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>5. LLM 驱动验证（由 Agent / Skill 完成，引擎不直接调用 LLM）
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>   └── 让 Agent 用该 Skill 完成 3 个典型任务
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>   └── 记录：是否选对、是否执行、输出是否可用
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>   └── 将问题反馈给 skill-prism 循环
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>6. 汇总评分、定位短板、制定 PDCA 优化计划
+</code></pre></div>
+<h3 id="87">8.7 跨项目复用建议<a class="headerlink" href="#87" title="Permanent link">&para;</a></h3>
+<p>如果要在多个项目（如 NanoResearch、Genomics、database、paperwriting 等）之间复用这套体系，建议：</p>
+<ol>
+<li><strong>把 <code>evaluate_skill_rubric.py</code> 作为独立引擎</strong>，通过 <code>--skills-dir</code> 和 <code>--config</code> 参数指向不同项目。</li>
+<li><strong>每个项目维护一个 <code>skill_rubric_types.yaml</code> 或 <code>skill_types.yaml</code></strong>，定义该项目特有的 Skill 类型和检查规则；通用类型可直接继承默认配置。</li>
+<li><strong>共享通用评分卡格式</strong>，但允许每个项目补充类型特定字段（如 benchmark 指标、API endpoint 版本）。</li>
+<li><strong>定期跨项目同步标杆 Skill</strong>，把某个项目中评分 95+ 的 Skill 作为全组织的模板参考。</li>
+<li><strong>在 CI 中统一调用</strong>（假设引擎已复制到项目 <code>scripts/</code> 目录）：
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>python<span class="w"> </span>scripts/evaluate_skill_rubric.py<span class="w"> </span>--all<span class="w"> </span>--skills-dir<span class="w"> </span>./skills<span class="w"> </span>--output<span class="w"> </span>docs/SKILL_SCORECARD.md
+</code></pre></div>
+   不同项目只需修改 <code>--skills-dir</code> 和 <code>--config</code> 参数。</li>
+</ol>
+<hr />
+<h2 id="_4">九、独立体系设计：配置驱动的评估引擎<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>本节说明如何把上述方法论从「具体项目专属」升级为「项目无关的独立评估体系」。</p>
+</blockquote>
+<h3 id="91">9.1 为什么要独立化？<a class="headerlink" href="#91" title="Permanent link">&para;</a></h3>
+<p>之前的实现把检查规则硬编码在脚本里（例如：只有 <code>requirements.txt</code> 才算依赖文件，只有 Python/R 才算代码）。这带来两个问题：</p>
+<ol>
+<li><strong>换项目就失效</strong>：一个论文写作 Skill 没有 <code>requirements.txt</code> 不代表它差；一个 API Skill 没有 <code>scripts/python/</code> 也不代表结构错误。</li>
+<li><strong>新增类型要改代码</strong>：每出现一种新的 Skill 形态，都要修改评估脚本。</li>
+</ol>
+<p><strong>独立化目标</strong>：把「规则」从「引擎」中分离出来。引擎只负责读取配置、执行检查、汇总分数；规则写在 YAML 配置里，可随项目扩展。</p>
+<h3 id="92-meta-model">9.2 元模型（Meta-Model）<a class="headerlink" href="#92-meta-model" title="Permanent link">&para;</a></h3>
+<p>独立体系的核心是一个三层元模型：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>┌─────────────────────────────────────┐
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>│  Engine（评估引擎）                  │
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>│  - 读取配置                          │
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>│  - 检测 Skill 类型                   │
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>│  - 按维度执行检查                    │
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>│  - 汇总评分、生成报告                 │
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>└─────────────────────────────────────┘
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>            ↑ 读取
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>┌─────────────────────────────────────┐
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>│  Type Registry（类型注册表）          │
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>│  - skill_types.yaml                  │
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>│  - 每个类型定义检测规则、frontmatter   │
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>│    要求、文件检查、关键词集合          │
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>└─────────────────────────────────────┘
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>            ↑ 适配
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>┌─────────────────────────────────────┐
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>│  Project Config（项目配置）           │
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>│  - skills 目录位置                    │
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>│  - 自定义类型覆盖                     │
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>│  - 权重调整（可选）                   │
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>└─────────────────────────────────────┘
+</code></pre></div>
+<h3 id="93">9.3 当前实现<a class="headerlink" href="#93" title="Permanent link">&para;</a></h3>
+<p>当前脚本 <code>evaluate_skill_rubric.py</code> 与配置文件 <code>skill_rubric_types.yaml</code> 已经按这个模型实现：</p>
+<ul>
+<li><strong>引擎</strong>：<code>evaluate_skill_rubric.py</code> 不再硬编码任何项目特定的路径或文件。</li>
+<li><strong>类型注册表</strong>：<code>skill_rubric_types.yaml</code> 定义了 <code>analysis</code>、<code>cmd</code>、<code>api</code>、<code>document</code>、<code>generic</code> 五种类型。</li>
+<li><strong>项目配置</strong>：通过 CLI 参数 <code>--skills-dir</code> 和 <code>--config</code> 指定。</li>
+</ul>
+<h3 id="94">9.4 配置示例：增加一个新类型<a class="headerlink" href="#94" title="Permanent link">&para;</a></h3>
+<p>假设未来出现一类「Agentic Reasoning Skill」，只需修改 <code>skill_rubric_types.yaml</code>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nt">skill_types</span><span class="p">:</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nt">reasoning</span><span class="p">:</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">推理/编排型</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Skills that orchestrate multi-step reasoning or agent workflows</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="nt">detection</span><span class="p">:</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">      </span><span class="nt">tool_type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">reasoning</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">agent</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">orchestrator</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">      </span><span class="nt">keywords</span><span class="p">:</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reasoning</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">agent</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multi-step</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chain-of-thought</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">      </span><span class="nt">file_patterns</span><span class="p">:</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;prompts/*.md&quot;</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span><span class="nt">frontmatter_recommended</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">tool_type</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">allowed-tools</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">    </span><span class="nt">dimension_names_override</span><span class="p">:</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">      </span><span class="nt">D3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">推理流程可用性</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">      </span><span class="nt">D4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">提示/工具依赖说明</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">      </span><span class="nt">D5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">推理准确性</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="w">      </span><span class="nt">D7</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">输出稳定性</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">    </span><span class="nt">dimension_checks</span><span class="p">:</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">      </span><span class="nt">D1</span><span class="p">:</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="w">        </span><span class="nt">dependency_file_candidates</span><span class="p">:</span>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prompts</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tools.yaml</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="w">      </span><span class="nt">D2</span><span class="p">:</span>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="w">        </span><span class="nt">io_keywords</span><span class="p">:</span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">input</span>
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">output</span>
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reasoning</span>
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">workflow</span>
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a><span class="w">        </span><span class="nt">code_example_markers</span><span class="p">:</span>
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;```&quot;</span>
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Step</span><span class="nv"> </span><span class="s">1&quot;</span>
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a><span class="w">      </span><span class="nt">D5</span><span class="p">:</span>
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a><span class="w">        </span><span class="nt">accuracy_keywords</span><span class="p">:</span>
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validation</span>
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verification</span>
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fact-check</span>
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a><span class="w">        </span><span class="nt">pitfall_keywords</span><span class="p">:</span>
+<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hallucination</span>
+<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ambiguity</span>
+<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fallback</span>
+<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a><span class="w">      </span><span class="nt">D7</span><span class="p">:</span>
+<a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a><span class="w">        </span><span class="nt">resource_keywords</span><span class="p">:</span>
+<a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tokens</span>
+<a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iterations</span>
+<a id="__codelineno-11-47" name="__codelineno-11-47" href="#__codelineno-11-47"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">steps</span>
+<a id="__codelineno-11-48" name="__codelineno-11-48" href="#__codelineno-11-48"></a><span class="w">        </span><span class="nt">robustness_keywords</span><span class="p">:</span>
+<a id="__codelineno-11-49" name="__codelineno-11-49" href="#__codelineno-11-49"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fallback</span>
+<a id="__codelineno-11-50" name="__codelineno-11-50" href="#__codelineno-11-50"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">retry</span>
+<a id="__codelineno-11-51" name="__codelineno-11-51" href="#__codelineno-11-51"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error</span>
+</code></pre></div>
+<p><strong>无需修改 <code>evaluate_skill_rubric.py</code></strong>，新类型即可被自动识别和评估（如果只需要基于文件存在性和关键词的检查）。</p>
+<h3 id="95">9.5 跨项目使用方式<a class="headerlink" href="#95" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. 在目标项目内使用默认配置</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>python<span class="w"> </span>/path/to/Skills_Validation/evaluate_skill_rubric.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>--all<span class="w"> </span>--skills-dir<span class="w"> </span>./skills<span class="w"> </span>--output<span class="w"> </span>docs/SKILL_SCORECARD.md
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># 2. 在 Genomics 项目内复用同一引擎</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>python<span class="w"> </span>/path/to/Skills_Validation/evaluate_skill_rubric.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>--all<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span>--skills-dir<span class="w"> </span>/path/to/Genomics-Skills/skills<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span>--output<span class="w"> </span>/path/to/Genomics-Skills/docs/SKILL_SCORECARD.md
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># 3. 使用自定义类型配置</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>python<span class="w"> </span>/path/to/Skills_Validation/evaluate_skill_rubric.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">    </span>--config<span class="w"> </span>/path/to/my_types.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">    </span>--all<span class="w"> </span>--skills-dir<span class="w"> </span>./skills
+</code></pre></div>
+<h3 id="96">9.6 内置类型是否足够泛化？<a class="headerlink" href="#96" title="Permanent link">&para;</a></h3>
+<p>当前 4 个具体类型 + 1 个通用兜底：<strong>对现有生信/科研场景基本够用，但还称不上终极完备</strong>。</p>
+<p>边界上可能还需拆分或新增：</p>
+<table>
+<thead>
+<tr>
+<th>候选类型</th>
+<th>适用场景</th>
+<th>与现有类型的关系</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>workflow</strong></td>
+<td>WDL/CWL/Nextflow/Snakemake 等声明式流程</td>
+<td>可从 <code>cmd</code> 中拆分出来</td>
+</tr>
+<tr>
+<td><strong>agentic</strong></td>
+<td>多步推理、工具调用、agent 编排</td>
+<td>新增类型</td>
+</tr>
+<tr>
+<td><strong>multimodal</strong></td>
+<td>图像/视频/音频生成与分析</td>
+<td>新增类型</td>
+</tr>
+<tr>
+<td><strong>data-engineering</strong></td>
+<td>ETL、数据清洗、数据库迁移</td>
+<td>介于 <code>cmd</code> 与 <code>api</code> 之间</td>
+</tr>
+<tr>
+<td><strong>devops</strong></td>
+<td>CI/CD、部署、监控</td>
+<td>新增类型</td>
+</tr>
+</tbody>
+</table>
+<p><strong>建议策略</strong>：
+- 不要一次性定义太多类型。
+- 先用 <code>generic</code> 兜底收集 10-20 个无法归类的 Skill，再抽象出新的类型。
+- 每个新类型必须有明确的 <strong>输入/输出形态</strong>、<strong>可执行性检查方式</strong>、<strong>领域准确性验证方式</strong>，否则应归入 <code>generic</code>。</p>
+<h3 id="97">9.7 类型不完善时的降级策略<a class="headerlink" href="#97" title="Permanent link">&para;</a></h3>
+<p>如果自动类型检测不确定，脚本会返回 <code>generic</code> 类型。<code>generic</code> 只执行最宽松的通用检查：</p>
+<ul>
+<li>基础 frontmatter</li>
+<li>文档结构和示例</li>
+<li>通用 pitfalls/参考文献提示</li>
+<li>通用资源/稳健性关键词</li>
+</ul>
+<p>这样可以<strong>避免因为类型误判而给出不公正的分数</strong>。</p>
+<hr />
+<h2 id="skilllens-skill-prism">十、SkillLens 与 skill-prism 的融合<a class="headerlink" href="#skilllens-skill-prism" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>注：本体系受 <code>alchaincyf/darwin-skill</code> 与 Karpathy autoresearch 启发，
+但 <code>skill-prism</code> 是本体系的<strong>独立实现</strong>，并非原样复制 darwin-skill。</p>
+</blockquote>
+<h3 id="101-skilllens">10.1 SkillLens 四维度<a class="headerlink" href="#101-skilllens" title="Permanent link">&para;</a></h3>
+<p>Microsoft Research SkillLens（arXiv 2605.23899）通过实证发现以下维度对 Skill 实际效果影响最大。本体系已将它们融入现有 Rubric，并补充了 darwin-skill 强调的显性检查点：</p>
+<table>
+<thead>
+<tr>
+<th>SkillLens 维度</th>
+<th>含义</th>
+<th>落地位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>失败模式编码</strong></td>
+<td>显式列出已知失败路径，而非泛泛提醒</td>
+<td>D2 文档可理解性</td>
+</tr>
+<tr>
+<td><strong>可执行具体性</strong></td>
+<td>禁用「视情况而定/建议/可以考虑」等模糊措辞</td>
+<td>D2 + D6 LLM 可调用性</td>
+</tr>
+<tr>
+<td><strong>高风险黑名单</strong></td>
+<td>明文禁止 <code>rm -rf /</code>、<code>git reset --hard</code> 等高危操作</td>
+<td>D9 安全与可信</td>
+</tr>
+<tr>
+<td><strong>显性检查点</strong></td>
+<td>在关键决策前加入 <code>🔴 STOP</code> / <code>CHECKPOINT</code> 等标记，强制 Agent 停顿确认</td>
+<td>D2 + D7 + D9</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1011-test-promptsruntime-neutrality-checkpoint-markers">10.1.1 补充检查：test-prompts、runtime neutrality 与 checkpoint markers<a class="headerlink" href="#1011-test-promptsruntime-neutrality-checkpoint-markers" title="Permanent link">&para;</a></h3>
+<p>除 SkillLens 四维度外，引擎还会自动执行以下轻量检查：</p>
+<table>
+<thead>
+<tr>
+<th>检查项</th>
+<th>作用</th>
+<th>期望</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>test-prompts.json</strong></td>
+<td>为每个 skill 保存 2-3 条代表性提示，用于 LLM 效果验证</td>
+<td>文件存在且覆盖 happy path 与边界/歧义场景</td>
+</tr>
+<tr>
+<td><strong>Runtime neutrality</strong></td>
+<td>避免 skill 被绑定到 Claude Code、Cursor、Codex 等特定 runtime</td>
+<td>SKILL.md / README.md 不出现 runtime-specific 措辞</td>
+</tr>
+<tr>
+<td><strong>Checkpoint markers</strong></td>
+<td>在删除、回滚、外部写操作等关键动作前强制停顿</td>
+<td>出现 <code>🔴 STOP</code>、<code>CHECKPOINT</code>、<code>🛑</code> 等显性标记</td>
+</tr>
+</tbody>
+</table>
+<p>这些检查不直接计入 Rubric 总分，但会出现在 <code>--detailed</code> 报告中，并为 <code>--auto-edit</code> 提供优化建议。</p>
+<h3 id="102-skill-prism">10.2 skill-prism 优化循环<a class="headerlink" href="#102-skill-prism" title="Permanent link">&para;</a></h3>
+<p>受 Karpathy autoresearch 和 <code>alchaincyf/darwin-skill</code> 启发，本体系将优化拆分为两层，但保持<strong>完全独立</strong>：</p>
+<ul>
+<li><strong>引擎层</strong>：<code>skillprism.optimize_skill</code> 负责客观测量、识别最低分维度、判断保留/回滚。</li>
+<li><strong>可选编辑层</strong>：通过 <code>--auto-edit</code> 调用用户配置的 editor 命令自动改写 <code>SKILL.md</code>；默认则由 Agent/用户手动编辑。</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Agent / 用户 / 外部 editor 编辑 SKILL.md
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>        ↓
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>引擎 --record-baseline 记录当前 Rubric 分与 benchmark 状态
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>        ↓
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>引擎 --suggest 输出最低分维度与改进建议
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>        ↓
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>生成候选 SKILL.md
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>        ↓
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>引擎 --judge 复评：
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    新分 ≥ 旧分 + min_gain 且 benchmark 不 regress → git commit 保留
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    否则                                          → git revert 回滚
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>        ↓
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>人在回路确认（或 --auto-edit 自动迭代）→ 下一轮
+</code></pre></div>
+<p><strong>两种优化模式</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>编辑方式</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>手动 / Agent（默认）</td>
+<td>Agent / 用户手动编辑，引擎负责测量与回滚</td>
+<td>需要人工审阅每轮 diff</td>
+</tr>
+<tr>
+<td><code>--auto-edit</code></td>
+<td><code>improve-skill ... --auto-edit --apply</code></td>
+<td>一键自动分析 → 自动改 → 自动 judge → 保留/回滚</td>
+</tr>
+</tbody>
+</table>
+<p><strong>配置 editor 命令</strong>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SKILLPRISM_EDITOR_COMMAND</span><span class="o">=</span><span class="s2">&quot;python scripts/my_skill_editor.py&quot;</span>
+</code></pre></div>
+<p>或配置 <code>skill_rubric_types.yaml</code>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nt">editor</span><span class="p">:</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python scripts/my_skill_editor.py</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="nt">max_retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+</code></pre></div>
+<p><strong>推荐做法</strong>：
+- 若需要人工确认每轮编辑，使用默认手动模式。
+- 若需要 turnkey 自动闭环，配置 editor 命令后使用 <code>--auto-edit --apply --max-rounds N</code>。
+- 使用仓库提供的 <code>examples/editor_wrappers/</code> 快速接入 OpenAI、Anthropic 或 Ollama。
+- 引擎始终不直接调用 LLM；editor 命令由用户选择并提供。</p>
+<p><strong>关键原则</strong>：</p>
+<ol>
+<li><strong>单一可编辑资产</strong>：每次只改一个 <code>SKILL.md</code>。</li>
+<li><strong>引擎不调用 LLM</strong>：避免引擎依赖 provider，评分客观可复现。</li>
+<li><strong>编辑能力可插拔</strong>：通过外部 editor 命令接入，不进入引擎。</li>
+<li><strong>按维度编辑策略</strong>：<code>--auto-edit</code> 会根据最弱维度（D1–D9）向 editor 发送具体的编辑策略提示。</li>
+<li><strong>棘轮机制</strong>：Rubric 分或 benchmark 退步时自动回滚。</li>
+<li><strong>人在回路</strong>：默认每轮暂停，展示 diff 和分数变化，等用户确认；<code>--auto-edit</code> 仍需 <code>--apply</code> 才能执行。</li>
+</ol>
+<h3 id="103-ratchet">10.3 棘轮模式（Ratchet）<a class="headerlink" href="#103-ratchet" title="Permanent link">&para;</a></h3>
+<p><code>evaluate-skill --ratchet</code> 将当前 scorecard 与上一次 scorecard 对比，任一 Skill 融合总分下降即返回非零退出码。配合 CI 使用可防止退化。</p>
+<hr />
+<h2 id="skill_5">十一、三层架构：引擎、可选能力与 Skill 入口<a class="headerlink" href="#skill_5" title="Permanent link">&para;</a></h2>
+<p>完整的架构说明见 <a href="../overview/">体系概览</a>。本文只给出与实现相关的要点。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Layer 3 (Skill 入口): 自然语言操作
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  - skills/skill-prism/SKILL.md → &quot;评估 / 测试 / 改进 / 流水线 / CI&quot;
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>Layer 2 (可选能力): 用户选择接入
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>  - SKILL.md editor 命令（--auto-edit）
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>  - LLM-as-judge 命令（--llm-judge，默认 2 个独立评委）
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>  - Prompts 验证（--prompts-verification）
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>Layer 1 (Engine):  pip 包 skillprism
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>  - CLI: evaluate-skill / improve-skill / test-skill / skill-pipeline / skill-ci
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>  - Python API: skillprism.evaluate_skill_rubric / skillprism.optimize_skill / skillprism.benchmark / skillprism.orchestrator
+</code></pre></div>
+<p><strong>价值</strong>：
+- 引擎层保证可复现、可集成 CI，且无 LLM provider 依赖。
+- 可选能力层通过 stdin/stdout 命令接入，不锁定 provider。
+- Skill 入口层让最终用户用自然语言驱动（"评估所有 skills" / "优化 X" / "运行流水线"）。
+- 每个 meta-Skill 自带 <code>scripts/</code> 封装脚本，优先调用已安装的包，降级时通过相对路径定位 repo 入口。</p>
+<hr />
+<h2 id="_5">十二、结语<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>这套框架的核心不是一次性把每个 Skill 打到满分，而是：</p>
+<ol>
+<li><strong>让质量可见</strong>：通过 Rubric 把「好/坏」变成数字。</li>
+<li><strong>让改进有方向</strong>：每次只攻最短的板。</li>
+<li><strong>让效果可验证</strong>：不仅看代码，更看 LLM Agent 能不能用它正确完成任务。</li>
+</ol>
+<p>建议先在目标项目内选一个代表性 Skill 做完整 Rubric 评估与一次 PDCA 迭代，跑通后再批量推广到全部 Skill。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/nanobot-skills/Skills_Validation" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

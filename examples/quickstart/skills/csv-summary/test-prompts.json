@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "scenario": "happy path",
+    "prompt": "Use the csv-summary skill to perform its main task under normal conditions.",
+    "expected": "The skill should follow its documented workflow and produce a correct result for csv-summary."
+  },
+  {
+    "id": 2,
+    "scenario": "ambiguous",
+    "prompt": "Use the csv-summary skill with an ambiguous or incomplete request related to: Summarize a CSV file by computing column statistics and writing a simple report.",
+    "expected": "The skill should either ask for clarification or handle the ambiguity gracefully without making unsafe assumptions."
+  },
+  {
+    "id": 3,
+    "scenario": "boundary",
+    "prompt": "Use the csv-summary skill with edge-case input (empty, malformed, or at the boundary of its stated capabilities).",
+    "expected": "The skill should not crash; it should follow its failure-mode/fallback instructions if applicable."
+  }
+]

@@ -1,0 +1,3971 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Project-agnostic framework for evaluating and optimizing AI agent skills">
+      
+      
+        <meta name="author" content="Skills Validation Team">
+      
+      
+        <link rel="canonical" href="https://nanobot-skills.github.io/Skills_Validation/reference/langfuse-integration/">
+      
+      
+        <link rel="prev" href="../llm-judge/">
+      
+      
+        <link rel="next" href="../benchmark-metrics/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>skillPrism × Langfuse 集成方案 - skillPrism</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#skillprism-langfuse" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="skillPrism" class="md-header__button md-logo" aria-label="skillPrism" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            skillPrism
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              skillPrism × Langfuse 集成方案
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/nanobot-skills/Skills_Validation" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    nanobot-skills/Skills_Validation
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/" class="md-tabs__link">
+          
+  
+  
+  🚀 Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorial/01-why-evaluate-skills/" class="md-tabs__link">
+          
+  
+  
+  📖 Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overview/" class="md-tabs__link">
+          
+  
+  
+  📚 Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="skillPrism" class="md-nav__button md-logo" aria-label="skillPrism" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    skillPrism
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/nanobot-skills/Skills_Validation" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    nanobot-skills/Skills_Validation
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🚀 Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    🚀 Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    快速入门
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/hands-on/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🙌 手把手教程：用 skillPrism 评估并改进一个 Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安装与环境
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/evaluate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    评估一个 Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    测试一个 Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/improve/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    改进一个 Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/ci/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ci
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/cli-cheatsheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI 与自然语言速查表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📖 Tutorial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📖 Tutorial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/01-why-evaluate-skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第 1 章：为什么要评估 Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/02-install-and-first-skill/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第 2 章：安装与第一个 Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/03-understanding-the-rubric/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第 3 章：理解 Rubric 九维度
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/04-building-your-first-benchmark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 building your first benchmark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/05-optimization-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 optimization loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/06-quality-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第 6 章：质量流水线与 CI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/07-extending-skillprism/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第 7 章：扩展 skillPrism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/08-gradual-testing-and-real-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 gradual testing and real data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/full-cycle-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    skillPrism 全周期 Skill 评估优化 Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/langfuse-bio-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Langfuse 集成下的全周期 Skill 评估优化 Demo（生物信息示例）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/agent-langfuse-production-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    手把手：用 Langfuse + skillPrism 搭建线上 Skill 同步评估优化闭环
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📚 Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📚 Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    skillPrism 体系概览
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../natural-language-interaction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Natural-Language Interaction Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skill-prism-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill prism architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agent-command/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Agent Command
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill 评估与持续优化框架
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmark-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    金标准 Benchmark 构建与迭代优化指南（手把手版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmark-bioinformatics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    生物信息类 Skill 的 Benchmark 设计
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-building-decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark 数据构建决策速查表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adding-a-benchmark-task-type/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    新增 Benchmark 任务类型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../llm-judge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Judge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    skillPrism × Langfuse 集成方案
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    skillPrism × Langfuse 集成方案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 背景与目标
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 背景与目标">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 现状
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 痛点
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 目标
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 设计原则
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 体系架构
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 数据模型映射
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 数据模型映射">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 隐私边界：字段级上送清单
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 模块设计与集成点
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 模块设计与集成点">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-skillprismobservability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 新模块 skillprism/observability/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 注入点（最小侵入，复用已验证的函数）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-sink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 sink 映射器
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 数据流
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 数据流">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 评估流
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 优化流（闭环核心）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 CI 流
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-llm-judge-langfuse-eval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. LLM-judge 迁移到 Langfuse Eval
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-dataset-experiment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Dataset + Experiment 闭环
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Dataset + Experiment 闭环">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Dataset 同步
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-experiment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Experiment 对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 反馈闭环
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-ratchet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Ratchet 迁移策略（本地状态 → 服务端真相源）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Ratchet 迁移策略（本地状态 → 服务端真相源）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 三阶段迁移
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 历史数据导入
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-historical_best_score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 historical_best_score 迁移
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 回退策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 自建部署与运维
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. 自建部署与运维">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-langfuse-v3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 组件栈（Langfuse v3 自建标准栈）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 部署形态选型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-docker-compose-poc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 最小 docker-compose 拓扑（PoC）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 存储与容量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 高可用与备份
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 网络与 CI 连通
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#107" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.7 鉴权与多租户
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#108" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.8 配置（自建）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#109" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.9 配额与采样
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 分阶段实施路线
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. 风险与边界
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. 验收标准
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. 与现有最佳实践改造的关系
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-poc-p0-p1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        附录 A：最小 PoC 清单（P0 + P1）
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmark-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark Metrics 参考与最佳实践
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test-prompts-verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test prompts verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../optimization-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    优化策略库
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiment-history/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    实验历史
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rubric-enhancements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rubric enhancements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dimension-clusters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dimension clusters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../edge-cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Edge cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runtime-neutrality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runtime neutrality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../visual-result-cards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    视觉成果卡片
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operational-playbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    skillPrism 自然语言交互操作手册
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gradual-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    渐进测试（Gradual Testing）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cell2location/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cell2location 示例完整指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API 参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TODO &amp; Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_26" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_26" id="__nav_4_26_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_26_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_26">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/scorecard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill Scorecard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/review-bio-single-cell-clustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill 评估报告：bio-single-cell-clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 背景与目标
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 背景与目标">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 现状
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 痛点
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 目标
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 设计原则
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 体系架构
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 数据模型映射
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 数据模型映射">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 隐私边界：字段级上送清单
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 模块设计与集成点
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 模块设计与集成点">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-skillprismobservability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 新模块 skillprism/observability/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 注入点（最小侵入，复用已验证的函数）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-sink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 sink 映射器
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 数据流
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 数据流">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 评估流
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 优化流（闭环核心）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 CI 流
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-llm-judge-langfuse-eval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. LLM-judge 迁移到 Langfuse Eval
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-dataset-experiment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Dataset + Experiment 闭环
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Dataset + Experiment 闭环">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Dataset 同步
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-experiment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Experiment 对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 反馈闭环
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-ratchet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Ratchet 迁移策略（本地状态 → 服务端真相源）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Ratchet 迁移策略（本地状态 → 服务端真相源）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 三阶段迁移
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 历史数据导入
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-historical_best_score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 historical_best_score 迁移
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 回退策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 自建部署与运维
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. 自建部署与运维">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-langfuse-v3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 组件栈（Langfuse v3 自建标准栈）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 部署形态选型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-docker-compose-poc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 最小 docker-compose 拓扑（PoC）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 存储与容量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 高可用与备份
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 网络与 CI 连通
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#107" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.7 鉴权与多租户
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#108" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.8 配置（自建）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#109" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.9 配额与采样
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 分阶段实施路线
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. 风险与边界
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. 验收标准
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. 与现有最佳实践改造的关系
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-poc-p0-p1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        附录 A：最小 PoC 清单（P0 + P1）
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="skillprism-langfuse">skillPrism × Langfuse 集成方案<a class="headerlink" href="#skillprism-langfuse" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>将 skillPrism 的「Skill 评估 + 优化」能力嫁接到 Langfuse 的可观测/实验体系上，
+形成团队级、跨机器、可追溯的工程化评估优化闭环。</p>
+<p>状态：设计稿。实施前需确认部署形态（自建 / Cloud）与数据合规边界。</p>
+</blockquote>
+<hr />
+<h2 id="1">1. 背景与目标<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<h3 id="11">1.1 现状<a class="headerlink" href="#11" title="Permanent link">&para;</a></h3>
+<p>skillPrism 已是一个成熟的本地评估优化引擎（经最佳实践改造后）：</p>
+<ul>
+<li><strong>引擎层</strong>（<code>skillprism/</code>，无 LLM 依赖）：9 维 Rubric 评分（<code>evaluate_skill_rubric.py</code>）、
+  benchmark 执行（<code>benchmark/runner.py</code>）、去卷积/聚类/表格/文档评分器、
+  优化 keep/revert 循环（<code>optimize_skill.py</code>，原子状态 + flock）、
+  回归对比（<code>benchmark/regression.py</code>，方向感知）、CI 门控（<code>ci/pipeline.py</code>）。</li>
+<li><strong>可选能力层</strong>：外部 editor 命令（<code>--auto-edit</code>）、LLM-as-judge 命令（<code>--llm-judge</code>），
+  均为 stdin/stdout 契约，provider 无关。</li>
+<li><strong>状态</strong>：<code>.skillprism_baseline.json</code> / <code>.skillprism_history.jsonl</code> 本地文件，
+  已原子写 + flock，但仍是<strong>单机本地</strong>。</li>
+</ul>
+<h3 id="12">1.2 痛点<a class="headerlink" href="#12" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>本地现状</th>
+<th>问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>优化历史</td>
+<td><code>.skillprism_history.jsonl</code> 单机</td>
+<td>团队不可共享、不可查询、不可跨 skill 对比</td>
+</tr>
+<tr>
+<td>Ratchet 真相源</td>
+<td>本地 JSON</td>
+<td>跨机器不一致；CI 与本地可能用不同 baseline</td>
+</tr>
+<tr>
+<td>LLM-judge 治理</td>
+<td>outlier 静默丢弃、wrapper 静默兜底</td>
+<td>已改为日志，但无集中分析；人类评分无法注入</td>
+</tr>
+<tr>
+<td>回归诊断</td>
+<td>本地 YAML diff</td>
+<td>无可视化、无跨时间趋势</td>
+</tr>
+<tr>
+<td>最弱维度选择</td>
+<td>3 套本地启发式（已统一）</td>
+<td>无基于历史实验的统计依据</td>
+</tr>
+<tr>
+<td>评估可观测性</td>
+<td>stdout + scorecard 文件</td>
+<td>无 trace、无 span、无维度级下钻</td>
+</tr>
+</tbody>
+</table>
+<h3 id="13">1.3 目标<a class="headerlink" href="#13" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>可观测</strong>：每次 <code>evaluate</code> / <code>test</code> / <code>improve</code> / <code>ci</code> 运行成为一条 Langfuse Trace，
+   维度/benchmark/guard/judge 各为 span，分数为 score。</li>
+<li><strong>可对比</strong>：优化各轮 candidate 作为 Experiment run，与 baseline 逐维度/逐指标对比，
+   替代手写 history + 本地回归 YAML。</li>
+<li><strong>可治理</strong>：LLM-judge 评分全部落库，支持离线分析与人类评分注入；outlier 不再静默。</li>
+<li><strong>可门控</strong>：CI ratchet 真相源迁到服务端，跨机器一致；回归默认 fail（已默认开）。</li>
+<li><strong>不破原则</strong>：引擎层保持「无 LLM 依赖、确定性、可复现」；Langfuse 是<strong>可选观测层</strong>，
+   默认关闭，环境变量开启，引擎代码不 import langfuse。</li>
+</ol>
+<hr />
+<h2 id="2">2. 设计原则<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>原则</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>观测层外挂</strong></td>
+<td>引擎 <code>dependencies</code> 仍只有 <code>pyyaml</code>；Langfuse 走 optional-dependency + 延迟 import</td>
+</tr>
+<tr>
+<td><strong>只读不写引擎结果</strong></td>
+<td>Langfuse 只采集引擎已产出的分数/决策，不改变引擎确定性结果</td>
+</tr>
+<tr>
+<td><strong>隐私优先</strong></td>
+<td>SKILL.md 正文/代码/绝对路径从不上送；字段级清单见 §4.1，默认最小化、敏感字段 opt-in</td>
+</tr>
+<tr>
+<td><strong>离线可用</strong></td>
+<td>未启用 / 无网络 / 未安装 langfuse 时，引擎行为与本轮改造后完全一致</td>
+</tr>
+<tr>
+<td><strong>契约复用</strong></td>
+<td>沿用现有 <code>SKILLPRISM_EDITOR_COMMAND</code> / <code>SKILLPRISM_LLM_JUDGE_COMMAND</code> 外挂契约</td>
+</tr>
+<tr>
+<td><strong>服务端为真相源</strong></td>
+<td>ratchet / 历史最佳分以 Langfuse score 为准，本地状态降级为缓存</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3">3. 体系架构<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  Langfuse（自建或 Cloud）                                             │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  ├─ Dataset   : skill test-prompts + benchmark task specs            │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ├─ Trace     : 每次 evaluate/test/improve/ci run                    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ├─ Score     : 9 维 Rubric + benchmark 指标 + LLM-judge + 决策       │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  ├─ Experiment: 优化各轮 candidate vs baseline                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  └─ Evaluator : LLM-judge 迁为 Langfuse evaluation（+ 人类评分）      │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>└──────────────▲───────────────────────────────────────────────────────┘
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>               │ OpenTelemetry / langfuse SDK（可选层，延迟 import）
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>┌──────────────┴───────────────────────────────────────────────────────┐
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  skillprism/observability/   ← 新模块，零 LLM 依赖                    │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ├─ tracer.py        Backend 协议 + 工厂                              │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ├─ noop_tracer.py   默认 NoopBackend（零开销）                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  ├─ langfuse_tracer  LangfuseBackend（延迟 import langfuse）          │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  └─ sink.py          SkillReport/BenchmarkResult/ExperimentRecord     │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                       → trace + span + score 映射                     │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└──────────────▲────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>               │ 注入点（见 §5）
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>   evaluate_skill_rubric / benchmark.runner / optimize_skill /
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>   orchestrator / ci.pipeline 的关键步骤
+</code></pre></div>
+<p>三层不变：Skill 入口层（SKILL.md）/ 引擎层（skillprism）/ 可选能力层（editor/judge）。
+Langfuse 对接落在<strong>可选观测层</strong>，与 editor/judge 同层并列。</p>
+<hr />
+<h2 id="4">4. 数据模型映射<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>skillPrism 概念</th>
+<th>Langfuse 概念</th>
+<th>映射说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一次 <code>evaluate_skill</code> 调用</td>
+<td><code>Trace</code></td>
+<td>name=<code>evaluate:&lt;skill&gt;</code>，metadata 含 skill_type/config 版本</td>
+</tr>
+<tr>
+<td>单维度评估（D1..D9）</td>
+<td><code>Span</code> + <code>Score</code></td>
+<td>span name=Dn，score name=Dn，value=1-5，comment=summary</td>
+</tr>
+<tr>
+<td><code>SkillReport.total_weighted</code></td>
+<td><code>Score</code></td>
+<td>name=<code>rubric_total</code>，value=0-100</td>
+</tr>
+<tr>
+<td><code>run_single_benchmark</code></td>
+<td><code>Span</code></td>
+<td>name=<code>benchmark:&lt;id&gt;</code>，metadata 含 task/level/suite</td>
+</tr>
+<tr>
+<td>单个 metric（row_count/mean_rmse…）</td>
+<td><code>Score</code></td>
+<td>name=metric id，value=数值，data_type=NUMERIC</td>
+</tr>
+<tr>
+<td><code>_all_pass</code>（benchmark/ci）</td>
+<td><code>Score</code></td>
+<td>name=<code>benchmark_pass</code>/<code>ci_pass</code>，data_type=CATEGORICAL</td>
+</tr>
+<tr>
+<td><code>judge_candidate</code> 决策</td>
+<td><code>Score</code></td>
+<td>name=<code>decision</code>，value=keep/revert/human-decide（CATEGORICAL）</td>
+</tr>
+<tr>
+<td><code>score_delta</code></td>
+<td><code>Score</code></td>
+<td>name=<code>score_delta</code>，value=浮点</td>
+</tr>
+<tr>
+<td>guard violation</td>
+<td><code>Event</code></td>
+<td>name=guard rule，level=warning/error，payload=violation</td>
+</tr>
+<tr>
+<td>优化一轮（auto-edit round）</td>
+<td><code>Trace</code>（子）或 <code>Span</code></td>
+<td>name=<code>optimize:&lt;skill&gt;:round-N</code></td>
+</tr>
+<tr>
+<td><code>experiment_history</code> 一条 record</td>
+<td><code>Experiment</code> item</td>
+<td>迁移：本地 jsonl → 服务端 experiment run</td>
+</tr>
+<tr>
+<td><code>.skillprism_baseline.json</code></td>
+<td>Langfuse score 历史</td>
+<td>ratchet 真相源改为查服务端上次 <code>rubric_total</code></td>
+</tr>
+<tr>
+<td>test-prompts.json</td>
+<td><code>Dataset</code> items</td>
+<td>每个 prompt → dataset item（input=prompt, expected=行为描述）</td>
+</tr>
+<tr>
+<td>per-skill task spec (<code>benchmarks/&lt;skill&gt;/tasks/&lt;task&gt;.yaml</code>)</td>
+<td><code>Dataset</code> items</td>
+<td>每个 task → dataset item（input=task spec, expected=金标准）</td>
+</tr>
+<tr>
+<td>editor/judge prompt 模板</td>
+<td><code>Prompt</code> 版本</td>
+<td>版本化、A/B 测试</td>
+</tr>
+</tbody>
+</table>
+<p><strong>方向约定</strong>：lower-better metric（rmse/jsd/…）在 score name 上加后缀 <code>:lower_better</code>，
+便于离线分析按方向解读（regression.py 已有 <code>_is_lower_better</code>，复用）。</p>
+<h3 id="41">4.1 隐私边界：字段级上送清单<a class="headerlink" href="#41" title="Permanent link">&para;</a></h3>
+<p>自建下数据不出本地，但仍需明确「什么上送、什么不上送」，避免元数据过度暴露
+内部 skill 结构，也便于合规审计。<strong>默认最小化</strong>，敏感字段需显式 opt-in。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>上送？</th>
+<th>落点</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>skill 名 / 路径</td>
+<td>✅</td>
+<td>trace name + metadata</td>
+<td><code>skills/foo</code> 级，<strong>不上送绝对路径</strong>（仅相对 skill 名）</td>
+</tr>
+<tr>
+<td>skill_type</td>
+<td>✅</td>
+<td>trace metadata</td>
+<td>analysis/cmd/api/...</td>
+</tr>
+<tr>
+<td>维度分数 D1..D9</td>
+<td>✅</td>
+<td>score</td>
+<td>1-5 整数</td>
+</tr>
+<tr>
+<td><code>rubric_total</code></td>
+<td>✅</td>
+<td>score</td>
+<td>0-100</td>
+</tr>
+<tr>
+<td>维度 evidence/suggestions 文本</td>
+<td>⚠️ opt-in</td>
+<td>score comment</td>
+<td>默认<strong>不上送</strong>（可能含 skill 文档片段）；<code>SKILLPRISM_TRACE_EVIDENCE=1</code> 开启</td>
+</tr>
+<tr>
+<td>benchmark metric 值</td>
+<td>✅</td>
+<td>score</td>
+<td>row_count/rmse/...</td>
+</tr>
+<tr>
+<td><code>_all_pass</code> / decision</td>
+<td>✅</td>
+<td>score</td>
+<td>categorical</td>
+</tr>
+<tr>
+<td>guard violation 消息</td>
+<td>⚠️ opt-in</td>
+<td>event payload</td>
+<td>默认只上送 <code>rule</code> + <code>severity</code>，<strong>不上送 message 正文</strong>（可能含命令片段）；opt-in 开启 message</td>
+</tr>
+<tr>
+<td><code>score_delta</code></td>
+<td>✅</td>
+<td>score</td>
+<td>浮点</td>
+</tr>
+<tr>
+<td>commit sha / branch / ci_run_id</td>
+<td>✅</td>
+<td>trace metadata</td>
+<td>用于 ratchet 与归因</td>
+</tr>
+<tr>
+<td>LLM-judge reason 文本</td>
+<td>⚠️ opt-in</td>
+<td>score comment</td>
+<td>默认不上送（可能含 SKILL.md 摘要）；opt-in 开启</td>
+</tr>
+<tr>
+<td><strong>SKILL.md 正文 / 代码资产内容</strong></td>
+<td>❌ 从不</td>
+<td>—</td>
+<td>引擎层不上送；editor/judge 的 LLM 调用单独 <code>@observe</code>（那条链路本就是外挂，由 wrapper 自行决定）</td>
+</tr>
+<tr>
+<td>绝对文件系统路径</td>
+<td>❌ 从不</td>
+<td>—</td>
+<td>仅 skill 名</td>
+</tr>
+<tr>
+<td>环境变量 / secret</td>
+<td>❌ 从不</td>
+<td>—</td>
+<td><code>AgentExecutor</code> 最小 env 不透传 <code>LANGFUSE_*</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>脱敏规则</strong>（<code>sink.py</code> 实现）：
+- 路径脱敏：<code>Path</code> 值统一取 <code>.name</code>，剥离父目录。
+- 文本字段（evidence/reason/guard message）：默认 <code>None</code>，opt-in 时截断 200 字符 + 正则脱敏
+  （<code>sk-...</code>/<code>http(s)://...</code>/email 打码）。
+- 配置项 <code>observability.redact_patterns</code>（复用 <code>security_evaluator</code> 的正则思路）可扩展。</p>
+<hr />
+<h2 id="5">5. 模块设计与集成点<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
+<h3 id="51-skillprismobservability">5.1 新模块 <code>skillprism/observability/</code><a class="headerlink" href="#51-skillprismobservability" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># skillprism/observability/tracer.py</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">ObservabilityBackend</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Run&quot;</span><span class="p">:</span> <span class="o">...</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">span</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">:</span> <span class="s2">&quot;Run&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span> <span class="o">...</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">:</span> <span class="s2">&quot;Run&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>              <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;NUMERIC&quot;</span><span class="p">):</span> <span class="o">...</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">:</span> <span class="s2">&quot;Run&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span> <span class="o">...</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_backend</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ObservabilityBackend</span><span class="p">:</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SKILLPRISM_OBSERVABILITY&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;langfuse&quot;</span><span class="p">:</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>            <span class="kn">from</span><span class="w"> </span><span class="nn">.langfuse_tracer</span><span class="w"> </span><span class="kn">import</span> <span class="n">LangfuseBackend</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>            <span class="k">return</span> <span class="n">LangfuseBackend</span><span class="p">()</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: langfuse 未安装，回退 noop。pip install &#39;skillprism[observability]&#39;&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="k">return</span> <span class="n">NoopBackend</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># skillprism/observability/langfuse_tracer.py（延迟 import）</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">LangfuseBackend</span><span class="p">:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">langfuse</span><span class="w"> </span><span class="kn">import</span> <span class="n">Langfuse</span>          <span class="c1"># 仅在此处 import</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">Langfuse</span><span class="p">()</span>              <span class="c1"># 读 LANGFUSE_HOST/SECRET/PUBLICKEY</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="k">return</span> <span class="n">Run</span><span class="p">(</span><span class="n">trace</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">),</span> <span class="n">client</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">span</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="k">return</span> <span class="n">run</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">span</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span> <span class="ow">or</span> <span class="p">{})</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s2">&quot;NUMERIC&quot;</span><span class="p">):</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="n">run</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="n">comment</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">data_type</span><span class="p">)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">payload</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="n">run</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">event</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">payload</span><span class="o">=</span><span class="n">payload</span> <span class="ow">or</span> <span class="p">{})</span>
+</code></pre></div>
+<h3 id="52">5.2 注入点（最小侵入，复用已验证的函数）<a class="headerlink" href="#52" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>引擎函数</th>
+<th>文件</th>
+<th>注入</th>
+<th>产出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>evaluate_skill</code></td>
+<td><code>evaluate_skill_rubric.py</code></td>
+<td><code>start_run("evaluate:&lt;skill&gt;")</code>；维度循环内 <code>span(Dn)</code> + <code>score(Dn)</code>；末尾 <code>score(rubric_total)</code></td>
+<td>9 span + 9 score + total</td>
+</tr>
+<tr>
+<td><code>run_single_benchmark</code></td>
+<td><code>benchmark/runner.py</code></td>
+<td><code>span("benchmark:&lt;id&gt;")</code>；每个 metric <code>score(metric_id)</code>；<code>score(benchmark_pass)</code></td>
+<td>metric scores + pass</td>
+</tr>
+<tr>
+<td><code>_judge_candidate_unlocked</code></td>
+<td><code>optimize_skill.py</code></td>
+<td><code>start_run("optimize:&lt;skill&gt;:round-N")</code>；span: eval/benchmark/guards/decision；<code>score(decision)</code>/<code>score(score_delta)</code>；guard <code>event</code></td>
+<td>决策 + delta + guard events</td>
+</tr>
+<tr>
+<td><code>run_gradual_pipeline</code></td>
+<td><code>gradual.py</code></td>
+<td><code>start_run("gradual:&lt;skill&gt;")</code>；每 level <code>span(levelN)</code> + <code>score(levelN_pass)</code></td>
+<td>level pass/fail</td>
+</tr>
+<tr>
+<td><code>CIPipeline.run</code></td>
+<td><code>ci/pipeline.py</code></td>
+<td><code>start_run("ci:&lt;skill&gt;")</code>；<code>score(ci_pass)</code>、<code>score(rubric_total)</code>、<code>score(benchmark_pass)</code></td>
+<td>ci 门控结果</td>
+</tr>
+</tbody>
+</table>
+<p>注入采用「<code>get_backend()</code> 默认 noop」方式，引擎函数只多 1-2 行 wrapper 调用，
+不破坏现有 207 测试（noop 路径零行为变化）。</p>
+<h3 id="53-sink">5.3 sink 映射器<a class="headerlink" href="#53-sink" title="Permanent link">&para;</a></h3>
+<p><code>skillprism/observability/sink.py</code> 负责把引擎数据结构映射为 trace/score：</p>
+<ul>
+<li><code>emit_skill_report(backend, run, report, config)</code>：遍历 <code>report.dimensions</code> 发 score，发 <code>rubric_total</code>。</li>
+<li><code>emit_benchmark_result(backend, run, result)</code>：遍历 metric 发 score（按 <code>_is_lower_better</code> 标注方向）。</li>
+<li><code>emit_guard_violations(backend, run, violations)</code>：每个 violation 发 event（block=error，warn=warning）。</li>
+</ul>
+<p>复用 <code>regression._is_lower_better</code>、<code>evaluate_skill_rubric.get_weights</code>，避免新逻辑。</p>
+<hr />
+<h2 id="6">6. 数据流<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<h3 id="61">6.1 评估流<a class="headerlink" href="#61" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>用户/Agent: evaluate-skill skills/foo --llm-judge
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  → evaluate_skill(foo) ──trace──→ Langfuse
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>      ├─ span D1..D9（score=Dn）
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>      ├─ span llm-judge（score=D2/D5/D6/D8 blended）   ← 见 §7
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      └─ score rubric_total
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  → 本地 scorecard.md（不变）
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  → Langfuse UI 可见该 trace 的 9 维分数 + 总分
+</code></pre></div>
+<h3 id="62">6.2 优化流（闭环核心）<a class="headerlink" href="#62" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>improve-skill skills/foo --auto-edit --apply --max-rounds N
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  → _run_auto_edit_rounds ──trace──→ Langfuse
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>      for round in 1..N:
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        ├─ span evaluate_candidate（score=rubric_total）
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        ├─ span benchmark_gate（score=metrics + benchmark_pass）
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>        ├─ span guards（event=violations）
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        ├─ score decision（keep/revert）
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        ├─ score score_delta
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        └─ 若 keep：baseline 更新 → 下轮；若 revert：见 §5 回滚
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  → Langfuse Experiment：各 round 作为 run，与 baseline 对比
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  → 本地 .skillprism_baseline.json（缓存，真相源在服务端）
+</code></pre></div>
+<h3 id="63-ci">6.3 CI 流<a class="headerlink" href="#63-ci" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>skill-ci --skill foo --run-benchmark --code &lt;path&gt;
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  → CIPipeline.run ──trace──→ Langfuse
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>      ├─ score ci_pass / rubric_total / benchmark_pass
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>      └─ 回归对比：查 Langfuse 上次 main 分支的 rubric_total
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>          （服务端 ratchet，替代本地 .skillprism_baseline.json）
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  → exit code 0/1（回归默认 fail，已开）
+</code></pre></div>
+<hr />
+<h2 id="7-llm-judge-langfuse-eval">7. LLM-judge 迁移到 Langfuse Eval<a class="headerlink" href="#7-llm-judge-langfuse-eval" title="Permanent link">&para;</a></h2>
+<p>现状：<code>SKILLPRISM_LLM_JUDGE_COMMAND</code> 外挂脚本吐 <code>{score, reason}</code> JSON，
+<code>llm_judge.py</code> 做 schema 校验 + outlier 丢弃 + 重试 + 混合（已硬化）。</p>
+<p>迁移路径（两步，可渐进）：</p>
+<p><strong>Step A（桥接，不破坏现有契约）</strong>：保留 <code>LLMJudge</code> 本地逻辑，
+在 <code>judge_dimension</code> / <code>judge_dimension_multi</code> 末尾把每次 judge 结果作为 score 发到 Langfuse
+（<code>score(llm_judge:Dn, value, comment=reason)</code>）。outlier 丢弃时也发 event（已加 WARN 日志）。
+→ 零行为变化，只是多了服务端可观测。</p>
+<p><strong>Step B（迁移到 Langfuse Evaluator）</strong>：在 Langfuse 定义自定义 Evaluator
+（Python SDK 的 <code>evaluator</code> 或 LLM-as-judge eval），D2/D5/D6/D8 的 judge 改为调
+<code>langfuse.evaluate()</code>。评分自动落为 trace score，支持人类评分（<code>langfuse.score(user_id=...)</code>）注入。
+本地 <code>LLMJudge</code> 降级为离线兜底。<code>skill_rubric_types.yaml</code> 的 <code>llm_judge</code> 段增加
+<code>backend: local | langfuse</code> 配置项。</p>
+<p><strong>收益</strong>：outlier 不再本地丢弃——所有 judge 分数落库，离线可统计 LLM 与引擎的分歧分布；
+人类评分注入后可作为金标准校准 LLM-judge 权重。</p>
+<hr />
+<h2 id="8-dataset-experiment">8. Dataset + Experiment 闭环<a class="headerlink" href="#8-dataset-experiment" title="Permanent link">&para;</a></h2>
+<p>这是把 skillPrism 从「单机评估」升级为「工程化评估优化体系」的关键。</p>
+<h3 id="81-dataset">8.1 Dataset 同步<a class="headerlink" href="#81-dataset" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>build-skill-test</code>（<code>benchmark/builder.py</code>）写 <code>benchmarks/&lt;skill&gt;/registry.yaml</code> 时，
+  同时 <code>langfuse.create_dataset_item(dataset_name=f"skill:{skill}:tasks", input=task_spec, expected=金标准)</code>。</li>
+<li><code>ensure_test_prompts</code>（<code>test_prompts.py</code>）生成 <code>test-prompts.json</code> 时，
+  同步到 <code>dataset_name=f"skill:{skill}:prompts"</code>。</li>
+<li>现有 <code>test-prompts.json</code> 仍是本地真相（离线可用），Langfuse Dataset 是镜像 + 团队共享。</li>
+</ul>
+<h3 id="82-experiment">8.2 Experiment 对比<a class="headerlink" href="#82-experiment" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>improve-skill --auto-edit --max-rounds N</code> 每轮 candidate 作为一个 Experiment run
+  （<code>langfuse.experiment(name=f"optimize:{skill}", run_name=f"round-{N}")</code>）。</li>
+<li>baseline 作为对照 run。Langfuse Experiment 视图直接给「第 K 轮 vs baseline」的
+  逐维度/逐指标 diff —— <strong>替代当前 <code>.skillprism_history.jsonl</code> + 回归 YAML 比对</strong>。</li>
+<li><code>format_history_table</code>（<code>experiment_history.py</code>）增加一个 Langfuse 后端读取分支，
+  从服务端拉历史 run 渲染表格。</li>
+</ul>
+<h3 id="83">8.3 反馈闭环<a class="headerlink" href="#83" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>run_optimize_setup</code>（<code>orchestrator.py</code>）不再只输出「下一步命令」，
+  而是查 Langfuse 找「最近 N 轮无提升的维度」→ 选最弱维度 → 生成下一轮 editor prompt。</li>
+<li><code>optimization_strategy.py</code> 的 P0-P3 策略选择从「本地启发式」升级为「基于历史实验的统计选择」
+  （某维度连续 K 轮尝试无收益 → 切换策略或建议人工介入）。</li>
+</ul>
+<hr />
+<h2 id="9-ratchet">9. Ratchet 迁移策略（本地状态 → 服务端真相源）<a class="headerlink" href="#9-ratchet" title="Permanent link">&para;</a></h2>
+<p>现状（已改造）：<code>evaluate_skill_rubric.py</code> ratchet 路径用 <code>get_weights(config)</code> 正确计算，
+对比本地上次 scorecard；<code>stop_on_regression</code> 默认 True；<code>.skillprism_baseline.json</code> 原子写 + flock；
+<code>historical_best_score</code> read-modify-write 已用 flock 串行化。</p>
+<p>目标：ratchet 真相源迁到 Langfuse 服务端，本地状态降级为<strong>离线缓存</strong>。
+迁移必须<strong>可回退、不丢历史、不阻塞 CI</strong>。</p>
+<h3 id="91">9.1 三阶段迁移<a class="headerlink" href="#91" title="Permanent link">&para;</a></h3>
+<p><strong>阶段 R1 — 双写（只增量，不读）</strong>
+- <code>save_baseline</code> / <code>record_baseline</code> 写本地 JSON 的同时，发一条 <code>rubric_total</code> score 到 Langfuse
+  （metadata 标 <code>source=local-mirror</code>、<code>commit=&lt;git sha&gt;</code>、<code>branch</code>、<code>ci_run_id</code>）。
+- ratchet 判定<strong>仍读本地</strong> scorecard（现状不变）。
+- 风险：零。仅多一次服务端写入，失败降级为 warning（不阻塞）。
+- 验收：服务端出现与本地一致的 <code>rubric_total</code> 序列；抽样比对一致率 100%。</p>
+<p><strong>阶段 R2 — 读服务端，本地兜底</strong>
+- ratchet 判定改为：先查 Langfuse 该 skill 在 <code>branch=main</code> 的最近 <code>rubric_total</code>，
+  有则用服务端值；<strong>无网络 / 查询失败 / 无记录</strong>则回退读本地 scorecard（与 R1 一致）。
+- 本地 JSON 仍写（缓存角色）。
+- 引入 <code>ratchet_source</code> 字段记录本次用的是 <code>langfuse | local</code>，写入 trace metadata 便于审计。
+- 风险：中。需保证服务端查询超时短（≤2s）+ 失败必降级，不阻塞 CI。
+- 验收：断网时 CI 仍以本地兜底通过；服务端可用时 ratchet 跨机器一致。</p>
+<p><strong>阶段 R3 — 服务端为真相源，本地可选</strong>
+- ratchet 只读服务端 <code>historical_best</code>（按 score name 聚合 max）。
+- 本地 <code>.skillprism_baseline.json</code> 降级为<strong>纯离线缓存</strong>：仅在无服务端时用，
+  且写入时标 <code>stale=true</code>；下次服务端可用时以服务端为准覆盖本地。
+- <code>historical_best_score</code> 的 read-modify-write 竞争<strong>彻底消除</strong>（服务端原子聚合）。
+- 可选：<code>SKILLPRISM_NO_LOCAL_STATE=1</code> 完全不写本地 JSON（仅服务端）。
+- 风险：中。需服务端 SLA 保障；保留本地缓存作为兜底。
+- 验收：两台机器并行 CI，ratchet 基线一致；服务端短时宕机，CI 降级本地不 fail。</p>
+<h3 id="92">9.2 历史数据导入<a class="headerlink" href="#92" title="Permanent link">&para;</a></h3>
+<ul>
+<li>阶段 R1 上线时，跑一次性 <strong>backfill 脚本</strong>：遍历各 skill 的 <code>.skillprism_history.jsonl</code>
+  与 <code>.skillprism_baseline/SKILL.md.bak.*</code>，把历史 <code>rubric_total</code> 与 <code>historical_best_score</code>
+  作为 score 批量导入 Langfuse（metadata 标 <code>source=backfill</code>、<code>backfilled_at</code>）。</li>
+<li>导入幂等：以 <code>(skill, commit, timestamp)</code> 去重，重复导入不产生重复 score
+  （Langfuse score 支持 <code>id</code> 字段，用确定性 id <code>&lt;skill&gt;:&lt;commit&gt;</code>）。</li>
+<li>导入后，R2 的服务端查询即有历史可比。</li>
+</ul>
+<h3 id="93-historical_best_score">9.3 <code>historical_best_score</code> 迁移<a class="headerlink" href="#93-historical_best_score" title="Permanent link">&para;</a></h3>
+<ul>
+<li>现状：本地 JSON 字段，flock 保护下的 read-modify-write。</li>
+<li>迁移：R3 后由 Langfuse score 聚合（<code>max(rubric_total) where skill=... and branch=main</code>）替代。</li>
+<li>过渡期（R2）：本地仍维护 <code>historical_best_score</code>，但 R2 判定优先用服务端 max；
+  若服务端无记录（新 skill），回退本地字段。</li>
+<li><strong>不再需要</strong>本地 <code>historical_best_score</code> 的手动重置（此前需手改 JSON 才能降 ratchet 目标）——
+  服务端聚合可按时间窗口重算。</li>
+</ul>
+<h3 id="94">9.4 回退策略<a class="headerlink" href="#94" title="Permanent link">&para;</a></h3>
+<ul>
+<li>任一阶段若出问题：<code>SKILLPRISM_OBSERVABILITY=</code> （不设）即回到纯本地 ratchet，
+  与本轮最佳实践改造后完全一致。</li>
+<li>R2/R3 的服务端调用全部包在 <code>try/except + 超时</code>，失败降级本地，不抛到引擎、不 fail CI。</li>
+<li>服务端数据不可信时（例如导入错误），可按 <code>source=backfill</code> 标签批量删除后重导。</li>
+</ul>
+<hr />
+<h2 id="10">10. 自建部署与运维<a class="headerlink" href="#10" title="Permanent link">&para;</a></h2>
+<p><strong>部署形态已定：自建</strong>（含敏感 skill 元数据，不出本地）。</p>
+<h3 id="101-langfuse-v3">10.1 组件栈（Langfuse v3 自建标准栈）<a class="headerlink" href="#101-langfuse-v3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>作用</th>
+<th>版本/选型建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>langfuse-web</code></td>
+<td>API + 前端</td>
+<td>Langfuse v3 官方镜像</td>
+</tr>
+<tr>
+<td><code>langfuse-worker</code></td>
+<td>异步入库（ClickHouse 写入）</td>
+<td>与 web 同版</td>
+</tr>
+<tr>
+<td>Postgres</td>
+<td>元数据（project/api key/dataset/prompt/score 索引）</td>
+<td>≥14，托管或自管</td>
+</tr>
+<tr>
+<td>ClickHouse</td>
+<td>trace/score/event 原始数据（高写入量）</td>
+<td>≥23.3，<strong>必须自管或托管</strong></td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>队列/缓存</td>
+<td>≥7</td>
+</tr>
+<tr>
+<td>对象存储</td>
+<td>大 payload（如 scorecard 文件、prompt 版本附件）</td>
+<td>MinIO（自建）或 S3</td>
+</tr>
+</tbody>
+</table>
+<h3 id="102">10.2 部署形态选型<a class="headerlink" href="#102" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>形态</th>
+<th>适用</th>
+<th>取舍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>docker-compose</strong>（单机）</td>
+<td>单团队 / PoC / P1-P3 阶段</td>
+<td>简单；单点；ClickHouse 单副本；不可扩</td>
+</tr>
+<tr>
+<td><strong>k8s（Helm chart）</strong></td>
+<td>多团队 / 生产 / P4+</td>
+<td>可扩、滚动升级；运维成本高；需 PV/Ingress/证书</td>
+</tr>
+</tbody>
+</table>
+<p><strong>建议</strong>：P1-P3 用 docker-compose 单机起步（够用、低运维），P4（团队级闭环）前评估迁 k8s。
+ClickHouse 与 Postgres 无论哪种形态都建议<strong>独立持久化卷 + 定期备份</strong>。</p>
+<h3 id="103-docker-compose-poc">10.3 最小 docker-compose 拓扑（PoC）<a class="headerlink" href="#103-docker-compose-poc" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 简化示意，生产需补资源限制/健康检查/备份</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">services</span><span class="p">:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">postgres</span><span class="p">:</span><span class="w">    </span><span class="c1"># 元数据</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">clickhouse</span><span class="p">:</span><span class="w">  </span><span class="c1"># trace/score（卷持久化）</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">redis</span><span class="p">:</span><span class="w">       </span><span class="c1"># 队列</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">minio</span><span class="p">:</span><span class="w">       </span><span class="c1"># 对象存储</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nt">langfuse-web</span><span class="p">:</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nt">langfuse-worker</span><span class="p">:</span>
+</code></pre></div>
+<ul>
+<li>网络：仅 <code>langfuse-web</code> 对内暴露（Ingress/TLS）；其余组件仅集群内可达。</li>
+<li>启动顺序：<code>postgres/clickhouse/redis/minio</code> → <code>langfuse-web/worker</code>（depends_on + healthcheck）。</li>
+</ul>
+<h3 id="104">10.4 存储与容量<a class="headerlink" href="#104" title="Permanent link">&para;</a></h3>
+<ul>
+<li>ClickHouse 是<strong>高写入量</strong>组件：trace + score + event 全部进 CH。
+  按 §10.6 采样后，估算：单 skill CI 每次 run ~10 span + ~15 score ≈ 25 行；
+  10 个 skill × 每日 20 次 CI = 5000 行/日 ≈ 180 万行/年，CH 轻松承受。</li>
+<li><strong>保留策略</strong>：trace TTL 90 天（热查询），score 聚合长期保留（ratchet 真相源）。
+  ClickHouse <code>TTL ... TO DISK 'cold'</code> 分层，或定期归档。</li>
+<li>Postgres 小（元数据），常规备份即可。</li>
+</ul>
+<h3 id="105">10.5 高可用与备份<a class="headerlink" href="#105" title="Permanent link">&para;</a></h3>
+<ul>
+<li>PoC：单副本，接受短时宕机（观测层宕机<strong>不阻塞 CI</strong>，见 §12）。</li>
+<li>生产：<code>langfuse-web</code> 多副本 + LB；ClickHouse 建议双副本或托管；
+  Postgres 定期 <code>pg_dump</code>；MinIO 跨节点 erasure coding。</li>
+<li><strong>关键约束</strong>：观测层 SLA 不等于引擎 SLA。引擎确定性结果不依赖 Langfuse 可用性。</li>
+</ul>
+<h3 id="106-ci">10.6 网络与 CI 连通<a class="headerlink" href="#106-ci" title="Permanent link">&para;</a></h3>
+<ul>
+<li>CI runner 需能访问 <code>langfuse-web</code> 的 API（443/内部端口）。</li>
+<li>自建在内网：CI runner 经内网直连；跨网络经 mTLS/VPN。</li>
+<li><strong>超时</strong>：CI 内 Langfuse 调用统一 <code>connect=2s, read=5s</code>，超时即降级 noop，不阻塞 CI。</li>
+<li>出站：自建无出站需求（数据全在内网）；仅 Langfuse 镜像拉取需出站（或内网镜像仓库）。</li>
+</ul>
+<h3 id="107">10.7 鉴权与多租户<a class="headerlink" href="#107" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Langfuse project ↔ skill 集合</strong>：一个 repo / 一个 skill 集合 = 一个 project。
+  project 间数据隔离。</li>
+<li><strong>API key 两种</strong>：</li>
+<li>CI：service account（<code>LANGFUSE_SECRET</code>），project 级，CI 注入。</li>
+<li>个人开发：个人 key（<code>LANGFUSE_PUBLICKEY</code> 标注 user），便于追责与 UI 归属。</li>
+<li><strong>secret 管理</strong>：通过 CI secret / 环境变量注入，不落 skill 仓库；
+  <code>AgentExecutor</code> 的最小 env（已改造）不会把 <code>LANGFUSE_*</code> 泄露进 agent 子进程（需把
+  <code>LANGFUSE_*</code> 加入 <code>SKILLPRISM_AGENT_PASS_THROUGH_ENV</code> 才透传，默认不透）。</li>
+</ul>
+<h3 id="108">10.8 配置（自建）<a class="headerlink" href="#108" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 启用观测层</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SKILLPRISM_OBSERVABILITY</span><span class="o">=</span>langfuse
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LANGFUSE_HOST</span><span class="o">=</span>https://langfuse.internal<span class="w">   </span><span class="c1"># 自建内网地址</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LANGFUSE_SECRET</span><span class="o">=</span>sk-...<span class="w">                     </span><span class="c1"># CI service account</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LANGFUSE_PUBLICKEY</span><span class="o">=</span>pk-...<span class="w">                  </span><span class="c1"># 个人/CI 标注</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># CI 采样：高频场景只上送 fail + ci_pass</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SKILLPRISM_TRACE_ON_FAIL</span><span class="o">=</span><span class="m">1</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># ratchet 迁移阶段控制（见 §9）</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SKILLPRISM_RATCHET_SOURCE</span><span class="o">=</span>auto<span class="w">            </span><span class="c1"># auto=服务端优先本地兜底；local=纯本地</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># pyproject.toml</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">[project.optional-dependencies]</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">observability</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;langfuse&gt;=2.0&quot;</span><span class="p">]</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">all</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="err">..., </span><span class="s2">&quot;langfuse&gt;=2.0&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>引擎 <code>dependencies</code> 仍只 <code>pyyaml&gt;=6.0</code> —— 零 LLM 依赖原则不破。</p>
+<h3 id="109">10.9 配额与采样<a class="headerlink" href="#109" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>evaluate-skill</code>（手动/低频）：全量 trace。</li>
+<li><code>skill-ci</code>（高频）：默认 <code>SKILLPRISM_TRACE_ON_FAIL=1</code> —— 只在 <code>_all_pass=False</code> 时建完整 trace；
+  通过时只发 <code>ci_pass</code> + <code>rubric_total</code> 两个 score（不建 span），压住 CH 写入量。</li>
+<li><code>--auto-edit</code> 多轮：全量 trace（低频、高价值）。</li>
+</ul>
+<hr />
+<h2 id="11_1">11. 分阶段实施路线<a class="headerlink" href="#11_1" title="Permanent link">&para;</a></h2>
+<p>部署：自建 docker-compose 起步（P0-P3），P4 前评估迁 k8s。Ratchet 按 §9 的 R1→R2→R3 独立推进。</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>范围</th>
+<th>交付物</th>
+<th>风险</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>P0 自建部署</strong></td>
+<td>docker-compose 起 Langfuse v3 栈（§10.3）；建 project + CI service key；连通性验证</td>
+<td>可用的内网 Langfuse + 一条手发 score</td>
+<td>低</td>
+</tr>
+<tr>
+<td><strong>P1 可观测（只读 trace）</strong></td>
+<td><code>observability/</code> 模块 + 5 注入点（noop 默认）+ LangfuseBackend + <code>emit_*</code> sink + 隐私脱敏（§4.1）；<code>evaluate-skill</code> 能在 Langfuse 看到 9 维 trace</td>
+<td>新模块 + 注入 + stub e2e 测试</td>
+<td>低，引擎行为不变</td>
+</tr>
+<tr>
+<td><strong>P2 LLM-judge 桥接</strong></td>
+<td>Step A：judge 结果发 score；outlier 发 event</td>
+<td><code>llm_judge.py</code> 末尾 hook + 测试</td>
+<td>低</td>
+</tr>
+<tr>
+<td><strong>P3 Dataset 同步</strong></td>
+<td><code>build-skill-test</code> / <code>ensure_test_prompts</code> 同步 dataset item（幂等）</td>
+<td>两个写入点 + 幂等测试</td>
+<td>低</td>
+</tr>
+<tr>
+<td><strong>P3.5 Ratchet R1 双写</strong></td>
+<td><code>save_baseline</code> 同步发 <code>rubric_total</code> score；ratchet 仍读本地；跑历史 backfill（§9.2）</td>
+<td>双写 + backfill 脚本 + 抽样比对</td>
+<td>低</td>
+</tr>
+<tr>
+<td><strong>P4 Experiment 闭环</strong></td>
+<td>auto-edit 各轮作 experiment run；<code>format_history_table</code> 增服务端分支</td>
+<td>optimize 注入 + 历史读取分支</td>
+<td>中，需离线回退</td>
+</tr>
+<tr>
+<td><strong>P4.5 Ratchet R2 读服务端</strong></td>
+<td>ratchet 判定服务端优先、本地兜底；<code>ratchet_source</code> 审计字段</td>
+<td>ratchet 逻辑分支 + 降级测试</td>
+<td>中，超时/降级</td>
+</tr>
+<tr>
+<td><strong>P5 LLM-judge 迁移 Eval</strong></td>
+<td>Step B：<code>backend: langfuse</code> + 人类评分注入</td>
+<td><code>llm_judge.py</code> backend 分支 + 配置</td>
+<td>中，双轨期</td>
+</tr>
+<tr>
+<td><strong>P5.5 Ratchet R3 服务端真相源</strong></td>
+<td>ratchet 只读服务端 max；本地降级纯缓存；可选 <code>SKILLPRISM_NO_LOCAL_STATE=1</code></td>
+<td>ratchet 收尾 + 跨机一致性测试</td>
+<td>中，需 SLA</td>
+</tr>
+<tr>
+<td><strong>P6 反馈闭环</strong></td>
+<td><code>run_optimize_setup</code> 基于历史实验选最弱维度</td>
+<td>orchestrator 增强</td>
+<td>中，策略统计需调参</td>
+</tr>
+</tbody>
+</table>
+<p>P0-P2 即带来「自建可观测 + LLM-judge 可治理」核心价值；P3.5-P4.5 解决团队级 ratchet 一致性；
+P5-P6 是高阶闭环。建议 P0-P2 先落地验证，再按价值推进。Ratchet 的 R1 可与 P2 并行（低风险）。</p>
+<hr />
+<h2 id="12_1">12. 风险与边界<a class="headerlink" href="#12_1" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>风险</th>
+<th>缓解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>引擎确定性被观测层污染</td>
+<td>Backend 只读采集，不回写引擎结果；noop 默认；全套 207 测试在 noop 路径不变</td>
+</tr>
+<tr>
+<td>SKILL.md 正文 / 代码内容外泄</td>
+<td>§4.1 字段级清单：正文与绝对路径<strong>从不</strong>上送；evidence/reason/guard message 默认不上送，opt-in 且脱敏</td>
+</tr>
+<tr>
+<td>元数据暴露内部 skill 结构</td>
+<td>仅上送 skill 名（非绝对路径）+ 分数 + 决策；自建内网不出网；project 隔离</td>
+</tr>
+<tr>
+<td>离线/无网络不可用</td>
+<td><code>NoopBackend</code> 默认；网络异常时 LangfuseBackend try/except + 超时降级 noop，不抛引擎</td>
+</tr>
+<tr>
+<td>自建 ClickHouse 写爆</td>
+<td>§10.4/§10.9 采样：CI <code>TRACE_ON_FAIL=1</code> 只上 fail trace + score；trace TTL 90 天</td>
+</tr>
+<tr>
+<td>自建组件宕机阻塞 CI</td>
+<td>观测层调用全非阻塞 + 超时 + 降级；CI 门控以本地引擎结果为准，观测层不可用<strong>不 fail CI</strong></td>
+</tr>
+<tr>
+<td>Ratchet 双写不一致</td>
+<td>§9 R1 只增量不读 → R2 服务端优先本地兜底 → R3 服务端真相源；任一阶段可 <code>SKILLPRISM_RATCHET_SOURCE=local</code> 回退</td>
+</tr>
+<tr>
+<td>服务端 ratchet 数据不可信</td>
+<td>backfill 用确定性 <code>id=&lt;skill&gt;:&lt;commit&gt;</code> 幂等；可按 <code>source=backfill</code> 批量删重导</td>
+</tr>
+<tr>
+<td><code>LANGFUSE_*</code> secret 泄进 agent 子进程</td>
+<td><code>AgentExecutor</code> 最小 env 默认不透传（已改造）；需透传才显式加入 <code>SKILLPRISM_AGENT_PASS_THROUGH_ENV</code></td>
+</tr>
+<tr>
+<td>Langfuse SDK 版本漂移</td>
+<td>延迟 import + <code>langfuse&gt;=2.0</code> 下限；NoopBackend 保证无 SDK 也能跑</td>
+</tr>
+</tbody>
+</table>
+<p><strong>明确不做</strong>：
+- 不把 SKILL.md 全文 / 代码资产内容作为 trace metadata 上送。
+- 不用 Langfuse 替代引擎的确定性评分（rubric 分仍由引擎算，Langfuse 只记录）。
+- 不让观测层可用性影响 CI 门控（观测层宕，CI 仍以本地引擎结果判定）。
+- 不引入 Langfuse SDK 之外的额外运行时依赖。</p>
+<hr />
+<h2 id="13_1">13. 验收标准<a class="headerlink" href="#13_1" title="Permanent link">&para;</a></h2>
+<p><strong>P0 自建部署</strong>：
+- 内网可访问 Langfuse UI；CI runner 能用 service key 发一条 score 并在 UI 可见。</p>
+<p><strong>P1 可观测</strong>：
+1. <code>SKILLPRISM_OBSERVABILITY=langfuse</code> 时，<code>evaluate-skill skills/foo</code> 在 Langfuse 出现一条 trace，
+   含 9 span + 9 Dn score + 1 <code>rubric_total</code> score。
+2. 未设该环境变量时，引擎输出与本轮改造后完全一致（207 测试全绿）。
+3. LangfuseBackend 在网络异常/SDK 缺失时降级 noop，不抛引擎。
+4. §4.1 隐私字段：SKILL.md 正文、绝对路径、evidence 默认<strong>不在</strong> trace 出现（断言测试）。</p>
+<p><strong>P3.5 R1 双写</strong>：
+5. <code>save_baseline</code> 后服务端出现 <code>rubric_total</code> score，与本地一致；backfill 幂等不重复。</p>
+<p><strong>P4.5 R2 读服务端</strong>：
+6. 断网时 ratchet 回退本地不 fail CI；服务端可用时两台机器 ratchet 基线一致；<code>ratchet_source</code> 字段记录来源。</p>
+<p><strong>P4 Experiment</strong>：
+7. <code>improve-skill --auto-edit --apply</code> 各轮在 Langfuse 形成可对比 experiment runs。</p>
+<hr />
+<h2 id="14">14. 与现有最佳实践改造的关系<a class="headerlink" href="#14" title="Permanent link">&para;</a></h2>
+<p>本轮最佳实践改造已为 Langfuse 对接铺好基础：</p>
+<ul>
+<li><strong>原子状态 + flock</strong>（P1-1）→ Langfuse 成为真相源后，本地状态降级为缓存仍保持完整。</li>
+<li><strong><code>_run_auto_edit_rounds</code> locked wrapper</strong>（P1-1）→ trace 注入点清晰（一个外层函数）。</li>
+<li><strong><code>_judge_candidate_unlocked</code> / <code>_run_bloat_gate</code></strong>（P0-4/P2-1）→ 决策点已结构化，
+  <code>score(decision)</code> 注入位置明确。</li>
+<li><strong>regression 方向感知</strong>（P0-6）→ metric score 的 <code>:lower_better</code> 后缀有现成依据。</li>
+<li><strong>outlier 日志</strong>（P2-8）→ 桥接 Langfuse event 的现成 hook。</li>
+<li><strong>config schema</strong>（P2-4）→ 新增 <code>llm_judge.backend</code> 配置项自动被校验。</li>
+<li><strong>静默 except 改日志</strong>（P2-9）→ 观测层降级路径的失败可见。</li>
+</ul>
+<p>即：最佳实践改造让 Langfuse 注入点从「散落在 280 行 god-function 里」变成「结构化、已测试、
+单一职责的函数边界」，对接成本与回归风险都显著降低。</p>
+<hr />
+<h2 id="a-poc-p0-p1">附录 A：最小 PoC 清单（P0 + P1）<a class="headerlink" href="#a-poc-p0-p1" title="Permanent link">&para;</a></h2>
+<p><strong>P0 自建部署</strong>：
+0. docker-compose 起 Langfuse v3 栈（§10.3）：postgres / clickhouse / redis / minio / langfuse-web / langfuse-worker。
+1. 建一个 project（对应一个 skill 仓库），生成 CI service key，验证内网可达 + UI 可见。</p>
+<p><strong>P1 可观测</strong>：
+2. 新建 <code>skillprism/observability/{__init__,tracer,noop_tracer,langfuse_tracer,sink}.py</code>；
+   <code>sink.py</code> 内置 §4.1 脱敏（路径取 <code>.name</code>、文本字段默认 None + opt-in 截断 + 正则脱敏）。
+3. <code>evaluate_skill_rubric.py:evaluate_skill</code> 头尾各加 <code>get_backend().start_run(...)</code> 与 <code>emit_skill_report(...)</code>。
+4. <code>pyproject.toml</code> 加 <code>[observability]</code> optional-dependency。
+5. 新增 <code>tests/test_observability.py</code>：stub backend 断言 evaluate_skill 产出 9 span + total score；
+   <strong>隐私断言</strong>：SKILL.md 正文 / 绝对路径 / evidence 默认不在 trace 出现。
+6. 文档：本文件 + README 增「可观测性」章节。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/nanobot-skills/Skills_Validation" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

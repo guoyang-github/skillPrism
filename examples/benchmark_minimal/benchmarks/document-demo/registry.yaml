@@ -1,0 +1,34 @@
+# Benchmark registry for the document-demo skill.
+schema_version: "2.0"
+
+cache_dir: ".benchmark_cache"
+
+benchmarks:
+  skill_md_generation:
+    name: SKILL.md Generation
+    skill: document-demo
+    task: document
+    level: 1
+    input:
+      path: data/prompt.txt
+      description: Prompt asking the skill to write a SKILL.md for a CSV summary tool
+    expected:
+      format: markdown
+      path: expected/best_skill.md
+    metrics:
+      - id: section_overlap
+        name: Section overlap
+        type: min
+        threshold: 0.6
+        description: Ratio of expected markdown headers present in output
+      - id: token_jaccard
+        name: Token Jaccard
+        type: min
+        threshold: 0.3
+        description: Jaccard similarity of word token sets
+      - id: length_ratio
+        name: Length ratio
+        type: range
+        min: 0.5
+        max: 2.0
+        description: Output length divided by expected length

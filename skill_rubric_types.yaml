@@ -1,0 +1,864 @@
+# Skill Rubric Type Configuration v2.0
+# Project-agnostic type registry for the Skill evaluation framework.
+#
+# To add a new skill type:
+#   1. Add a new entry under `skill_types`.
+#   2. Define detection hints (tool_type, keywords, file_patterns).
+#   3. Specify frontmatter requirements and recommended fields.
+#   4. Provide per-dimension file/keyword checks.
+#   5. (Optional) Add a new check function in evaluate_skill_rubric.py if needed.
+
+schema_version: "2.0"
+
+# --------------------------------------------------------------------------- #
+# Scoring configuration - now configurable without touching the engine
+# --------------------------------------------------------------------------- #
+scoring:
+  # Weights for each dimension. Must sum to 1.0.
+  weights:
+    D1: 0.10   # 目录与元数据规范
+    D2: 0.15   # 文档可理解性
+    D3: 0.18   # 可执行性/正确性
+    D4: 0.12   # 环境/依赖可复现
+    D5: 0.15   # 领域准确性
+    D6: 0.10   # LLM 可调用性
+    D7: 0.08   # 性能/资源/稳健性
+    D8: 0.04   # 可维护性
+    D9: 0.08   # 安全与可信
+
+  # Grade thresholds (inclusive lower bound)
+  grade_thresholds:
+    A: 90
+    B: 75
+    C: 60
+
+# --------------------------------------------------------------------------- #
+# Note on LLM-driven verification / optimization
+# --------------------------------------------------------------------------- #
+# skillPrism does NOT call LLMs directly. If you want LLM-driven verification
+# or optimization, implement it as an agent skill that reads SKILL.md and uses
+# the agent's own LLM. The engine only provides objective measurement primitives.
+
+# --------------------------------------------------------------------------- #
+# Task templates (for reference / external LLM skill use)
+# --------------------------------------------------------------------------- #
+llm_tasks:
+    - id: direct_task
+      name: 直接任务
+      prompt_template: |
+        You are an AI agent that has access to the following skill:
+
+        --- SKILL START ---
+        {skill_md}
+        --- SKILL END ---
+
+        User task: {task_description}
+
+        Please use this skill to complete the task. Output only the executable
+        code/commands needed. Do not add explanations outside the code block.
+      evaluation_criteria:
+        - selects_correct_skill
+        - code_is_runnable
+        - output_is_reasonable
+
+    - id: boundary_task
+      name: 边界任务
+      prompt_template: |
+        You are an AI agent that has access to the following skill:
+
+        --- SKILL START ---
+        {skill_md}
+        --- SKILL END ---
+
+        User task: {task_description}
+
+        The input has an edge case or missing information. Use the skill to
+        handle it gracefully. Output executable code/commands only.
+      evaluation_criteria:
+        - detects_boundary
+        - provides_fallback
+        - code_is_runnable
+
+    - id: error_recovery_task
+      name: 错误恢复任务
+      prompt_template: |
+        You are an AI agent that has access to the following skill:
+
+        --- SKILL START ---
+        {skill_md}
+        --- SKILL END ---
+
+        The following error occurred when running code generated from this skill:
+
+        {error_message}
+
+        Please suggest a fix using the skill documentation. Output the corrected
+        executable code/commands only.
+      evaluation_criteria:
+        - diagnoses_error
+        - fix_is_correct
+        - code_is_runnable
+
+# --------------------------------------------------------------------------- #
+# Security evaluator configuration (D9)
+# Inspired by NVIDIA SkillSpector: static + optional LLM semantic analysis.
+# --------------------------------------------------------------------------- #
+security:
+  # Static patterns to search for. Each pattern is a regex.
+  # Severity maps to rubric score impact: critical/high reduce score more.
+  static_patterns:
+    - id: env_harvesting
+      name: 环境变量收集
+      severity: contextual
+      patterns:
+        - 'os\.environ'
+        - 'os\.environ\.items'
+        - 'os\.environ\.keys'
+        - 'getenv\s*\('
+      description: Skill 读取环境变量。通常是正常配置读取，但需确认是否收集敏感凭证。
+
+    - id: external_transmission
+      name: 外部网络传输
+      severity: contextual
+      patterns:
+        - 'requests\.(post|put|patch)'
+        - 'urllib\.request\.urlopen'
+        - 'httpx\.(post|put|patch)'
+        - 'socket\.'
+      description: Skill 向外部地址发送数据。需结合场景判断是否为预期行为。
+
+    - id: arbitrary_code_execution
+      name: 任意代码执行
+      severity: critical
+      patterns:
+        - '\beval\s*\('
+        - '\bexec\s*\('
+      description: Skill 使用 eval/exec 执行动态代码，属于无条件高风险操作。
+
+    - id: subprocess_invocation
+      name: 子进程/命令调用
+      severity: contextual
+      patterns:
+        - 'subprocess\.call'
+        - 'subprocess\.run'
+        - 'subprocess\.Popen'
+        - 'os\.system'
+        - 'os\.popen'
+      description: Skill 调用子进程或 shell 命令。常见于包装 CLI 工具的技能，需确认参数是否受控。
+
+    - id: prompt_injection_marker
+      name: 提示注入标记
+      severity: medium
+      patterns:
+        - 'ignore previous instructions'
+        - 'ignore the above'
+        - 'system prompt'
+        - 'developer message'
+        - 'DAN'
+        - 'jailbreak'
+      description: 文档或代码中包含提示注入相关文本。
+
+    - id: hardcoded_secret
+      name: 硬编码密钥
+      severity: high
+      patterns:
+        - '(?i)api[_-]?key\s*[:=]\s*[''"][a-zA-Z0-9]{16,}[''"]'
+        - '(?i)password\s*[:=]\s*[''"][^''"]{6,}[''"]'
+        - '(?i)token\s*[:=]\s*[''"][a-zA-Z0-9]{16,}[''"]'
+        - '(?i)secret\s*[:=]\s*[''"][a-zA-Z0-9]{16,}[''"]'
+        - '(?i)sk-[a-zA-Z0-9]{20,}'
+      description: 代码或文档中疑似硬编码 API key / token / 密码。
+
+    - id: file_traversal
+      name: 路径遍历
+      severity: contextual
+      patterns:
+        - '\.\./'
+        - '~\/' 
+      description: Skill 操作相对父目录或用户主目录路径。需确认是否在允许范围内。
+
+    - id: excessive_agency
+      name: 过度代理声明
+      severity: medium
+      patterns:
+        - "run any command"
+        - "execute arbitrary"
+        - "full access"
+        - "unrestricted"
+      description: 文档中暗示 Skill 拥有过度权限。
+
+  # Optional integration with external security scanner (e.g. SkillSpector).
+  # If the CLI is available, the engine will call it and merge findings.
+  external_scanner:
+    name: skillspector
+    install_hint: "pip install skillspector"
+    command: ["skillspector", "scan", "{skill_path}", "--no-llm", "--format", "json"]
+    # If external scanner is required, set required: true
+    required: false
+
+# --------------------------------------------------------------------------- #
+# Frontmatter fields required for ALL skill types
+# --------------------------------------------------------------------------- #
+required_frontmatter_base:
+  - name
+  - description
+  - keywords
+
+# --------------------------------------------------------------------------- #
+# Rubric dimension display names
+# --------------------------------------------------------------------------- #
+dimension_names:
+  D1: 目录与元数据规范
+  D2: 文档可理解性
+  D3: 可执行性/正确性
+  D4: 环境/依赖可复现
+  D5: 领域准确性
+  D6: LLM 可调用性
+  D7: 性能/资源/稳健性
+  D8: 可维护性
+  D9: 安全与可信
+
+# --------------------------------------------------------------------------- #
+# Skill type definitions
+# --------------------------------------------------------------------------- #
+skill_types:
+  meta:
+    label: 元能力
+    description: >-
+      Framework-level or agent-interface skills that do not ship executable code.
+      Examples: skill-prism itself, a prompt-engineering helper, or an agent
+      coordination skill.
+    detection:
+      tool_type: [meta]
+      keywords:
+        - unified interface
+        - agent interface
+        - framework
+        - skillprism
+    frontmatter_recommended:
+      - tool_type
+    dimension_names_override:
+      D3: 代码正确性
+      D4: 工具依赖可复现
+      D5: 领域准确性
+      D7: 性能与资源友好
+    enabled_dimensions:
+      - D1
+      - D2
+      - D5
+      - D6
+      - D7
+      - D9
+    dimension_checks:
+      D1:
+        require_examples: false
+        require_usage_guide: false
+        dependency_file_candidates: []
+      D7:
+        resource_keywords:
+          - memory
+          - ram
+          - resource
+          - subset
+          - downsample
+          - large
+          - 大规模
+        speed_keywords:
+          - slow
+          - fast
+          - speed
+          - time
+          - 性能
+          - 耗时
+        resource_sections:
+          - resource
+          - performance
+          - requirement
+          - runtime
+          - limit
+        robustness_sections:
+          - error
+          - robustness
+          - failure
+          - troubleshooting
+          - handling
+        parameter_sections:
+          - parameter
+          - 参数
+          - argument
+          - config
+          - option
+
+  analysis:
+    label: 分析型
+    description: >-
+      Data analysis skills implemented in Python, R, or Jupyter notebooks.
+      Examples: single-cell analysis, statistical modeling, visualization.
+    detection:
+      tool_type: [python, r, mixed, jupyter]
+      keywords:
+        - scanpy
+        - seurat
+        - pandas
+        - numpy
+        - anndata
+        - dataframe
+        - plot
+        - clustering
+        - differential
+        - enrichment
+      file_patterns:
+        - "scripts/python/*.py"
+        - "scripts/r/*.R"
+        - "scripts/r/*.r"
+    frontmatter_recommended:
+      - tool_type
+      - primary_tool
+      - languages
+      - supported_tools
+    dimension_names_override:
+      D3: 代码正确性
+      D4: 工具依赖可复现
+      D5: 生物信息学准确性
+      D7: 性能与资源友好
+    dimension_checks:
+      D1:
+        dependency_file_candidates:
+          - requirements.txt
+          - DESCRIPTION
+          - renv.lock
+          - renv
+      D2:
+        io_keywords:
+          - input
+          - output
+          - parameter
+          - 参数
+        code_example_markers:
+          - "```python"
+          - "```r"
+          - "```R"
+        io_sections:
+          - input
+          - output
+          - parameter
+          - usage
+          - arguments
+          - signature
+        version_sections:
+          - version
+          - compatibility
+          - requirements
+          - dependencies
+        pitfall_sections:
+          - pitfall
+          - troubleshooting
+          - caveat
+          - common issue
+          - 注意
+          - warning
+      D3:
+        code_file_extensions:
+          - ".py"
+          - ".R"
+          - ".r"
+        example_runnable: true
+      D5:
+        accuracy_keywords:
+          - parameter
+          - typical values
+          - 推荐
+          - resolution
+          - n_pcs
+          - 默认值
+        pitfall_keywords:
+          - pitfall
+          - caution
+          - 注意
+          - 警告
+          - deprecated
+        reference_sections:
+          - reference
+          - bibliography
+          - literature
+          - guideline
+        accuracy_sections:
+          - parameter
+          - method
+          - best practice
+          - recommendation
+          - setting
+        pitfall_sections:
+          - pitfall
+          - caution
+          - warning
+          - troubleshooting
+          - caveat
+          - note
+      D7:
+        resource_keywords:
+          - memory
+          - ram
+          - resource
+          - subset
+          - downsample
+          - large
+          - 大规模
+        speed_keywords:
+          - slow
+          - fast
+          - speed
+          - time
+          - 性能
+          - 耗时
+        resource_sections:
+          - resource
+          - performance
+          - requirement
+          - runtime
+          - limit
+        robustness_sections:
+          - error
+          - robustness
+          - failure
+          - troubleshooting
+          - handling
+        parameter_sections:
+          - parameter
+          - 参数
+          - argument
+          - config
+          - option
+      D8:
+        scripts_dirs:
+          - scripts/python
+          - scripts/r
+      D9:
+        security_keywords:
+          - 数据隐私
+          - 敏感数据
+          - 随机种子
+          - reproducible
+          - 可复现
+        sensitive_data_keywords:
+          - human subject
+          - patient
+          - clinical
+          - PHI
+          - HIPAA
+
+  cmd:
+    label: 命令/CLI 型
+    description: >-
+      Command-line tools, shell scripts, and CLI-driven computational workflows.
+      Examples: GATK/BWA/Samtools shell wrappers, WGS/WES pipelines,
+      Nextflow/Snakemake/CWL/WDL workflows, GPU-accelerated command-line tools.
+    detection:
+      tool_type: [cli, workflow, shell, bash]
+      keywords:
+        - bash
+        - shell
+        - gatk
+        - bwa
+        - samtools
+        - workflow
+        - wes
+        - wgs
+        - gpu
+        - cli
+        - nextflow
+        - snakemake
+      file_patterns:
+        - "*.sh"
+        - "*.wdl"
+        - "*.cwl"
+        - "nextflow.config"
+        - "Snakefile"
+    frontmatter_recommended:
+      - tool_type
+      - primary_tool
+      - resource_profile
+    dimension_names_override:
+      D3: 命令/CLI 可执行性
+      D4: CLI 环境可复现
+      D5: CLI 流程准确性
+      D7: 资源与稳健性
+    dimension_checks:
+      D1:
+        dependency_file_candidates:
+          - requirements.txt
+          - environment.yml
+          - Dockerfile
+          - nextflow.config
+          - Snakefile
+          - snakemake
+      D2:
+        io_keywords:
+          - input
+          - output
+          - prerequisites
+          - 参数
+          - 参考基因组
+          - bam
+          - vcf
+        code_example_markers:
+          - "```bash"
+          - "```shell"
+          - "```sh"
+      D5:
+        accuracy_keywords:
+          - "|"
+          - 工具
+          - tool
+          - 选择
+          - best for
+        pitfall_keywords:
+          - recommended
+          - 推荐
+          - best practice
+          - 标准流程
+      D7:
+        resource_keywords:
+          - cpu
+          - gpu
+          - threads
+          - memory
+          - 资源
+          - runtime
+          - 运行时间
+        robustness_keywords:
+          - error
+          - log
+          - stderr
+          - stdout
+          - 失败
+          - 重试
+      D8:
+        scripts_dirs:
+          - scripts
+          - workflows
+      D9:
+        security_keywords:
+          - 输入校验
+          - 沙箱
+          - 只读
+          - 备份
+        command_injection_keywords:
+          - eval
+          - exec
+          - backtick
+          - $()
+
+  api:
+    label: API/数据库型
+    description: >-
+      Skills that interact with external databases or REST APIs.
+      Examples: UniProt, Ensembl, PubChem, cBioPortal, arXiv API clients.
+    detection:
+      tool_type: [api, database]
+      keywords:
+        - rest
+        - api
+        - database
+        - uniprot
+        - ensembl
+        - pubchem
+        - query
+        - http
+        - endpoint
+        - client
+      file_patterns:
+        - "*client*.py"
+        - "*api*.py"
+    frontmatter_recommended:
+      - tool_type
+      - primary_tool
+      - api_version
+    dimension_names_override:
+      D3: API 可调用性
+      D4: API 环境可复现
+      D5: API 准确性
+      D7: API 稳健性
+    dimension_checks:
+      D1:
+        dependency_file_candidates:
+          - requirements.txt
+          - pyproject.toml
+          - setup.py
+      D2:
+        io_keywords:
+          - endpoint
+          - query
+          - request
+          - response
+          - input
+          - output
+        code_example_markers:
+          - "```python"
+          - "```bash"
+          - "```"
+      D5:
+        accuracy_keywords:
+          - field
+          - 返回字段
+          - response
+          - json
+          - format
+        pitfall_keywords:
+          - id mapping
+          - mapping
+          - map
+      D7:
+        resource_keywords:
+          - rate limit
+          - timeout
+          - retry
+          - 速率限制
+          - 超时
+          - 重试
+        robustness_keywords:
+          - batch
+          - 分页
+          - page
+          - stream
+          - 批量
+          - cache
+          - 缓存
+      D8:
+        scripts_dirs:
+          - scripts
+      D9:
+        security_keywords:
+          - api key
+          - authentication
+          - token
+          - 认证
+          - 权限
+        sensitive_data_keywords:
+          - credential
+          - secret
+
+  document:
+    label: 文档/写作型
+    description: >-
+      Skills for document generation, scientific writing, and text orchestration.
+      Examples: SKILL.md generation, manuscript preparation, grant writing,
+      literature review, peer review, scientific illustration guidance.
+    detection:
+      tool_type: [document, writing, orchestration]
+      keywords:
+        - manuscript
+        - paper
+        - writing
+        - grant
+        - review
+        - peer-review
+        - illustration
+        - orchestrator
+        - thesis
+        - dissertation
+      file_patterns:
+        - "assets/*"
+        - "templates/*"
+        - "references/*"
+    frontmatter_recommended:
+      - allowed-tools
+      - output_format
+    dimension_names_override:
+      D3: 模板/示例可用性
+      D4: 文档素材/格式可复现
+      D5: 文档准确性
+      D7: 输出控制与稳健性
+    dimension_checks:
+      D1:
+        dependency_file_candidates:
+          - assets
+          - templates
+          - references
+      D2:
+        io_keywords:
+          - when to use
+          - input
+          - output
+          - template
+          - structure
+          - format
+        code_example_markers:
+          - "```"
+          - template
+          - example
+      D5:
+        accuracy_keywords:
+          - imrad
+          - structure
+          - outline
+          - stage
+          - 结构
+        pitfall_keywords:
+          - consort
+          - strobe
+          - prisma
+          - reporting
+          - guideline
+      D7:
+        resource_keywords:
+          - iterative
+          - stage
+          - outline
+          - 迭代
+          - 大纲
+        robustness_keywords:
+          - length
+          - word count
+          - 字数
+          - 长度
+          - checklist
+          - 验证
+          - review
+          - 校对
+      D8:
+        scripts_dirs:
+          - assets
+          - templates
+          - references
+          - scripts
+      D9:
+        security_keywords:
+          - fact-check
+          - 事实核查
+          - 引用规范
+          - citation
+        sensitive_data_keywords:
+          - unpublished data
+          - embargo
+
+  generic:
+    label: 通用型
+    description: >-
+      Fallback type for skills that do not match any specific category.
+      Uses only universal checks and is intentionally lenient.
+    detection:
+      default: true
+    frontmatter_recommended:
+      - tool_type
+    dimension_names_override:
+      D3: 可执行性/可用性
+      D4: 依赖/环境说明
+      D5: 领域准确性
+      D7: 稳健性
+    dimension_checks:
+      D1:
+        dependency_file_candidates:
+          - requirements.txt
+          - package.json
+          - DESCRIPTION
+          - environment.yml
+          - Dockerfile
+          - assets
+          - templates
+      D2:
+        io_keywords:
+          - input
+          - output
+          - parameter
+          - usage
+          - when to use
+        code_example_markers:
+          - "```"
+      D5:
+        accuracy_keywords:
+          - reference
+          - guideline
+          - best practice
+        pitfall_keywords:
+          - pitfall
+          - caution
+          - warning
+          - note
+          - 注意
+          - 警告
+      D7:
+        resource_keywords:
+          - memory
+          - cpu
+          - time
+          - performance
+        robustness_keywords:
+          - error
+          - timeout
+          - retry
+          - fallback
+      D8:
+        scripts_dirs:
+          - scripts
+          - assets
+          - templates
+      D9:
+        security_keywords:
+          - safe
+          - sandbox
+          - read-only
+          - 安全
+        sensitive_data_keywords:
+          - sensitive
+          - private
+          - confidential
+
+# --------------------------------------------------------------------------- #
+# Optional LLM-as-judge for subjective dimensions (D2, D5)
+# --------------------------------------------------------------------------- #
+# The engine remains provider-agnostic. Provide a command that reads a prompt
+# from stdin and prints a JSON object: {"score": int, "reason": str}.
+#
+# Example command using an OpenAI-compatible endpoint:
+#   llm_judge:
+#     enabled: true
+#     command: python examples/editor_wrappers/openai_compatible_judge.py
+#     weight: 0.3
+#
+# Or set the environment variable:
+#   export SKILLPRISM_LLM_JUDGE_COMMAND="python examples/editor_wrappers/openai_compatible_judge.py"
+llm_judge:
+  enabled: false
+  # command: python examples/editor_wrappers/openai_compatible_judge.py
+  weight: 0.3
+  max_retries: 2
+  outlier_threshold: 2
+  require_reason: true
+  n_judges: 2
+  aggregate: median
+  # Reproducibility metadata (optional; used by Agent-generated judgments).
+  # model: moonshot-v1-8k
+  # temperature: 0.2
+  # prompt_version: "1.0"
+  # system_prompt: "You are an expert reviewer..."
+  # prompts:
+  #   D2: "Evaluate the following SKILL.md for dimension {dimension} ({focus}). Engine score: {engine_score}/5."
+
+editor:
+  enabled: false
+  # command: python scripts/my_skill_editor.py
+  max_retries: 2
+
+# --------------------------------------------------------------------------- #
+# Optimization loop configuration
+# --------------------------------------------------------------------------- #
+optimization:
+  priority:
+    # Dimensions that must be fixed first when below the blocker threshold.
+    blockers:
+      - D9
+    # High-ROI dimensions: easy to improve and yield large score gains.
+    high_roi:
+      - D4
+      - D1
+    # Score threshold below which a dimension is considered a blocker candidate.
+    blocker_threshold: 2
+    # Score threshold below which a dimension is considered needing improvement.
+    improvement_threshold: 3
+  clusters:
+    # Dimensions that can be improved together in a single edit round.
+    - name: documentation_callability
+      dimensions: [D2, D6]
+    - name: structure_dependencies
+      dimensions: [D1, D4]

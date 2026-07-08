@@ -1,0 +1,141 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "skillprism"
+version = "2.1.0"
+description = "SkillPrism — project-agnostic framework for evaluating and optimizing AI agent skills"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "Skills Validation Team"},
+]
+keywords = [
+    "skill",
+    "agent",
+    "rubric",
+    "evaluation",
+    "optimization",
+    "llm",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+security = [
+    "skillspector",
+]
+analysis = [
+    "scanpy>=1.9.0",
+    "anndata>=0.9.0",
+    "scikit-learn>=1.3.0",
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+]
+benchmark = [
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+]
+ml-metrics = [
+    "sentence-transformers>=2.3.0",
+    "rouge-score>=0.1.2",
+    "bert-score>=0.3.13",
+]
+dev = [
+    "skillprism[analysis,benchmark,ml-metrics,security]",
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.4.0",
+    "mypy>=1.0",
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocstrings[python]>=0.24",
+]
+all = [
+    "skillprism[analysis,benchmark,ml-metrics,security,dev]",
+]
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+cache_dir = ".mypy_cache"
+
+[project.scripts]
+evaluate-skill = "skillprism.evaluate_skill_rubric:main"
+test-skill = "skillprism.test_skill_cli:main"
+build-skill-test = "skillprism.benchmark.builder:main"
+improve-skill = "skillprism.optimize_skill:main"
+skill-pipeline = "skillprism.orchestrator:main"
+skill-ci = "skillprism.ci.cli:main"
+skill-gradual = "skillprism.gradual:main"
+
+[project.urls]
+Homepage = "https://github.com/nanobot-skills/Skills_Validation"
+Documentation = "https://github.com/nanobot-skills/Skills_Validation/blob/main/README.md"
+Repository = "https://github.com/nanobot-skills/Skills_Validation"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["skillprism*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "--strict-markers"
+
+[tool.coverage.run]
+source = ["skillprism"]
+branch = true
+omit = [
+    "tests/*",
+    "examples/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+fail_under = 55
+
+[tool.ruff]
+line-length = 100
+exclude = [
+    ".benchmark_cache",
+    "__pycache__",
+    ".git",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "F",  # Pyflakes
+    "I",  # isort
+]
+ignore = [
+    "E501",  # line too long (handled by formatter)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"examples/benchmark_minimal/sample_skill_code.py" = ["F821"]
+"examples/benchmark_minimal/sample_document_skill_code.py" = ["F821"]
+"examples/benchmark_minimal/shared/*.py" = ["E402"]
+"templates/regression_test.py" = ["E402"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false

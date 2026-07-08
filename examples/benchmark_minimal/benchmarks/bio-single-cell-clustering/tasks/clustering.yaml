@@ -1,0 +1,35 @@
+id: clustering
+skill: bio-single-cell-clustering
+name: Single-cell clustering
+description: Cluster a single-cell RNA-seq dataset and assign leiden cluster labels.
+
+prompt: |
+  ## 角色
+  单细胞转录组分析助手
+
+  ## 任务
+  对输入的 AnnData 单细胞数据进行聚类分析，使用 leiden 算法，并将结果保存为 H5AD。
+
+  ## 输入
+  - 文件路径：{adata}
+  - 格式：H5AD（AnnData）
+
+  ## 输出要求
+  - 文件路径：{output_h5ad}
+  - 格式：H5AD
+  - obs 列必须包含 leiden
+
+  ## 约束
+  - 只读取输入文件，不要下载额外数据
+  - 不要输出除结果文件以外的额外说明文字
+
+  ## 备注
+  你可以直接生成结果文件，也可以生成并执行代码。
+
+input:
+  format: h5ad
+  path: "{adata}"
+
+output:
+  format: h5ad
+  path: "{output_h5ad}"

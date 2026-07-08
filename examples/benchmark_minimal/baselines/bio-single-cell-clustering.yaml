@@ -1,0 +1,11 @@
+# 示例基线：bio-single-cell-clustering
+# 每次通过全量 Benchmark 后更新此文件
+skill: bio-single-cell-clustering
+version: "2026-06-16"
+benchmarks:
+  pbmc3k_clustering:
+    ari: 1.0
+    nmi: 1.0
+    n_clusters: 4
+    silhouette_score: 0.16
+    largest_cluster_ratio: 0.44

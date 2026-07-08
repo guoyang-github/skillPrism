@@ -1,0 +1,120 @@
+site_name: skillPrism
+site_description: Project-agnostic framework for evaluating and optimizing AI agent skills
+site_author: Skills Validation Team
+site_url: https://nanobot-skills.github.io/Skills_Validation
+
+docs_dir: docs
+
+repo_name: nanobot-skills/Skills_Validation
+repo_url: https://github.com/nanobot-skills/Skills_Validation
+
+nav:
+  - Home: index.md
+  - 🚀 Getting Started:
+      - getting-started/index.md
+      - getting-started/hands-on.md
+      - getting-started/install.md
+      - getting-started/evaluate.md
+      - getting-started/test.md
+      - getting-started/improve.md
+      - getting-started/pipeline.md
+      - getting-started/ci.md
+      - getting-started/cli-cheatsheet.md
+  - 📖 Tutorial:
+      - tutorial/01-why-evaluate-skills.md
+      - tutorial/02-install-and-first-skill.md
+      - tutorial/03-understanding-the-rubric.md
+      - tutorial/04-building-your-first-benchmark.md
+      - tutorial/05-optimization-loop.md
+      - tutorial/06-quality-pipeline.md
+      - tutorial/07-extending-skillprism.md
+      - tutorial/08-gradual-testing-and-real-data.md
+      - tutorial/full-cycle-demo.md
+      - tutorial/langfuse-bio-demo.md
+      - tutorial/agent-langfuse-production-loop.md
+  - 📚 Reference:
+      - reference/overview.md
+      - reference/natural-language-interaction.md
+      - reference/skill-prism-architecture.md
+      - reference/agent-command.md
+      - reference/framework.md
+      - reference/benchmark-guide.md
+      - reference/benchmark-bioinformatics.md
+      - reference/data-building-decisions.md
+      - reference/adding-a-benchmark-task-type.md
+      - reference/llm-judge.md
+      - reference/langfuse-integration.md
+      - reference/benchmark-metrics.md
+      - reference/test-prompts-verification.md
+      - reference/optimization-strategy.md
+      - reference/experiment-history.md
+      - reference/rubric-enhancements.md
+      - reference/dimension-clusters.md
+      - reference/edge-cases.md
+      - reference/runtime-neutrality.md
+      - reference/visual-result-cards.md
+      - reference/operational-playbook.md
+      - reference/gradual-testing.md
+      - reference/cell2location.md
+      - reference/api.md
+      - reference/roadmap.md
+      - Examples:
+          - reference/examples/scorecard.md
+          - reference/examples/review-bio-single-cell-clustering.md
+
+theme:
+  name: material
+  language: zh
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: ["."]
+          options:
+            docstring_style: google
+            show_source: true
+            show_root_heading: true
+
+markdown_extensions:
+  - attr_list
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - tables
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/nanobot-skills/Skills_Validation

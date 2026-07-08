@@ -1,0 +1,36 @@
+# Benchmark registry for the bio-single-cell-clustering skill.
+schema_version: "2.0"
+
+cache_dir: ".benchmark_cache"
+
+benchmarks:
+  pbmc3k_clustering:
+    name: PBMC 3k Clustering
+    skill: bio-single-cell-clustering
+    task: clustering
+    level: 1
+    dataset:
+      source: scanpy.datasets.pbmc3k_processed
+      type: builtin
+      description: 10x Genomics PBMC 3k processed dataset
+    expected:
+      format: h5ad
+      path: expected/adata.h5ad
+      label_column: leiden
+    metrics:
+      - id: n_clusters
+        name: Cluster count
+        type: range
+        min: 3
+        max: 8
+        description: Number of leiden clusters
+      - id: silhouette_score
+        name: Silhouette score
+        type: min
+        threshold: 0.10
+        description: Silhouette score on PCA embedding
+      - id: largest_cluster_ratio
+        name: Largest cluster ratio
+        type: max
+        threshold: 0.60
+        description: Fraction of cells in the largest cluster

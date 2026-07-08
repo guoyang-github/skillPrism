@@ -1,0 +1,15 @@
+skill: bio-spatial-deconvolution-cell2location
+benchmarks:
+  c2l_level0_smoke:
+    n_spots: 10
+    n_cell_types: 3
+    _metric_pass:
+      n_spots: true
+      n_cell_types: true
+    _all_pass: true
+    _actual_output: /mnt/c/Users/guoyang/Desktop/TEST/Skills_Validation/examples/benchmark_cell2location/benchmarks/bio-spatial-deconvolution-cell2location/.benchmark_cache/output/c2l_level0_smoke/output.csv
+    _expected_output: /mnt/c/Users/guoyang/Desktop/TEST/Skills_Validation/examples/benchmark_cell2location/benchmarks/bio-spatial-deconvolution-cell2location/expected/tiny_proportions.csv
+    _real_data: false
+_all_pass: true
+_suite: null
+_level: 0

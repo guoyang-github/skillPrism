@@ -1,0 +1,35 @@
+id: document
+skill: document-demo
+name: SKILL.md generation
+description: Generate a SKILL.md document from a text prompt.
+
+prompt: |
+  ## 角色
+  技术文档撰写助手
+
+  ## 任务
+  根据输入的 prompt 生成一份 SKILL.md 文档。
+
+  ## 输入
+  - 文件路径：{prompt_path}
+  - 格式：纯文本
+
+  ## 输出要求
+  - 文件路径：{output_path}
+  - 格式：Markdown
+  - 需包含角色、任务、使用示例等章节
+
+  ## 约束
+  - 只读取输入文件
+  - 不要输出除结果文件以外的额外说明文字
+
+  ## 备注
+  你可以直接生成结果文件，也可以生成并执行代码。
+
+input:
+  format: text
+  path: "{prompt_path}"
+
+output:
+  format: markdown
+  path: "{output_path}"

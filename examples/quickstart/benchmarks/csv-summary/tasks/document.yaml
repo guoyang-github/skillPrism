@@ -1,0 +1,25 @@
+id: document
+skill: csv-summary
+name: SKILL.md generation
+description: Generate a concise SKILL.md for the csv-summary skill from a text prompt.
+
+prompt: |
+  ## Role
+  Technical documentation assistant.
+
+  ## Task
+  Read the prompt in {prompt_path} and write a SKILL.md document to {output_path}.
+  The document should include frontmatter, When to Use, Inputs, Outputs, Quick Start,
+  Parameters Reference, Common Pitfalls, Performance & Resources, and References sections.
+
+  ## Constraints
+  - Only read the input prompt file.
+  - Do not output any text other than the generated SKILL.md.
+
+input:
+  format: text
+  path: "{prompt_path}"
+
+output:
+  format: markdown
+  path: "{output_path}"

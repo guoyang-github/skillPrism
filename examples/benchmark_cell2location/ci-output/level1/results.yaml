@@ -1,0 +1,17 @@
+skill: bio-spatial-deconvolution-cell2location
+benchmarks:
+  c2l_level1_small:
+    n_spots: 50
+    n_cell_types: 5
+    mean_rmse: 0.041215212501441376
+    _metric_pass:
+      n_spots: true
+      n_cell_types: true
+      mean_rmse: true
+    _all_pass: true
+    _actual_output: /mnt/c/Users/guoyang/Desktop/TEST/Skills_Validation/examples/benchmark_cell2location/benchmarks/bio-spatial-deconvolution-cell2location/.benchmark_cache/output/c2l_level1_small/output.csv
+    _expected_output: /mnt/c/Users/guoyang/Desktop/TEST/Skills_Validation/examples/benchmark_cell2location/benchmarks/bio-spatial-deconvolution-cell2location/expected/small_proportions.csv
+    _real_data: false
+_all_pass: true
+_suite: null
+_level: 1

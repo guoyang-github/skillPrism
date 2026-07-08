@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillPrism Result Card</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf8f5;
+      --fg: #1a1a1a;
+      --accent: #d45d35;
+      --muted: #6b6b6b;
+      --border: #e2ddd6;
+      --bar-before: #b0b0b0;
+      --bar-after: #d45d35;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #f0ede8;
+      display: flex;
+      justify-content: center;
+      padding: 48px 24px;
+    }
+    .card {
+      width: 720px;
+      background: var(--bg);
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.12);
+      padding: 48px;
+      color: var(--fg);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand-name {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .brand-date {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .skill-name {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0 0 8px;
+    }
+    .skill-desc {
+      font-size: 15px;
+      color: var(--muted);
+      margin: 0 0 32px;
+    }
+    .score-row {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .score-box {
+      flex: 1;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .score-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .score-value {
+      font-size: 32px;
+      font-weight: 700;
+    }
+    .score-delta {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 32px 0 16px;
+    }
+    .dim-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .dim-label {
+      width: 120px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .dim-bars {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .bar {
+      height: 8px;
+      border-radius: 4px;
+      transition: width 0.6s ease;
+    }
+    .bar-before {
+      background: var(--bar-before);
+    }
+    .bar-after {
+      background: var(--bar-after);
+    }
+    .improvements {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .improvements li {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .footer {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">
+      <div class="brand-name">SkillPrism</div>
+      <div class="brand-date" data-field="date">2026-06-22</div>
+    </div>
+
+    <h1 class="skill-name" data-field="skill-name">my-skill</h1>
+    <p class="skill-desc" data-field="skill-desc">Optimized with darwin-skill best practices.</p>
+
+    <div class="score-row">
+      <div class="score-box">
+        <div class="score-label">Before</div>
+        <div class="score-value" data-field="score-before">72</div>
+      </div>
+      <div class="score-box">
+        <div class="score-label">After</div>
+        <div class="score-value" data-field="score-after">85</div>
+      </div>
+      <div class="score-box">
+        <div class="score-label">Delta</div>
+        <div class="score-delta" data-field="score-delta">+13</div>
+      </div>
+    </div>
+
+    <div class="section-title">Dimension Breakdown</div>
+    <div data-field="dimensions">
+      <div class="dim-row">
+        <div class="dim-label">D1 Structure</div>
+        <div class="dim-bars">
+          <div class="bar bar-before" style="width: 60%"></div>
+          <div class="bar bar-after" style="width: 80%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Top Improvements</div>
+    <ul class="improvements">
+      <li data-field="improvement-1">Added explicit failure-mode fallback tables</li>
+      <li data-field="improvement-2">Replaced vague wording with concrete parameters</li>
+      <li data-field="improvement-3">Added checkpoint markers for human confirmation</li>
+    </ul>
+
+    <div class="footer">
+      Train your Skills like you train your models · skillprism.dev
+    </div>
+  </div>
+</body>
+</html>
