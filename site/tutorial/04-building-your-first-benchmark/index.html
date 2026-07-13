@@ -18,7 +18,7 @@
         <link rel="prev" href="../03-understanding-the-rubric/">
       
       
-        <link rel="next" href="../05-optimization-loop/">
+        <link rel="next" href="../build-bio-benchmark-with-claude-code/">
       
       
         
@@ -1154,10 +1154,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#verify-only" class="md-nav__link">
+  <a href="#results" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify-only 模式（默认）
+        Results 模式（默认）
       
     </span>
   </a>
@@ -1217,6 +1217,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../build-bio-benchmark-with-claude-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build bio benchmark with claude code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2588,10 +2616,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#verify-only" class="md-nav__link">
+  <a href="#results" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify-only 模式（默认）
+        Results 模式（默认）
       
     </span>
   </a>
@@ -3175,7 +3203,7 @@
 <a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span>--code<span class="w"> </span>sample_skill_code.py
 </code></pre></div>
 <h2 id="410-benchmark">4.10 运行 Benchmark<a class="headerlink" href="#410-benchmark" title="Permanent link">&para;</a></h2>
-<h3 id="verify-only">Verify-only 模式（默认）<a class="headerlink" href="#verify-only" title="Permanent link">&para;</a></h3>
+<h3 id="results">Results 模式（默认）<a class="headerlink" href="#results" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>test-skill<span class="w"> </span>--skill<span class="w"> </span>my-first-table<span class="w"> </span>--registry<span class="w"> </span>benchmarks/my-first-table/registry.yaml<span class="w"> </span>--task<span class="w"> </span>csv_summary
 </code></pre></div>
 <p>skillPrism 会读取 task spec，生成 prompt，然后只评估已存在的输出。默认适用于 Agent 已经生成结果的场景。</p>

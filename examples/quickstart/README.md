@@ -92,5 +92,5 @@ baselines.
 2. Create `benchmarks/<your-skill>/registry.yaml` for your skill.
 3. Write a task spec under `benchmarks/<your-skill>/tasks/<task>.yaml`.
 4. Provide a `sample_skill_code.py` that implements the task deterministically,
-   or run in `--verify-only` mode after an agent has produced output.
+   or run in `--results` mode after an agent has produced output.
 5. Run `bash run_quickstart.sh` again.

@@ -379,7 +379,7 @@ def evaluate_skill(
     llm_judgments: Optional[Dict[str, MultiJudgeResult]] = None,
     prompts_verification: Optional[PromptsVerificationReport] = None,
     auto_generate_prompts: bool = True,
-    output_dir: Optional[Path] = None,
+    prompts_dir: Optional[Path] = None,
 ) -> SkillReport:
     if not skill_path.is_dir():
         report = SkillReport(
@@ -435,7 +435,12 @@ def evaluate_skill(
                 )
                 dim.score = blended
 
-    # Apply pre-computed prompts verification if provided.
+    # Apply pre-computed prompts verification if provided; otherwise auto-discover
+    # the per-skill default ``{skill_path}/.skillprism_prompts_verification.json``.
+    if prompts_verification is None:
+        prompts_verification = load_prompts_verification(
+            skill_path / ".skillprism_prompts_verification.json"
+        )
     if prompts_verification:
         report.prompts_verification = prompts_verification
         report.prompts_verification_report = format_prompts_verification_report(
@@ -510,11 +515,12 @@ def evaluate_skill(
     except Exception as e:
         report.errors.append(f"Runtime neutrality check failed: {e}")
 
-    # Test prompts summary (always generated, lightweight)
+    # Test prompts summary (always generated, lightweight). ``prompts_dir`` decouples
+    # where test-prompts.json lives from the --output report path.
     try:
         if auto_generate_prompts:
-            ensure_test_prompts(skill_path, auto_generate=True, output_dir=output_dir)
-        report.test_prompts_report = format_test_prompts_report(skill_path, prompts_dir=output_dir)
+            ensure_test_prompts(skill_path, auto_generate=True, output_dir=prompts_dir)
+        report.test_prompts_report = format_test_prompts_report(skill_path, prompts_dir=prompts_dir)
     except Exception as e:
         report.errors.append(f"Test prompts check failed: {e}")
 
@@ -621,6 +627,11 @@ def _build_evaluate_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Do not auto-generate test-prompts.json if missing",
     )
+    parser.add_argument(
+        "--prompts-dir",
+        help="Directory to read/write test-prompts.json (default: the skill directory). "
+        "Decouples prompt location from --output.",
+    )
     return parser
 
 
@@ -660,7 +671,13 @@ def _resolve_skill_paths(args: argparse.Namespace, cwd: Path) -> List[Path]:
         skills_dir = Path(args.skills_dir)
         if not skills_dir.is_absolute():
             skills_dir = cwd / skills_dir
-        return sorted(p for p in skills_dir.iterdir() if p.is_dir() and not p.name.startswith("."))
+        # ``skill-prism`` is the meta-skill (agent harness), not a skill under test;
+        # skip it when batch-evaluating a skills directory.
+        return sorted(
+            p
+            for p in skills_dir.iterdir()
+            if p.is_dir() and not p.name.startswith(".") and p.name != "skill-prism"
+        )
     p = Path(args.skill)
     if not p.is_absolute():
         p = cwd / p
@@ -676,11 +693,11 @@ def _run_evaluations(
     prompts_verification: Optional[PromptsVerificationReport],
 ) -> List[SkillReport]:
     """Evaluate all requested skills and return their reports."""
-    output_dir: Optional[Path] = None
-    if args.output:
-        output_dir = Path(args.output).parent
-        if not output_dir.is_absolute():
-            output_dir = Path.cwd() / output_dir
+    prompts_dir: Optional[Path] = None
+    if args.prompts_dir:
+        prompts_dir = Path(args.prompts_dir)
+        if not prompts_dir.is_absolute():
+            prompts_dir = Path.cwd() / prompts_dir
 
     reports: List[SkillReport] = []
     for sp in skill_paths:
@@ -697,7 +714,7 @@ def _run_evaluations(
             llm_judgments=llm_judgments,
             prompts_verification=prompts_verification,
             auto_generate_prompts=not args.no_generate_prompts,
-            output_dir=output_dir,
+            prompts_dir=prompts_dir,
         )
         reports.append(report)
     return reports

@@ -68,7 +68,7 @@ class CIPipeline:
         run_deps: bool = True,
         run_deps_dry_run: bool = False,
         code_path: Optional[Path] = None,
-        verify_only: bool = True,
+        results_mode: bool = True,
         agent_command: Optional[List[str]] = None,
     ) -> Dict[str, Any]:
         """Execute the pipeline.
@@ -173,7 +173,7 @@ class CIPipeline:
 
         # A concrete code artifact means we should execute it, not just verify.
         if code_path is not None:
-            verify_only = False
+            results_mode = False
 
         results_path = self.output_dir / f"results.{output_format}"
         benchmark_results = run_benchmarks(
@@ -184,7 +184,7 @@ class CIPipeline:
             suite=suite,
             level=level,
             output_format=output_format,
-            verify_only=verify_only,
+            results_mode=results_mode,
             agent_command=agent_command,
         )
 
@@ -243,7 +243,7 @@ def run_ci_pipeline(
     run_deps: bool = True,
     run_deps_dry_run: bool = False,
     code_path: Optional[Path] = None,
-    verify_only: bool = True,
+    results_mode: bool = True,
 ) -> Dict[str, Any]:
     """Convenience wrapper around ``CIPipeline.run``."""
     pipeline = CIPipeline(
@@ -265,5 +265,5 @@ def run_ci_pipeline(
         run_deps=run_deps,
         run_deps_dry_run=run_deps_dry_run,
         code_path=code_path,
-        verify_only=verify_only,
+        results_mode=results_mode,
     )

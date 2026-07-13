@@ -111,6 +111,7 @@ def save_test_prompts(
 ) -> Path:
     """Write test prompts to ``{output_dir or skill_path}/test-prompts.json``."""
     prompt_file = (output_dir or skill_path) / "test-prompts.json"
+    prompt_file.parent.mkdir(parents=True, exist_ok=True)
     prompt_file.write_text(
         json.dumps(prompts, indent=2, ensure_ascii=False),
         encoding="utf-8",

@@ -16,11 +16,11 @@ def test_build_parser_help() -> None:
     assert args.registry == "registry.yaml"
 
 
-def test_resolve_args_defaults_to_verify_only() -> None:
+def test_resolve_args_defaults_to_results_mode() -> None:
     parser = build_parser()
     args = parser.parse_args(["--skill", "foo", "--registry", "registry.yaml"])
     assert resolve_args(args) == 0
-    assert args.verify_only is True
+    assert args.results_mode is True
 
 
 def test_resolve_args_run_with_agent_command() -> None:
@@ -29,18 +29,18 @@ def test_resolve_args_run_with_agent_command() -> None:
     os.environ["SKILLPRISM_AGENT_COMMAND"] = "echo agent"
     try:
         assert resolve_args(args) == 0
-        assert args.verify_only is False
+        assert args.results_mode is False
     finally:
         del os.environ["SKILLPRISM_AGENT_COMMAND"]
 
 
-def test_resolve_args_code_disables_verify_only(tmp_path: Path) -> None:
+def test_resolve_args_code_disables_results_mode(tmp_path: Path) -> None:
     code = tmp_path / "script.py"
     code.write_text("print('hi')", encoding="utf-8")
     parser = build_parser()
     args = parser.parse_args(["--skill", "foo", "--registry", "registry.yaml", "--code", str(code)])
     assert resolve_args(args) == 0
-    assert args.verify_only is False
+    assert args.results_mode is False
 
 
 def test_resolve_args_code_missing_returns_error() -> None:
@@ -49,12 +49,12 @@ def test_resolve_args_code_missing_returns_error() -> None:
     assert resolve_args(args) == 2
 
 
-def test_resolve_args_verify_only_conflicts_with_code(tmp_path: Path) -> None:
+def test_resolve_args_results_mode_conflicts_with_code(tmp_path: Path) -> None:
     code = tmp_path / "script.py"
     code.write_text("print('hi')", encoding="utf-8")
     parser = build_parser()
     args = parser.parse_args(
-        ["--skill", "foo", "--registry", "registry.yaml", "--code", str(code), "--verify-only"]
+        ["--skill", "foo", "--registry", "registry.yaml", "--code", str(code), "--results"]
     )
     assert resolve_args(args) == 2
 

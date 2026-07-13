@@ -119,7 +119,7 @@ def main() -> int:
         run_deps=not args.no_deps,
         run_deps_dry_run=args.deps_dry_run,
         code_path=Path(args.code) if args.code else None,
-        verify_only=not args.run_benchmark,
+        results_mode=not args.run_benchmark,
     )
 
     report = format_report(results, args.output_format)

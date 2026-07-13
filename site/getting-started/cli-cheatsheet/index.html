@@ -1061,6 +1061,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../tutorial/build-bio-benchmark-with-claude-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build bio benchmark with claude code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../tutorial/05-optimization-loop/" class="md-nav__link">
         
   
@@ -2602,6 +2630,16 @@
 <td>提高主观评分稳定性</td>
 </tr>
 <tr>
+<td><code>--prompts-dir &lt;path&gt;</code></td>
+<td>test-prompts.json 读写目录（默认 skill 目录；与 <code>--output</code> 解耦）</td>
+<td>多 skill 项目隔离产物</td>
+</tr>
+<tr>
+<td><code>--no-generate-prompts</code></td>
+<td>不自动生成 test-prompts.json</td>
+<td>只读评估</td>
+</tr>
+<tr>
 <td><code>--output-history &lt;path&gt;</code></td>
 <td>写入全局趋势 JSONL</td>
 <td>追踪历史变化</td>
@@ -2612,9 +2650,16 @@
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>evaluate-skill<span class="w"> </span>skills/my-skill<span class="w"> </span>--detailed
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>evaluate-skill<span class="w"> </span>--all<span class="w"> </span>--skills-dir<span class="w"> </span>./skills<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span>--output<span class="w"> </span>docs/SKILL_SCORECARD.md<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span>--output<span class="w"> </span>reports/SKILL_SCORECARD.md<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span>--run-smoke<span class="w"> </span>--run-deps
 </code></pre></div>
+<blockquote>
+<ul>
+<li><code>--all</code> 批量评估会<strong>自动跳过 <code>skill-prism</code> 元 skill</strong>（它是 Agent harness，不是被测 skill）。</li>
+<li>未传 <code>--prompts-verification</code> 时，引擎自动尝试 <code>{skill}/.skillprism_prompts_verification.json</code>。</li>
+<li>生成物按 skill 隔离到 <code>artifacts/&lt;skill&gt;/</code>，跨 skill 汇总放 <code>reports/</code>。</li>
+</ul>
+</blockquote>
 <hr />
 <h2 id="test-skill_1"><code>test-skill</code><a class="headerlink" href="#test-skill_1" title="Permanent link">&para;</a></h2>
 <p>回答：<strong>这个 skill 能不能完成指定任务？</strong></p>
@@ -2643,7 +2688,7 @@
 <td>Agent 生成代码而非结果时</td>
 </tr>
 <tr>
-<td><code>--verify-only</code></td>
+<td><code>--results</code></td>
 <td>强制只验证现有输出（忽略 <code>SKILLPRISM_AGENT_COMMAND</code>）</td>
 <td>已生成结果且要跳过外部 agent 时</td>
 </tr>
@@ -2688,7 +2733,7 @@
 <td>保存中间结果</td>
 </tr>
 <tr>
-<td><code>--verify-only</code></td>
+<td><code>--results</code></td>
 <td>跳过执行，只评估已存在的输出</td>
 <td>默认开启</td>
 </tr>

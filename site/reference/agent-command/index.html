@@ -862,6 +862,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../tutorial/build-bio-benchmark-with-claude-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build bio benchmark with claude code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../tutorial/05-optimization-loop/" class="md-nav__link">
         
   
@@ -2170,7 +2198,7 @@
 
 <h1 id="external-agent-command">External Agent Command<a class="headerlink" href="#external-agent-command" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>By default <code>test-skill</code> runs in <strong>verify-only mode</strong>: the Agent (or a sub-agent) produces the output and the engine only evaluates it. If you prefer, you can configure an <strong>external agent command</strong> that the engine invokes to produce the output.</p>
+<p>By default <code>test-skill</code> runs in <strong>results mode</strong>: the Agent (or a sub-agent) produces the output and the engine only evaluates it. If you prefer, you can configure an <strong>external agent command</strong> that the engine invokes to produce the output.</p>
 </blockquote>
 <h2 id="when-to-use">When to use<a class="headerlink" href="#when-to-use" title="Permanent link">&para;</a></h2>
 <ul>
@@ -2192,7 +2220,7 @@
 <p>Then run <code>test-skill</code> as usual:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>test-skill<span class="w"> </span>--skill<span class="w"> </span>my-skill<span class="w"> </span>--task<span class="w"> </span>csv_summary
 </code></pre></div>
-<p>When <code>SKILLPRISM_AGENT_COMMAND</code> is set, the engine automatically switches from verify-only to agent mode. To force verify-only anyway, pass <code>--verify-only</code>.</p>
+<p>When <code>SKILLPRISM_AGENT_COMMAND</code> is set, the engine automatically switches from results to agent mode. To force results anyway, pass <code>--results</code>.</p>
 <h2 id="command-interface">Command interface<a class="headerlink" href="#command-interface" title="Permanent link">&para;</a></h2>
 <p>The external command must:</p>
 <ul>
@@ -2214,7 +2242,7 @@
 </thead>
 <tbody>
 <tr>
-<td>Verify-only</td>
+<td>Results</td>
 <td>Default (no <code>SKILLPRISM_AGENT_COMMAND</code>, no <code>--code</code>)</td>
 <td>Current Agent / sub-agent</td>
 </tr>
@@ -2230,7 +2258,7 @@
 </tr>
 </tbody>
 </table>
-<p>The three modes are mutually exclusive; <code>--code</code> and explicit <code>--verify-only</code> take precedence over <code>SKILLPRISM_AGENT_COMMAND</code>.</p>
+<p>The three modes are mutually exclusive; <code>--code</code> and explicit <code>--results</code> take precedence over <code>SKILLPRISM_AGENT_COMMAND</code>.</p>
 
 
 

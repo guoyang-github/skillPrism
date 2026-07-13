@@ -359,7 +359,7 @@ def run_test_skill(skill_name: str, code_path: Optional[Path]) -> Dict[str, Any]
     if code_path:
         cmd.extend(["--code", str(code_path)])
     else:
-        cmd.append("--verify-only")
+        cmd.append("--results")
 
     proc = subprocess.run(cmd, capture_output=True, text=True)
     return {

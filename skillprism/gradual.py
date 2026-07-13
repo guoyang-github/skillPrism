@@ -53,7 +53,7 @@ def run_gradual_stage(
     output_dir: Optional[Path] = None,
     ratchet: bool = True,
     code_path: Optional[Path] = None,
-    verify_only: bool = True,
+    results_mode: bool = True,
     agent_command: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """Run a single Gradual stage and compare against the stage baseline."""
@@ -75,7 +75,7 @@ def run_gradual_stage(
         static_only=False,
         run_benchmark=True,
         code_path=code_path,
-        verify_only=verify_only,
+        results_mode=results_mode,
         agent_command=agent_command,
     )
 
@@ -88,7 +88,7 @@ def run_gradual_pipeline(
     base_output_dir: Optional[Path] = None,
     ratchet: bool = True,
     code_path: Optional[Path] = None,
-    verify_only: bool = True,
+    results_mode: bool = True,
     agent_command: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """Run Gradual stages from level 0 up to ``max_level``.
@@ -122,7 +122,7 @@ def run_gradual_pipeline(
             output_dir=base_output_dir,
             ratchet=ratchet,
             code_path=code_path,
-            verify_only=verify_only,
+            results_mode=results_mode,
             agent_command=agent_command,
         )
         overall["stages"][f"level{level}"] = stage_result
@@ -171,11 +171,12 @@ def main() -> int:
         help="Path to generated skill code to execute",
     )
     parser.add_argument(
-        "--verify-only",
+        "--results",
+        dest="results_mode",
         action="store_true",
         default=None,
-        help="Skip execution; verify that the expected output path already exists (default: True). "
-        "Explicit --verify-only ignores SKILLPRISM_AGENT_COMMAND.",
+        help="Skip execution; evaluate the existing results at the expected output path "
+        "(default: True). Explicit --results ignores SKILLPRISM_AGENT_COMMAND.",
     )
     args = parser.parse_args()
 
@@ -185,17 +186,17 @@ def main() -> int:
         if not code_path.exists():
             print(f"Error: code file not found: {code_path}")
             return 2
-        if args.verify_only is True:
-            print("Error: --verify-only cannot be used with --code")
+        if args.results_mode is True:
+            print("Error: --results cannot be used with --code")
             return 2
-        verify_only = False
-    elif args.verify_only is True:
-        verify_only = True
+        results_mode = False
+    elif args.results_mode is True:
+        results_mode = True
     elif os.environ.get("SKILLPRISM_AGENT_COMMAND"):
-        verify_only = False
+        results_mode = False
         agent_command = os.environ["SKILLPRISM_AGENT_COMMAND"].split()
     else:
-        verify_only = True
+        results_mode = True
 
     overall = run_gradual_pipeline(
         skill=args.skill,
@@ -205,7 +206,7 @@ def main() -> int:
         base_output_dir=Path(args.output_dir),
         ratchet=not args.no_ratchet,
         code_path=code_path,
-        verify_only=verify_only,
+        results_mode=results_mode,
         agent_command=agent_command,
     )
 

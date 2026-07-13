@@ -378,7 +378,7 @@ test-skill --skill my-first-table \
 
 ## 4.10 运行 Benchmark
 
-### Verify-only 模式（默认）
+### Results 模式（默认）
 
 ```bash
 test-skill --skill my-first-table --registry benchmarks/my-first-table/registry.yaml --task csv_summary

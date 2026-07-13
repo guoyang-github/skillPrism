@@ -1,5 +1,4 @@
 ---
-
 name: skill-prism
 description: >-
   Unified Agent interface for skillPrism. Translates natural-language intents
@@ -56,34 +55,48 @@ skillPrism answers three questions:
 
 ---
 
-## Quick Intent Map
+## Output Location Rules
 
-| User says | Agent runs |
-|---|---|
-| "Evaluate this skill" | `evaluate-skill skills/<skill>` |
-| "Score all skills" | `evaluate-skill --all --skills-dir ./skills` |
-| "Test this skill" | `test-skill --skill <skill> --task <task>` |
-| "Run all benchmarks" | `test-skill --skill <skill> --registry benchmarks/<skill>/registry.yaml` |
-| "Build a benchmark" | `build-skill-test --id ... --skill <skill> --task <task> --input ... --expected-path ...` |
-| "Improve this skill" | `improve-skill skills/<skill> --record-baseline --suggest` |
-| "Judge my edit" | `improve-skill skills/<skill> --judge --apply` |
-| "Run full pipeline" | `skill-pipeline --intent "run full quality pipeline"` |
-| "CI gate" | `skill-ci --skill <skill>` |
+`<project-root>` 下可同时测多个 skill，生成物一律**按 skill 命名空间隔离**，绝不写进 skill 树。约定：`artifacts/<skill>/` 放该 skill 的全部生成物，`reports/` 放跨 skill 汇总。
 
-### Natural-language variants
-
-The table above shows canonical phrases. Agent should also recognize these synonyms and word orders:
-
-| User says | Interpreted intent | Command to run |
+| 产物 | 位置 | 控制参数 |
 |---|---|---|
-| "跑一下 benchmark" / "run benchmarks" / "benchmark this skill" | Test skill against registry | `test-skill --skill <skill> --registry benchmarks/<skill>/registry.yaml` |
-| "给所有 skills 打分" / "score everything" / "grade all skills" | Evaluate all skills | `evaluate-skill --all --skills-dir ./skills` |
-| "评估一下 skill-prism" / "evaluate skill-prism" | Evaluate single skill | `evaluate-skill skills/skill-prism` |
-| "生成测试用例" / "generate prompts" / "create test prompts" | Generate test prompts | `evaluate-skill --skill <skill> --output <dir>/report.md` (prompts written beside the report, not in the skill tree) |
-| "看看有没有 regress" / "check regression" / "ratchet check" | Evaluate with ratchet | `evaluate-skill --ratchet --output docs/SKILL_SCORECARD.md` |
-| "CI 检查" / "run CI gate" / "static gate" | CI gate | `skill-ci --skill <skill>` |
-| "优化 skill-prism" / "improve skill-prism" / "fix the failing dimension" | Improve skill | `improve-skill skills/<skill> --record-baseline --suggest` |
-| "完整流水线" / "full pipeline" / "quality check everything" | Full pipeline | `skill-pipeline --intent "run full quality pipeline" --skills-dir ./skills --benchmark-registry benchmarks/<skill>/registry.yaml` |
+| scorecard / report | `artifacts/<skill>/scorecard.md` | `--output` |
+| test-prompts.json | `artifacts/<skill>/` | `--prompts-dir` |
+| LLM judgments | `artifacts/<skill>/llm_judgments.json` | Agent 写 → `--llm-judgments` |
+| prompts verification | `artifacts/<skill>/prompts_verification.json` | Agent 写 → `--prompts-verification` |
+| optimization history | `artifacts/<skill>/history.jsonl` | `--output-history` |
+| benchmark 结果 | `artifacts/<skill>/results.yaml` | `test-skill --output` |
+| benchmark baseline | `benchmarks/<skill>/baselines/<name>.yaml` | `--baseline` / `--ratchet` |
+| test / CI artifacts | `artifacts/<skill>/ci/` | `--output-dir` |
+| 跨 skill 汇总 | `reports/SKILL_SCORECARD.md` | `evaluate-skill --all --output` |
+
+**红线**：
+
+- **绝不**把生成物写进 `skills/skill-prism/`（本 skill 自身文件夹）或目标 skill 源码树，除非本次明确在编辑该 SKILL.md 或其代码资产。
+- 生成物默认落 `artifacts/<skill>/`；多 skill 时不要在 CWD 平铺 dot 文件，避免互相覆盖。
+
+---
+
+## Most Common Invocations
+
+按生命周期排序。每行是该环节**最常用的参数组合**（覆盖最常见整体场景，不是裸默认）。一个环节可能有多行，对应不同的常用场景。裸默认见各 Core Intent 节的 **Default**。
+
+| Phase | User says（默认说法） | Most common command |
+|---|---|---|
+| Evaluate | "评估这个 skill，详细看哪里扣分，主观维度用 LLM judge" | `evaluate-skill skills/<skill> --detailed --llm-judge` |
+| Evaluate | "给所有 skill 打分并出报告" | `evaluate-skill --all --skills-dir ./skills --output ./reports/SKILL_SCORECARD.md` |
+| Build | "为这个 skill 建 benchmark" | **进入 §2 引导流程**；最终落到 `build-skill-test --id <id> --skill <skill> --task <task> --input data/<level>/... --metric <id:type:args> --suite smoke --suite gradual --registry benchmarks/<skill>/registry.yaml` |
+| Test | "用代码跑全部 benchmark" | `test-skill --skill <skill> --registry benchmarks/<skill>/registry.yaml --code <path>` |
+| Test | "只评估已产出的结果（results 模式）" | `test-skill --skill <skill> --registry benchmarks/<skill>/registry.yaml` |
+| Test | "先跑冒烟" | `test-skill --skill <skill> --registry benchmarks/<skill>/registry.yaml --suite smoke --code <path>` |
+| Improve | "优化这个 skill 并判断是否保留" | `improve-skill skills/<skill> --record-baseline --suggest` → 编辑 → `improve-skill skills/<skill> --judge --apply` |
+| Improve | "自动改 3 轮" | `improve-skill skills/<skill> --auto-edit --max-rounds 3 --apply` |
+| Pipeline | "跑完整质量流水线" | `skill-pipeline --intent "run full quality pipeline" --skills-dir ./skills --benchmark-registry benchmarks/<skill>/registry.yaml --output ./reports/SKILL_QUALITY_REPORT.md` |
+| CI | "CI 静态门控" | `skill-ci --skill <skill>` |
+| CI | "CI 里也跑 benchmark" | `skill-ci --skill <skill> --registry benchmarks/<skill>/registry.yaml --run-benchmark --code <path>` |
+
+> 没有配置外部 judge 命令时，Agent 自己生成 `./.skillprism_llm_judgments.json` 并把 Evaluate/Improve 里的 `--llm-judge` 换成 `--llm-judgments ./.skillprism_llm_judgments.json`，对用户说法表现一致。详见各节 decision rule。
 
 ---
 
@@ -91,130 +104,296 @@ The table above shows canonical phrases. Agent should also recognize these synon
 
 ### 1. Evaluate a skill
 
-**User says**: "Evaluate this skill", "Score this skill", "Check this SKILL.md"
-
-**Default command** (when user does not specify extra requirements):
+**Default**（用户只说"评估一下"时）：
 
 ```bash
 evaluate-skill skills/my-skill
 ```
 
-**How to choose parameters from natural language**:
+**参数与意图线索（整合表）**：
 
-| User intent clue | Parameter to add | Example user phrase |
+| User intent clue | Parameter | Purpose |
 |---|---|---|
-| "详细", "告诉我哪里扣分", "定位短板" | `--detailed` | "详细评估一下这个 skill" |
-| "可执行", "跑一下示例", "smoke" | `--run-smoke` | "检查一下这个 skill 能不能跑" |
-| "依赖", "环境", "安装" | `--run-deps` | "看看依赖能不能装" |
-| "所有 skill", "批量", "打分" | `--all --skills-dir ./skills` | "给所有 skills 打个分" |
-| "LLM judge", "主观维度", "第二意见" | `--llm-judge` 或 `--llm-judgments` | "用 LLM judge 再看看" |
-| "对比 baseline", "别 regress" | `--ratchet` | "评估一下有没有 regress" |
-| "输出报告", "生成 scorecard" | `--output docs/SKILL_SCORECARD.md` | "生成一份 scorecard" |
-| "追踪历史", "趋势" | `--output-history docs/score_history.jsonl` | "记录到历史里" |
+| "详细"、"哪里扣分"、"定位短板" | `--detailed` | 逐维度证据与改进建议 |
+| "可执行"、"跑一下示例"、"smoke" | `--run-smoke` | 运行示例冒烟测试 |
+| "允许执行 skill 自带示例" | `--allow-exec` | 沙箱执行 skill 自带示例（仅可信/内部 skill 开启，以获得真实 D3 信号） |
+| "依赖"、"环境"、"安装" | `--run-deps` | 检查依赖可复现性 |
+| "所有 skill"、"批量"、"打分" | `--all` | 评估 `--skills-dir` 下所有 skill |
+| "skill 目录在别处" | `--skills-dir <path>` | Skills 根目录（默认 `./skills`） |
+| "LLM judge"、"主观维度"、"第二意见" | `--llm-judge` | 对主观维度启用 LLM judge（外部命令） |
+| "judge 次数" | `--llm-judge-count N` | judge 数量（默认 2） |
+| "Agent 已生成 judgments" | `--llm-judgments <path>` | 消费 Agent 预生成的 judgments 文件 |
+| "已验证 prompts" | `--prompts-verification <path>` | 消费预生成的 prompt 验证结果 |
+| "对比 baseline"、"别 regress" | `--ratchet` | 分数退步即失败 |
+| "输出报告"、"生成 scorecard" | `--output <path>` | 写 scorecard/report（单 skill 建议 `artifacts/<skill>/scorecard.md`；跨 skill 汇总用 `reports/`） |
+| "追踪历史"、"趋势" | `--output-history <path>` | 追加到 JSONL 趋势文件（建议 `artifacts/<skill>/history.jsonl`） |
+| "不要生成 test prompts" | `--no-generate-prompts` | 跳过 prompt 生成 |
+| "prompts 放指定目录" | `--prompts-dir <path>` | test-prompts.json 读写目录（默认 skill 目录；与 `--output` 解耦） |
+| "看进度" | `--verbose` / `-v` | 打印详细进度 |
 
-**Common combinations**:
+**Common combinations**（本环节最常用场景）：
 
 ```bash
 # 默认：快速确定性评分
 evaluate-skill skills/my-skill
 
-# 详细评估
-evaluate-skill skills/my-skill --detailed
-
-# 检查可执行性和依赖
-evaluate-skill skills/my-skill --run-smoke --run-deps
+# 详细评估 + 主观维度 LLM judge
+evaluate-skill skills/my-skill --detailed --llm-judge
 
 # 批量评估并生成报告
-evaluate-skill --all --skills-dir ./skills --output docs/SKILL_SCORECARD.md
-
-# 主观维度用 LLM judge（需要配置外部 judge 命令）
-evaluate-skill skills/my-skill --llm-judge
+evaluate-skill --all --skills-dir ./skills --output ./reports/SKILL_SCORECARD.md
 
 # Agent 已生成 judgments 文件，引擎直接消费（无需配置外部命令）
-evaluate-skill skills/my-skill --llm-judgments .skillprism_llm_judgments.json
+evaluate-skill skills/my-skill --llm-judgments ./.skillprism_llm_judgments.json
 
-# 完整 CI 前检查
+# CI 前完整检查
 evaluate-skill skills/my-skill --detailed --run-smoke --run-deps --ratchet
 ```
 
 **Side effects and output directory**:
 
-- By default, `evaluate-skill` does **not** modify the skill source tree.
-- If `--output <path>` is provided, auto-generated `test-prompts.json` is written next to the report (in the same directory as `--output`), not inside the skill directory.
-- If you explicitly want prompts inside the skill tree, run without `--output`.
-- Use `--no-generate-prompts` to skip prompt generation entirely.
-
-**Key parameters**:
-
-| Parameter | Purpose |
-|---|---|
-| `--detailed` | Per-dimension evidence and suggestions |
-| `--all` | Evaluate all skills under `--skills-dir` |
-| `--skills-dir <path>` | Skills root directory (default: `./skills`) |
-| `--run-smoke` | Run example smoke tests |
-| `--allow-exec` | Execute skill-shipped example code (sandboxed). Off by default; safe to enable for **trusted/internal** skills to get the real D3 signal. Keep off for untrusted skill sources. |
-| `--run-deps` | Check dependency reproducibility |
-| `--llm-judge` | Enable LLM judge for subjective dimensions |
-| `--llm-judge-count N` | Number of judges (default: 2) |
-| `--llm-judgments <path>` | Consume pre-computed judgments generated by the Agent |
-| `--prompts-verification <path>` | Consume pre-computed prompt verification |
-| `--output-history <path>` | Append result to JSONL trend file |
-| `--ratchet` | Fail if score regresses vs baseline |
-| `--output <path>` | Write scorecard/report |
-| `--verbose` / `-v` | Print detailed progress |
+- 默认 `evaluate-skill` **不**修改 skill 源码树。
+- `test-prompts.json` 落点由 `--prompts-dir` 控制（与 `--output` 解耦）：不传则写入 skill 目录；多 skill 项目建议 `--prompts-dir artifacts/<skill>`。
+- `--output` 只管 scorecard/report 路径，不再影响 prompt 落点。
+- 用 `--no-generate-prompts` 完全跳过 prompt 生成。
 
 **Agent decision rule for LLM judge**:
 
-- If `SKILLPRISM_LLM_JUDGE_COMMAND` or `skill_rubric_types.yaml` 中 `llm_judge.command` 有值，使用 `--llm-judge`。引擎会通过子进程调用该外部 judge 命令。
-- 否则，Agent 自己生成 `.skillprism_llm_judgments.json`，再使用 `--llm-judgments <file>`。
-- 两种路径对用户请求表现一致："用 LLM judge 再看看"。
+- 若 `SKILLPRISM_LLM_JUDGE_COMMAND` 或 `skill_rubric_types.yaml` 中 `llm_judge.command` 有值，用 `--llm-judge`，引擎通过子进程调用外部 judge 命令。
+- 否则，Agent 自己生成 `./.skillprism_llm_judgments.json`，再用 `--llm-judgments <file>`。
+- 两条路径对用户请求表现一致："用 LLM judge 再看看"。
 
 **路径 A：Agent 生成 judgments 文件**
 
 - 默认评估 **D2 和 D5**（可选 D6、D8）。
-- 每个维度调用 **2 个独立 judge**，每次调用必须是独立子 agent / 独立 LLM 请求，不能共享推理上下文。
+- 每个维度调用 **2 个独立 judge**，每次必须是独立子 agent / 独立 LLM 请求，不能共享推理上下文。
 - 必须使用 [`references/LLM_JUDGE.md`](references/LLM_JUDGE.md) 中的 prompt 模板，不得修改 JSON 输出要求。
-- 用 `mean` 聚合 2 个分数，写入 `.skillprism_llm_judgments.json`。
-- 文件格式见 [`references/LLM_JUDGE.md`](references/LLM_JUDGE.md)。
+- 用 `mean` 聚合 2 个分数，写入 `./.skillprism_llm_judgments.json`。
 
 **路径 B：外部 judge 命令**
 
 - 外部命令从 stdin 接收引擎构造的 user prompt，stdout 返回 `{"score": int, "reason": str}`，退出码 0 表示成功。
-- 配置方式：
-  - 环境变量：`export SKILLPRISM_LLM_JUDGE_COMMAND="python path/to/judge.py"`
-  - 或 `skill_rubric_types.yaml`：`llm_judge.command`
-- 启用：`evaluate-skill skills/<skill> --llm-judge --llm-judge-count 2`
-- 完整接口规范和 prompt 模板见 [`references/LLM_JUDGE.md`](references/LLM_JUDGE.md)。
+- 配置：环境变量 `export SKILLPRISM_LLM_JUDGE_COMMAND="python path/to/judge.py"`，或 `skill_rubric_types.yaml` 的 `llm_judge.command`。
+- 启用：`evaluate-skill skills/<skill> --llm-judge --llm-judge-count 2`。
+- 完整接口规范与 prompt 模板见 [`references/LLM_JUDGE.md`](references/LLM_JUDGE.md)。
 
 ---
 
-### 2. Test a skill
+### 2. Build a benchmark（引导流程）
 
-**User says**: "Test this skill", "Run the benchmark", "Does the code work?"
+> **前提**：`build-skill-test` **只把一条 benchmark 写进 `benchmarks/<skill>/registry.yaml`**。
+> 它**不**创建目录、**不**写 task spec、**不**生成/复制数据（`--generate-expected` 仅对 csv 做简单拷贝）、**不**写 `metrics.py`、**不**写执行代码。
+> 这些都要在调用前由 Agent 与用户一起准备好。因此"帮我建个 benchmark"不是一句话能完成的——Agent 按下面流程**逐步引导**用户。
+
+下面是可以**照抄执行**的 runbook。每步给你三块：**Agent 说**（复制给用户的话术）、**收集/判断**（这一步在要什么、怎么分支）、**落地**（复制运行的命令或写入的文件）。
+全程遵循 [`references/AGENT_GUIDE.md`](references/AGENT_GUIDE.md)：写文件前先展示并获确认，不编造不安全默认。
+
+占位符：`<skill>` 技能名，`<task>` 任务 id，`<fmt>` 格式（`csv`/`h5ad`/`markdown`/`directory`），`<id>` benchmark id。所有相对路径都相对 `benchmarks/<skill>/`。
+
+---
+
+**Step 0 — 定界**
+
+Agent 说：
+> "我来为 `<skill>` 建 benchmark。先确认两件事：① skill 名是 `<skill>` 吗？② benchmark 目录用 `benchmarks/<skill>/` 可以吗？确认后我建目录骨架。"
+
+落地（用户确认后）：
+```bash
+mkdir -p benchmarks/<skill>/{tasks,data,expected}
+```
+
+---
+
+**Step 1 — Task spec**
+
+Agent 说：
+> "定义任务契约。请给我：任务描述一句话、输入格式（csv/h5ad/markdown/directory）、输出格式。输入占位符我叫 `{input}`、输出叫 `{output}`，可以吗？若输出是 h5ad，要比较的标签列名是什么（设 `label_column`）？若是 csv，有哪些必需列（设 `required_columns`）？我起草后给你看完整 YAML 再写入。"
+
+落地（确认后写 `benchmarks/<skill>/tasks/<task>.yaml`）：
+```yaml
+id: <task>
+skill: <skill>
+name: <Human name>
+description: <what this task verifies>
+# 仅 h5ad 需要比较标签列时加：label_column: <col>
+prompt: |
+  ## 角色
+  <role>
+  ## 任务
+  <one-line task>
+  ## 输入
+  - 文件路径：{input}
+  - 格式：<fmt>
+  ## 输出要求
+  - 文件路径：{output}
+  - 格式：<fmt>
+input:
+  format: <fmt>
+  path: "{input}"
+output:
+  format: <fmt>
+  path: "{output}"
+```
+> 占位符 `{input}`/`{output}` 的名字自由取，但必须和 `input.path`/`output.path` 一致；引擎会把它们解析成同名全局变量注入 `--code` 脚本。
+
+---
+
+**Step 2 — 数据**
+
+Agent 说：
+> "准备输入数据，放 `benchmarks/<skill>/data/<level>/`。数据来源三选一：A 你已有文件（给我路径）；B 用库内置数据集（如 `scanpy.datasets.pbmc3k_processed`）；C 我写脚本合成（用 `skillprism.testing.mock_data` 或 `scripts/generate_data.py`，固定 seed 可复现）。你选哪个？规模多大？我先做成 level 0（极小，冒烟）和 level 1（小，回归）两份，生成后给你看 shape/前几行再确认。"
+
+落地分支：
+- A：`cp <user-file> benchmarks/<skill>/data/level1/`
+- B：在 registry 条目用 `dataset: {source: <builtin>, type: builtin}`（Step 6 处理），此处无需落文件。
+- C：写并运行 `scripts/generate_data.py`，产物落到 `data/level0/`、`data/level1/`，固定 `random_state`。
+
+---
+
+**Step 3 — Expected（可选，先判断）**
+
+Agent 说：
+> "这条 benchmark 要不要和『金标准』对比？"
+> - 不要（只检查输出自身是否合理）→ 跳过 expected，Step 4 选自洽性 metric。
+> - 要（比对一致性）→ 金标准从哪来：A 你已有文件；B 我写参考实现生成。生成后放 `benchmarks/<skill>/expected/`，并和金标准的细胞/行顺序保持一致（按位置对齐比较）。"
+
+落地（仅"要"时）：A `cp <gold> benchmarks/<skill>/expected/`；B 写参考实现生成到 `expected/<file>`。
+
+---
+
+**Step 4 — Metrics**
+
+Agent 说：
+> "选指标。先复用内置，不够再写私有。我列一下当前可用内置 metric，你挑；阈值我提议默认，你确认。"
+
+落地（发现内置）：
+```bash
+python -c "from skillprism.benchmark.metrics import list_metrics; print(list_metrics())"
+```
+
+落地（需私有 metric 时写 `benchmarks/<skill>/metrics.py`，随 registry 自动加载；签名固定）：
+```python
+from skillprism.benchmark.metrics import metric
+
+@metric("my_metric")                 # id 供 registry 引用
+def my_metric(actual_path, expected_path, task_spec):
+    # 返回一个单值。无需 expected 时忽略 expected_path；需要但缺失时返回 None（判失败）。
+    ...
+```
+> metric 是**单值判断**：函数算一个数，registry 里用 `type/threshold` 判定。自洽性指标（无 expected）：`n_clusters`、`row_count`、`has_required_columns`；一致性指标（需 expected）：`ari`、`nmi`、`mean_rmse`、私有 `*_accuracy`。
+
+---
+
+**Step 5 — 执行方式**
+
+Agent 说：
+> "输出由谁产出？三选一：① `--code <path>`：引擎在沙箱里执行被测代码（最适合 CI/回归）；② agent 模式：配置 `SKILLPRISM_AGENT_COMMAND`，引擎调外部 agent；③ results 模式：只评估已存在的输出（Agent 已产出结果）。你选哪个？选①的话我现在起草 `sample_skill_code.py`。"
+
+落地（选①时写 `sample_skill_code.py`，全局变量名 = Step 1 占位符）：
+```python
+# 全局变量 input / output 由引擎从 task spec 占位符注入
+...  # 读 input，写 output
+```
+
+---
+
+**Step 6 — 注册（此时才调 build-skill-test）**
+
+Agent 说：
+> "我把上面收集到的值注册进 `benchmarks/<skill>/registry.yaml`。拟用 id=`<id>`、level=`<0|1|2|3>`、suite 加 `smoke` 和 `gradual`。注册命令如下，确认后我执行，并给你看生成的条目。"
+
+落地：
+```bash
+build-skill-test \
+  --id <id> --name "<name>" \
+  --skill <skill> --task <task> \
+  --task-spec tasks/<task>.yaml \
+  --level <0|1|2|3> \
+  --input data/<level>/... \
+  `# 仅 Step 3 要金标准时加：` [--expected-path expected/<file>] \
+  --metric <id:type:args> [--metric ...] \
+  --suite smoke --suite gradual \
+  --registry benchmarks/<skill>/registry.yaml
+```
+> `--metric` 的 `type`：`min`/`max`/`range`/`exact`/`tolerance`。例：`row_count:min:8`、`ari:min:0.4`、`n_clusters:range:3:12`。
+
+---
+
+**Step 7 — 验证**
+
+Agent 说：
+> "先跑冒烟，再跑渐进。失败我带你回到对应步骤修。"
+
+落地：
+```bash
+# 冒烟
+test-skill --skill <skill> --registry benchmarks/<skill>/registry.yaml --suite smoke --code <path>
+# 渐进（level 0 → 1）
+test-skill --skill <skill> --registry benchmarks/<skill>/registry.yaml --suite gradual --code <path>
+```
+
+---
+
+**一页信息收集表（Agent 开场可一次性贴出，逐项打勾）**
+
+| 项 | 谁来填 | 示例 |
+|---|---|---|
+| skill 名 | 用户必填 | `<skill>` |
+| task id | 用户必填 | `<task>` |
+| 输入/输出格式 | 用户必填 | `h5ad` → `h5ad` |
+| 输入数据来源 | 用户必填 | A 文件 / B builtin / C 合成 |
+| 是否对比金标准 | 用户必填 | 是 / 否 |
+| metrics 与阈值 | Agent 提议，用户确认 | `ari:min:0.4` |
+| level / suite | Agent 提议，用户确认 | level0+1；smoke+gradual |
+| 执行方式 | 用户必填 | `--code` / agent / results |
+
+**用户必须提供的最少信息**（Agent 不得编造不安全默认）：skill 名、task id、输入/输出格式、输入数据、是否做金标准对比、执行方式。
+**Agent 可提议但须确认的默认**：level 0/1 划分、suite 名（smoke/gradual/release）、`cache_dir`、默认阈值、占位符名（`{input}`/`{output}`）。
+
+**参数对照（收集到的答案如何映射到 `build-skill-test`）**：
+
+| User intent clue | Parameter | Purpose |
+|---|---|---|
+| （直接指定） | `--id` | Benchmark 唯一 id |
+| （直接指定） | `--name` | 人类可读名称 |
+| （直接指定） | `--skill` | 关联的 skill 名 |
+| （直接指定） | `--task` | Task id |
+| "task spec 在别处" | `--task-spec <path>` | task spec 路径（相对 registry 目录，默认 `tasks/<task>.yaml`） |
+| "level N" | `--level N` | 难度等级 0–3 |
+| （直接指定） | `--input <path>` | 输入数据路径（相对 registry 目录） |
+| "有金标准" | `--expected-path <path>` | 金标准路径（相对 registry 目录） |
+| "定义指标" | `--metric id:type:args` | 指标阈值（可重复；type ∈ min/max/range/exact/tolerance） |
+| "加入 smoke/gradual suite" | `--suite <name>` | 加入 suite（可重复） |
+| （直接指定） | `--registry <path>` | 注册表文件（必填；约定 `benchmarks/<skill>/registry.yaml`） |
+| "自动生成金标准" | `--generate-expected` | 仅对 csv 做简单拷贝 |
+| "需要 GPU" | `--gpu` | 标记需要 GPU |
+| "真实数据" | `--real-data` | 真实数据，completion-only |
+
+---
+
+### 3. Test a skill
 
 The primary purpose of `test-skill` is to verify that a **skill works as part of an Agent's capabilities**. The skill is the thing being tested; the Agent is the executor that selects and invokes it.
 
-**Important**: By default `test-skill` runs in **verify-only mode**. It does **not** execute any code and does **not** call an LLM. It only checks whether the expected output file already exists and satisfies the metrics. Therefore, **you must produce the output before calling `test-skill`**, unless an external agent command is configured.
+**Important**: By default `test-skill` runs in **results mode**. It does **not** execute any code and does **not** call an LLM. It only checks whether the expected output already exists and satisfies the metrics. Therefore, **you must produce the output before calling `test-skill`**, unless `--code` or an external agent command is configured.
+
+**Default**（用户只说"跑一下"，验证已产出结果）：
+
+```bash
+test-skill --skill my-skill --registry benchmarks/my-skill/registry.yaml
+```
 
 **Execution mode selection**:
 
 | Mode | Trigger | Who produces the result |
 |---|---|---|
-| **Verify-only (default)** | No `SKILLPRISM_AGENT_COMMAND`, no `--code` | Current Agent / sub-agent |
+| **Results (default)** | No `SKILLPRISM_AGENT_COMMAND`, no `--code` | Current Agent / sub-agent 已产出 |
 | **External agent** | `SKILLPRISM_AGENT_COMMAND` is set | External command invoked by the engine |
 | **Code** | `--code <path>` | Engine executes the provided code |
 
-Use `--verify-only` to force verify-only mode even when `SKILLPRISM_AGENT_COMMAND` is set.
+Use `--results` to force results mode even when `SKILLPRISM_AGENT_COMMAND` is set.
 
----
-
-#### Default workflow: Agent/sub-agent produces the result, engine verifies
-
-```bash
-test-skill --skill my-skill --task csv_summary
-```
-
-**What the Agent must do before running the command above**:
+#### Default workflow: Agent/sub-agent produces the result, engine evaluates (results mode)
 
 ```text
 当前 Agent（已加载 skill-prism + target skills）：
@@ -223,214 +402,83 @@ test-skill --skill my-skill --task csv_summary
   3. （推荐）创建子 agent：只保留 skill 能力，不保留当前任务推理上下文
   4. 子 agent 看到 task prompt，识别并调用合适的 skill
   5. 子 agent 生成结果文件到 task-spec 指定的 output path
-  6. 当前 Agent 运行：test-skill --skill my-skill --task csv_summary
+  6. 当前 Agent 运行：test-skill --skill my-skill --registry benchmarks/my-skill/registry.yaml
   7. skillPrism 评估结果并报告 PASS/FAIL
 ```
 
-This is the recommended mode because:
-- It tests whether the Agent can correctly select and invoke the right skill.
-- The Agent can retry, iterate, and debug before finalizing the output.
-- The engine stays deterministic and does not call LLMs.
+推荐原因：测试 Agent 能否正确选择并调用 skill；Agent 可在定稿前重试/迭代/排错；引擎保持确定性、不调 LLM。
 
-> When spawning sub-agents or reporting results to the user, follow the conventions in [`references/AGENT_GUIDE.md`](references/AGENT_GUIDE.md): explain the plan, ask before editing files, show diffs, and recover from failures gracefully.
-
----
-
-#### Code workflow: Agent/sub-agent produces code, engine executes and verifies
-
-If you want the Agent to produce **executable code** instead of the final result, and let the engine run it:
+#### Code workflow: `--code <path>`
 
 ```text
-当前 Agent（已加载 skill-prism + target skills）：
-  1. 读取 task spec: benchmarks/my-skill/tasks/csv_summary.yaml
-  2. 拿到 input path、output path 和 task prompt
-  3. （推荐）创建子 agent：只保留 skill 能力，不保留当前任务推理上下文
-  4. 子 agent 看到 task prompt，识别并调用合适的 skill
-  5. 子 agent 生成可执行代码文件，例如 sample_skill_code.py
-  6. 当前 Agent 运行：test-skill --skill my-skill --task csv_summary --code sample_skill_code.py
-  7. skillPrism 执行代码并评估产出，报告 PASS/FAIL
+1-4 同上
+5. 子 agent 生成可执行代码文件，例如 sample_skill_code.py
+6. 当前 Agent 运行：test-skill --skill my-skill --registry benchmarks/my-skill/registry.yaml --code sample_skill_code.py
+7. skillPrism 在沙箱中执行代码并评估产出，报告 PASS/FAIL
 ```
 
-Use this when:
-- The task is easier to express as code than as a direct result.
-- You want a reproducible artifact for CI.
-- You want to test the skill's code-generation capability rather than its end-to-end reasoning.
+适用：任务更适合表达为代码；需要可复现的 CI 产物；想测 skill 的代码生成能力。
+> **代码来源无关**：`--code` 接受任何可执行文件——Agent 生成、用户手写、纳入版本管理、外部生成器产出。引擎只检查文件存在并执行它。
 
-> **Code source does not matter.** `--code` accepts any executable file: Agent-generated, user-written, checked into version control, or produced by an external generator. The engine only checks that the file exists and executes it.
-
----
-
-#### External agent workflow: engine invokes an external agent command
-
-If `SKILLPRISM_AGENT_COMMAND` is configured, the engine itself invokes the external command to produce the result:
+#### External agent workflow
 
 ```bash
 export SKILLPRISM_AGENT_COMMAND="python examples/editor_wrappers/agent_caller.py"
-test-skill --skill my-skill --task csv_summary
+test-skill --skill my-skill --registry benchmarks/my-skill/registry.yaml
 ```
 
-**What happens**:
+引擎构造 task prompt，通过 stdin 传给外部命令；外部命令读 `SKILLPRISM_INPUT_PATH`，写结果到 `SKILLPRISM_OUTPUT_PATH`；引擎评估。用 `--results` 可在已配置外部 agent 时仍只评估现有输出。
 
-```text
-1. 引擎读取 task spec
-2. 引擎构造 task prompt
-3. 引擎调用 SKILLPRISM_AGENT_COMMAND，通过 stdin 传入 prompt
-4. 外部 agent 读取 SKILLPRISM_INPUT_PATH，生成结果到 SKILLPRISM_OUTPUT_PATH
-5. 引擎评估 output 并报告 PASS/FAIL
-```
+**参数与意图线索（整合表）**：
 
-Use this when:
-- You want a clean separation between the measuring engine and the executing agent.
-- The current Agent context should not be polluted with task-specific reasoning.
-- You have a dedicated agent process or LLM wrapper.
-
-Use `--verify-only` to skip the external agent and verify an existing output even when `SKILLPRISM_AGENT_COMMAND` is set.
-
----
-
-#### How to choose parameters from natural language
-
-| User intent clue | Parameter to add | Example user phrase |
+| User intent clue | Parameter | Purpose |
 |---|---|---|
-| "所有 benchmark", "跑一遍" | `--registry <path>` | "跑一下这个 skill 的所有 benchmark" |
-| "用代码", "让 Agent 写代码" | `--code <path>` | "让 Agent 生成代码来跑" |
-| "外部 agent", "用另一个 agent 跑" | 配置 `SKILLPRISM_AGENT_COMMAND` | "让外部 agent 执行这个 benchmark" |
-| "快速", "quick", "先快速验证" | `--mode quick` | "快速验证一下" |
-| "渐进", "逐步", "从简单到复杂" | `--mode gradual` | "从简单到复杂逐步测试" |
-| "只跑 level N", "第 N 级" | `--level N` | "只跑 level 2" |
-| "最高到 level N" | `--max-level N` | "测到 level 2 就够了" |
-| "只跑 smoke", "轻量验证" | `--suite smoke` | "只跑 smoke 测试" |
-| "GPU", "显卡" | `--gpu` | "用 GPU 跑" |
+| （直接指定） | `--skill <name>` | Skill 名 |
+| "跑某个 task" | `--task <id>` | Task id（用 `benchmarks/<skill>/tasks/<task>.yaml`） |
+| "用代码跑"、"让 Agent 写代码" | `--code <path>` | 引擎执行该代码并评估产出 |
+| "跑全部 benchmark" | `--registry <path>` | 注册表 YAML（约定 `benchmarks/<skill>/registry.yaml`） |
+| "渐进"、"从简单到复杂" | `--mode single/gradual/quick` | 测试模式（默认 single） |
+| "只跑 level N" | `--level N` | 仅跑该 level（single 模式） |
+| "最高到 level N" | `--max-level N` | gradual 模式最高 level |
+| "只跑 smoke"、"轻量验证" | `--suite <name>` | 仅跑该 suite |
+| "强制只评估已有结果" | `--results` | results 模式；忽略 `SKILLPRISM_AGENT_COMMAND` |
+| "产物目录" | `--output-dir <path>` | test artifacts 目录（默认 `ci-output/test`） |
+| "写出完整结果" | `--output <path>` | single 模式写全量结果到文件 |
+| "GPU" | `--gpu` / `--no-gpu` | 覆盖 GPU 可用性 |
 
----
-
-#### Common combinations
+**Common combinations**（本环节最常用场景）：
 
 ```bash
-# 默认：验证 Agent/子 Agent 已生成的结果（必须先产生输出）
-test-skill --skill my-skill --task csv_summary
-
-# 跑 registry 里所有 benchmarks（均验证已生成结果）
+# 默认：results 模式，评估 Agent/子 Agent 已生成的结果（必须先有输出）
 test-skill --skill my-skill --registry benchmarks/my-skill/registry.yaml
 
-# Agent/子 Agent 已生成代码，由引擎执行并验证
-test-skill --skill my-skill --task csv_summary --code sample_skill_code.py
-
-# 配置外部 agent 命令后，由引擎调用外部 agent 执行
-export SKILLPRISM_AGENT_COMMAND="python examples/editor_wrappers/agent_caller.py"
-test-skill --skill my-skill --task csv_summary
-
-# 即使配置了外部 agent，也强制只验证现有输出
-test-skill --skill my-skill --task csv_summary --verify-only
-
-# 快速 gate
-test-skill --skill my-skill --registry benchmarks/my-skill/registry.yaml --mode quick
-
-# 渐进测试到 level 2
-test-skill --skill my-skill --registry benchmarks/my-skill/registry.yaml --mode gradual --max-level 2
+# 用代码跑全部 benchmark
+test-skill --skill my-skill --registry benchmarks/my-skill/registry.yaml --code sample_skill_code.py
 
 # 只跑 smoke suite
-test-skill --skill my-skill --registry benchmarks/my-skill/registry.yaml --suite smoke
+test-skill --skill my-skill --registry benchmarks/my-skill/registry.yaml --suite smoke --code sample_skill_code.py
+
+# 渐进测试到 level 2
+test-skill --skill my-skill --registry benchmarks/my-skill/registry.yaml --mode gradual --max-level 2 --code sample_skill_code.py
+
+# 即使配置了外部 agent，也强制只评估现有输出
+test-skill --skill my-skill --registry benchmarks/my-skill/registry.yaml --results
 ```
 
----
+**Restrictions**:
 
-#### Key parameters
-
-| Parameter | Purpose |
-|---|---|
-| `--skill <name>` | Skill name |
-| `--task <id>` | Task id (uses task spec in `benchmarks/<skill>/tasks/<task>.yaml`) |
-| `--code <path>` | Pre-generated skill code (engine will execute it) |
-| `--registry <path>` | Benchmark registry YAML (canonical: `benchmarks/<skill>/registry.yaml`) |
-| `--mode single/gradual/quick` | Testing mode |
-| `--level N` | Run only benchmarks at this level (single mode) |
-| `--max-level N` | Highest level for gradual mode |
-| `--suite <name>` | Run only benchmarks in this suite |
-| `--output-dir <path>` | Directory for test artifacts |
-| `--gpu` / `--no-gpu` | Override GPU availability |
-| `--verify-only` | Verify existing output (default: True; disable with `--code` or `SKILLPRISM_AGENT_COMMAND`) |
-
----
-
-#### What it does
-
-- Discovers the task spec (`benchmarks/<skill>/tasks/<task>.yaml`)
-- Generates the agent prompt from the task spec (no SKILL.md leakage)
-- In verify-only mode: checks the existing output against the metrics defined in the registry entry
-- With `--code`: executes the provided code and evaluates the produced output
-- With `SKILLPRISM_AGENT_COMMAND`: invokes the external agent command to produce the output, then evaluates it
-- Compares output against expected / baseline
+- `--code` 表示引擎执行；显式 `--results` 与 `--code` 互斥（同时使用报错）。
+- 显式 `--results` 忽略 `SKILLPRISM_AGENT_COMMAND`。
+- results 模式下输出文件必须已存在，否则该 benchmark 立即失败。
 
 **Metrics**:
 
-- Public metric functions are registered via `@metric("id")` in `skillprism/benchmark/metrics.py`.
-- A per-registry `metrics.py` (beside `registry.yaml`) can add private or skill-specific metrics.
-- Metrics and expected output are declared in the benchmark entry inside `benchmarks/<skill>/registry.yaml`, not in the task spec.
-
-**Restrictions**:
-- `--code` implies engine execution unless `--verify-only` is explicitly set (which is an error).
-- `--verify-only` explicitly set ignores `SKILLPRISM_AGENT_COMMAND`.
-- `--verify-only` and `--code` are mutually exclusive.
-- In verify-only mode, the output file must already exist; otherwise the benchmark fails immediately.
-
----
-
-### 3. Build a benchmark
-
-**User says**: "Build a benchmark", "Register a test", "Add this case to the benchmark registry"
-
-**Default command** (when user only names the benchmark):
-
-```bash
-build-skill-test \
-  --id csv_summary_sales \
-  --name "CSV Summary: Sales" \
-  --skill my-skill \
-  --task csv_summary \
-  --input data/level1/input.csv \
-  --expected-path expected/level1/expected.csv \
-  --registry benchmarks/my-skill/registry.yaml
-```
-
-> 示例：`examples/benchmark_minimal/benchmarks/document-demo/registry.yaml`
-
-**How to choose parameters from natural language**:
-
-| User intent clue | Parameter to add | Example user phrase |
-|---|---|---|
-| "task spec 在别处" | `--task-spec <path>` | "task spec 放在别的目录" |
-| "定义指标" | `--metric id:type:args` | "行数至少 8 行" |
-| "level N" | `--level N` | "这是一个 level 2 的 benchmark" |
-| "加入 smoke/gradual suite" | `--suite <name>` | "加到 smoke suite" |
-| "需要 GPU" | `--gpu` | "这个 benchmark 需要 GPU" |
-| "真实数据" | `--real-data` | "用真实数据，只检查完成" |
-| "自动生成金标准" | `--generate-expected` | "帮我生成 expected output" |
-
-**Key parameters**:
-
-| Parameter | Purpose |
-|---|---|
-| `--id` | Benchmark unique id |
-| `--name` | Human-readable name |
-| `--skill` | Skill this benchmark tests |
-| `--task` | Task id |
-| `--task-spec` | Path to task spec YAML relative to the registry directory (default: `tasks/<task>.yaml`) |
-| `--input` | Input data path (relative to registry directory) |
-| `--expected-path` | Golden output path (relative to registry directory) |
-| `--metric id:type:args` | Metric threshold to store in the registry entry |
-| `--level` | Difficulty level (0-3) |
-| `--suite` | Add to suite (repeatable) |
-| `--registry` | Registry file to append to (canonical: `benchmarks/<skill>/registry.yaml`) |
-| `--generate-expected` | Auto-generate expected for simple CSV cases |
-| `--gpu` | Mark as requiring GPU |
-| `--real-data` | Mark as real-data completion check |
+- 公共 metric 用 `@metric("id")` 注册在 `skillprism/benchmark/metrics.py`；registry 同级 `metrics.py` 可加私有 metric。
+- metric 与 expected 声明在 `benchmarks/<skill>/registry.yaml` 的 benchmark 条目里，**不在** task spec 里。
 
 ---
 
 ### 4. Improve a skill
-
-**User says**: "Improve this skill", "Optimize this skill", "Fix the failing dimension"
 
 **Default workflow**:
 
@@ -441,78 +489,51 @@ improve-skill skills/my-skill --record-baseline
 # Step 2: get optimization strategy
 improve-skill skills/my-skill --suggest
 
-# Step 3: edit SKILL.md (manually or auto-edit)
-# Manual: edit skills/my-skill/SKILL.md, then:
+# Step 3: edit SKILL.md (manual or auto), then judge + apply
 improve-skill skills/my-skill --judge --apply
-
-# Auto: let editor edit for you
-improve-skill skills/my-skill --auto-edit --max-rounds 3 --apply
+# or: improve-skill skills/my-skill --auto-edit --max-rounds 3 --apply
 ```
 
-**How to choose parameters from natural language**:
+**参数与意图线索（整合表）**：
 
-| User intent clue | Parameter to add | Example user phrase |
+| User intent clue | Parameter | Purpose |
 |---|---|---|
-| "记录 baseline" | `--record-baseline` | "先记录 baseline" |
-| "哪里最弱", "给建议" | `--suggest` | "这个 skill 哪里最弱？" |
-| "自动改", "帮我改" | `--auto-edit` | "自动帮我优化" |
-| "最多改 N 轮" | `--max-rounds N` | "自动改 3 轮" |
-| "改完判断" | `--judge` | "judge 一下这次改动" |
-| "确认保留" | `--apply` | "确认保留这次改动" |
-| "带 benchmark" | `--benchmark-registry <path>` | "优化时跑 benchmark gate" |
-| "用代码跑 benchmark" | `--code <path>` | "用这份代码跑 benchmark gate" |
-| "允许改代码" | `--edit-code` | "也可以改代码" |
-| "最低提升" | `--min-gain <float>` | "至少提升 1 分才保留" |
-| "遇到回滚停止" | `--stop-on-regression` | "如果改差了立刻停" |
-| "查看历史" | `--history` | "看看优化历史" |
-| "重写", "瓶颈" | `--explore-rewrite` | "好像到瓶颈了，重写试试" |
-| "LLM judge" / "第二意见" | `--llm-judge` 或 `--llm-judgments` | "优化时用 LLM judge 看看" |
+| "记录 baseline" | `--record-baseline` | 保存当前 scorecard/benchmark 为 baseline |
+| "哪里最弱"、"给建议" | `--suggest` | 打印最弱维度与 P0–P3 策略 |
+| "自动改"、"帮我改" | `--auto-edit` | 用配置的 editor 自动改 SKILL.md |
+| "最多改 N 轮" | `--max-rounds N` | 自动编辑最大轮数 |
+| "改完判断" | `--judge` | 对比 baseline 与当前，决定 keep/revert |
+| "确认保留" | `--apply` | 真正执行决定（默认 dry-run） |
+| "最低提升" | `--min-gain <float>` | 至少提升多少才保留 |
+| "遇到回滚停止" | `--stop-on-regression` | 自动编辑若被回滚则停 |
+| "带 benchmark" | `--benchmark-registry <path>` | 优化时跑 benchmark gate |
+| "benchmark 产物目录" | `--benchmark-output-dir <path>` | benchmark artifacts 目录 |
+| "用代码跑 benchmark" | `--code <path>` | benchmark gate 用这份代码 |
+| "允许改代码" | `--edit-code` | 允许 editor 改代码资产 |
+| "查看历史" | `--history` | 看优化历史 |
+| "清掉 baseline" | `--clear-baseline` | 删除已存 baseline |
+| "重写"、"瓶颈" | `--explore-rewrite` | 探索性重写 SKILL.md |
+| "显示/隐藏 diff" | `--show-diff` / `--no-show-diff` | 输出中是否显示 diff |
+| "换 editor/judge" | `--editor-command` / `--editor-model` / `--judge-model` | 覆盖 editor/judge |
+| "LLM judge" / "第二意见" | `--llm-judge` | 优化时对主观维度启用 LLM judge |
+| "换 judge 命令" | `--llm-judge-command` | 覆盖 LLM judge 命令 |
+| "Agent 已生成 judgments" | `--llm-judgments <path>` | 消费 Agent 预生成的 judgments |
 
-**Key parameters**:
-
-| Parameter | Purpose |
-|---|---|
-| `--record-baseline` | Save current scorecard/benchmark as baseline |
-| `--suggest` | Print weakest dimension and strategy |
-| `--auto-edit` | Autonomously edit SKILL.md using configured editor |
-| `--max-rounds N` | Max auto-edit rounds |
-| `--judge` | Compare current vs baseline and decide keep/revert |
-| `--apply` | Actually execute the decision (default is dry-run) |
-| `--min-gain <float>` | Minimum score gain to keep edit |
-| `--stop-on-regression` | Stop auto-edit if an edit is reverted |
-| `--benchmark-registry <path>` | Enable benchmark gate |
-| `--benchmark-output-dir <path>` | Directory for benchmark artifacts |
-| `--code <path>` | Code to use during benchmark gate |
-| `--edit-code` | Allow editor to modify code assets |
-| `--clear-baseline` | Remove stored baseline |
-| `--history` | Show optimization history |
-| `--explore-rewrite` | Exploratory rewrite of SKILL.md |
-| `--show-diff` / `--no-show-diff` | Show/hide diff in output |
-| `--editor-command`, `--editor-model`, `--judge-model` | Override editor/judge |
-| `--llm-judge` | Enable LLM judge for subjective dimensions during optimization |
-| `--llm-judge-command` | Override LLM judge command |
-| `--llm-judgments <path>` | Consume pre-computed judgments generated by the Agent |
-
-**Agent decision rule for LLM judge**:
-
-- If `SKILLPRISM_LLM_JUDGE_COMMAND` or config `llm_judge.command` is available, use `--llm-judge`.
-- Otherwise, the Agent generates `.skillprism_llm_judgments.json` itself and uses `--llm-judgments <file>`.
-- 完整 prompt 模板、外部 judge 命令接口和配置项见 [`references/LLM_JUDGE.md`](references/LLM_JUDGE.md)。
-- This works the same as in `evaluate-skill`.
+**Agent decision rule for LLM judge**: 与 `evaluate-skill` 相同——有外部 judge 命令用 `--llm-judge`，否则 Agent 生成 `./.skillprism_llm_judgments.json` 并用 `--llm-judgments <file>`。模板与接口见 [`references/LLM_JUDGE.md`](references/LLM_JUDGE.md)。
 
 **What it does**:
 
-- Records baseline scorecard + benchmark results in `.skillprism_history.jsonl`
-- Suggests P0-P3 optimization strategies
-- Edits SKILL.md / code (Agent or external editor), constrained to one dimension per round
-- Re-evaluates and re-tests
-- Judges whether the change is keep / revert / human-decide
-- Applies only with explicit `--apply`
-- Auto-git-init if not in a repo; uses file backup fallback when git unavailable
+- 在 `./.skillprism_history.jsonl` 记录 baseline scorecard + benchmark 结果
+- 给出 P0–P3 优化策略
+- 编辑 SKILL.md / 代码（Agent 或外部 editor），每轮限一个维度
+- 重新评估与测试
+- 判断 keep / revert / human-decide
+- 仅在显式 `--apply` 时落地
+- 非 git 仓库自动 git-init；git 不可用则用文件备份回退
 
-### Judge Logic for improve-skill
+**Judge Logic for improve-skill**:
 
-When `--judge` runs, the engine compares **baseline** vs **current**:
+`--judge` 对比 **baseline** vs **current**：
 
 | Condition | Decision |
 |---|---|
@@ -521,148 +542,114 @@ When `--judge` runs, the engine compares **baseline** vs **current**:
 | Score unchanged but a key dimension improved | **human-decide** |
 | Security score (D9) decreased | **revert** |
 
-The final apply requires `--apply` or human confirmation.
+最终 apply 需要 `--apply` 或人工确认。
 
 ---
 
 ### 5. Run full pipeline
 
-**User says**: "Run the full pipeline", "Quality check everything", "Find the worst skill"
-
-**Default command**:
+**Default**:
 
 ```bash
 skill-pipeline --intent "run full quality pipeline" \
   --skills-dir ./skills \
   --benchmark-registry benchmarks/<skill>/registry.yaml \
-  --output docs/SKILL_QUALITY_REPORT.md
+  --output ./reports/SKILL_QUALITY_REPORT.md
 ```
 
-**How to choose parameters from natural language**:
+**参数与意图线索（整合表）**：
 
-| User intent clue | `--intent` value | Additional parameters |
+| User intent clue | Parameter | Purpose |
 |---|---|---|
-| "完整流水线", "质量检查" | `"run full quality pipeline"` | `--benchmark-registry <path>` |
-| "给所有 skill 打分" | `"evaluate all skills"` | `--skills-dir ./skills` |
-| "找出最差的" | `"improve skills"` | `--apply --max-rounds 3` |
-| "渐进测试所有 skill" | `"run gradual pipeline"` | `--benchmark-registry <path> --max-level N` |
-| "生成报告" | any | `--output docs/SKILL_QUALITY_REPORT.md` |
-| "跑 smoke" | any | `--run-smoke` |
+| （必填） | `--intent <text>` | 自然语言意图 |
+| "完整流水线"、"质量检查" | `--intent "run full quality pipeline"` | 评估 + 测试 + 优化全流程 |
+| "给所有 skill 打分" | `--intent "evaluate all skills"` | 批量评估 |
+| "找出最差的并优化" | `--intent "improve skills"` | 批量优化（配 `--apply --max-rounds`） |
+| "渐进测试所有 skill" | `--intent "run gradual pipeline"` | 渐进测试 |
+| "skill 目录" | `--skills-dir <path>` | Skills 根目录 |
+| "带 benchmark" | `--benchmark-registry <path>` | benchmark 注册表 |
+| "只跑某 suite" | `--benchmark-suite <name>` | 仅跑该 suite |
+| "benchmark 产物目录" | `--benchmark-output-dir <path>` | benchmark 输出目录 |
+| "baseline 目录" | `--benchmark-baseline-dir <path>` | baseline 目录 |
+| "生成报告" | `--output <path>` | 合并报告输出（默认落 `./reports/`） |
+| "跑 smoke" | `--run-smoke` | 跑冒烟测试 |
+| "自动应用" | `--apply` | 自动应用优化决定 |
+| "优化轮数" | `--max-rounds N` | 最大优化轮数 |
+| "最高 level" | `--max-level N` | gradual 最高 level |
+| "不推进 baseline" | `--no-ratchet` | 不 ratchet baseline |
 
-**Common combinations**:
+**Common combinations**（本环节最常用场景）：
 
 ```bash
 # 完整质量流水线
 skill-pipeline --intent "run full quality pipeline" \
   --skills-dir ./skills \
   --benchmark-registry benchmarks/<skill>/registry.yaml \
-  --output docs/SKILL_QUALITY_REPORT.md
+  --output ./reports/SKILL_QUALITY_REPORT.md
 
 # 批量评估
 skill-pipeline --intent "evaluate all skills" --skills-dir ./skills
 
-# 批量渐进测试
+# 批量渐进测试到 level 2
 skill-pipeline --intent "run gradual pipeline" \
   --skills-dir ./skills \
   --benchmark-registry benchmarks/<skill>/registry.yaml \
   --max-level 2
-
-# 自动优化所有 skill
-skill-pipeline --intent "improve skills" \
-  --skills-dir ./skills \
-  --apply --max-rounds 3
 ```
-
-**Key parameters**:
-
-| Parameter | Purpose |
-|---|---|
-| `--intent <text>` | Natural language intent (required) |
-| `--skills-dir <path>` | Skills root directory |
-| `--benchmark-registry <path>` | Benchmark registry YAML |
-| `--benchmark-suite <name>` | Run only this suite |
-| `--benchmark-output-dir <path>` | Directory for benchmark outputs |
-| `--benchmark-baseline-dir <path>` | Directory for benchmark baselines |
-| `--output <path>` | Combined report output |
-| `--run-smoke` | Run smoke tests |
-| `--apply` | Auto-apply optimization decisions |
-| `--max-rounds N` | Max optimization rounds |
-| `--max-level N` | Max gradual level |
-| `--no-ratchet` | Do not ratchet baselines forward |
 
 ---
 
 ### 6. CI gate
 
-**User says**: "CI gate", "Run CI checks", "Static gate"
-
-**Default command**:
+**Default**（静态检查）：
 
 ```bash
-# Static checks only (default)
 skill-ci --skill my-skill
 ```
 
-**How to choose parameters from natural language**:
+**参数与意图线索（整合表）**：
 
-| User intent clue | Parameter to add | Example user phrase |
+| User intent clue | Parameter | Purpose |
 |---|---|---|
-| "跑 benchmark" | `--run-benchmark --code <path>` | "CI 里也跑 benchmark" |
-| "对比 baseline" | `--baseline <path>` | "检查有没有 regress" |
-| "regress 就失败" | `--stop-on-regression` | "有 regression 就挂" |
-| "更新 baseline" | `--ratchet` | "通过就更新 baseline" |
-| "只跑某个 suite" | `--suite <name>` | "只跑 smoke suite" |
-| "只跑 level N" | `--level N` | "只跑 level 1" |
-| "跳过 smoke" | `--no-smoke` | "跳过 smoke 快点" |
-| "跳过依赖检查" | `--no-deps` | "不检查依赖" |
+| （必填） | `--skill <name>` | Skill 名或路径 |
+| "跑 benchmark" | `--run-benchmark` | 也跑动态 benchmark（需 `--code`） |
+| "用代码跑" | `--code <path>` | 动态 benchmark 用代码 |
+| "注册表" | `--registry <path>` | benchmark 注册表 YAML |
+| "对比 baseline" | `--baseline <path>` | 回归对比的 baseline（`benchmarks/<skill>/baselines/<name>.yaml`） |
+| "regress 不要挂" | `--no-stop-on-regression` | 不因 benchmark 回归而失败（默认：回归即失败） |
+| "更新 baseline" | `--ratchet` | 通过则更新 baseline |
+| "只跑某 suite" | `--suite <name>` | 仅跑该 suite |
+| "只跑 level N" | `--level N` | 仅跑该 level |
+| "产物目录" | `--output-dir <path>` | CI artifacts 目录（默认 `ci-output`） |
+| "报告格式" | `--output-format <fmt>` | `yaml` / `json` / `markdown` |
+| "指定 config" | `--config <path>` | skill_rubric_types.yaml 路径 |
+| "跳过 smoke" | `--no-smoke` | 跳过冒烟测试 |
+| "跳过依赖检查" | `--no-deps` | 跳过依赖检查 |
+| "依赖 dry-run" | `--deps-dry-run` | pip/conda dry-run |
 
-**Common combinations**:
+**Common combinations**（本环节最常用场景）：
 
 ```bash
 # 默认静态 CI 门控
 skill-ci --skill my-skill
 
-# 含 benchmark 的完整 CI
+# 含 benchmark 的完整 CI（回归即失败）
 skill-ci --skill my-skill \
   --registry benchmarks/<skill>/registry.yaml \
   --run-benchmark --code sample_skill_code.py \
-  --baseline baselines/my-skill.yaml \
-  --stop-on-regression
+  --baseline benchmarks/<skill>/baselines/initial.yaml
 ```
-
-**Key parameters**:
-
-| Parameter | Purpose |
-|---|---|
-| `--skill <name>` | Skill name or path (required) |
-| `--registry <path>` | Benchmark registry YAML |
-| `--baseline <path>` | Baseline results YAML for regression comparison |
-| `--output-dir <path>` | CI artifacts directory |
-| `--output-format <fmt>` | `yaml` / `json` / `markdown` |
-| `--suite <name>` | Run only this suite |
-| `--level N` | Run only this level |
-| `--run-benchmark` | Also run dynamic benchmarks (requires `--code`) |
-| `--code <path>` | Code for dynamic benchmarks |
-| `--ratchet` | Update baseline on success |
-| `--stop-on-regression` | Fail on regression |
-| `--no-smoke` | Skip smoke tests |
-| `--no-deps` | Skip dependency checks |
-| `--deps-dry-run` | Run pip/conda dry-run installs |
 
 ---
 
 ## Standard Agent Workflow
 
-### For a new skill
-
 ```bash
-# 1. Evaluate
-evaluate-skill skills/my-skill
+# 1. Evaluate（含 LLM judge 看主观维度）
+evaluate-skill skills/my-skill --detailed --llm-judge
 
-# 2. Define a task spec for the benchmark
-#    benchmarks/my-skill/tasks/csv_summary.yaml
-
-# 3. Register a benchmark
+# 2. Build a benchmark（按 §2 引导流程，准备好 task spec / 数据 / expected / metrics / 代码）
+#    最终注册：
 build-skill-test \
   --id csv_summary_sales \
   --skill my-skill \
@@ -671,19 +658,15 @@ build-skill-test \
   --expected-path expected/level1/expected.csv \
   --registry benchmarks/my-skill/registry.yaml
 
-# 4. Test with Agent/sub-agent-produced output (default verify-only)
-#    Make sure the output file at the task-spec output path already exists.
-test-skill --skill my-skill --task csv_summary
+# 3. Test —— results 模式：评估 Agent/子 Agent 已生成的结果（必须先有输出）
+test-skill --skill my-skill --registry benchmarks/my-skill/registry.yaml
 
-# 5. Or test with an external agent command configured via SKILLPRISM_AGENT_COMMAND
-test-skill --skill my-skill --task csv_summary
+# 4. Test —— 或用引擎执行 Agent/子 Agent 生成的代码
+test-skill --skill my-skill --registry benchmarks/my-skill/registry.yaml --code sample_skill_code.py
 
-# 6. Or test with code generated by the Agent/sub-agent and executed by the engine
-test-skill --skill my-skill --task csv_summary --code sample_skill_code.py
-
-# 6. Improve if needed
+# 5. Improve if needed
 improve-skill skills/my-skill --record-baseline --suggest
-# edit skills/my-skill/SKILL.md
+# edit skills/my-skill/SKILL.md（先说明改动并获用户批准）
 improve-skill skills/my-skill --judge --apply
 ```
 
@@ -693,69 +676,67 @@ improve-skill skills/my-skill --judge --apply
 
 **skillPrism never calls an LLM directly, unless configured to invoke an external agent command.**
 
-- In verify-only mode: the Agent or sub-agent produces the result; skillPrism only evaluates it.
-- With `SKILLPRISM_AGENT_COMMAND`: skillPrism invokes the configured external command; the command may use an LLM, but the engine itself does not.
-- With `--code`: the user or Agent writes code; skillPrism executes it and evaluates the output.
-- The engine only measures results; it is not a code generator or an Agent.
+- results 模式：Agent 或子 agent 产出结果，skillPrism 只评估。
+- `SKILLPRISM_AGENT_COMMAND`：skillPrism 调用配置的外部命令；该命令内部可用 LLM，但引擎本身不调。
+- `--code`：用户或 Agent 写代码，skillPrism 在沙箱中执行并评估产出。
+- 引擎只测量结果，不是代码生成器，也不是 Agent。
 
 ---
 
 ## Output Artifacts
 
-| Artifact | When produced | Purpose |
+| Artifact | Default location | When produced |
 |---|---|---|
-| `scorecard.md` | `evaluate-skill --output` | Human-readable report |
-| `test-prompts.json` | `evaluate-skill` (when prompts are generated) | Test prompts for the skill |
-| `.skillprism_baseline/` | `improve-skill --record-baseline` | Baseline for comparison |
-| `.skillprism_history.jsonl` | every evaluate/improve run | Optimization history |
-| `.skillprism_llm_judgments.json` | Agent LLM judge | Structured LLM opinions |
-| `.skillprism_prompts_verification.json` | Agent prompts verification | Structured prompt results |
-| `ci-output/` | `test-skill`, `skill-ci` | Test artifacts |
+| scorecard / report | `artifacts/<skill>/scorecard.md` | `evaluate-skill --output` |
+| `test-prompts.json` | `artifacts/<skill>/` | `evaluate-skill --prompts-dir`（生成 prompts 时） |
+| baseline | `benchmarks/<skill>/baselines/<name>.yaml` | `improve-skill --record-baseline` / `--ratchet` |
+| history | `artifacts/<skill>/history.jsonl` | 每次 evaluate/improve（`--output-history`） |
+| LLM judgments | `artifacts/<skill>/llm_judgments.json` | Agent LLM judge（`--llm-judgments` 消费） |
+| prompts verification | `artifacts/<skill>/prompts_verification.json` | Agent prompts verification（`--prompts-verification` 消费） |
+| test / CI artifacts | `artifacts/<skill>/ci/` | `test-skill` / `skill-ci --output-dir` |
 
 ---
 
 ## When NOT to Use skillPrism
 
-- If you only need to run arbitrary Python code, use `python` directly.
-- If you want the engine to generate code for you, skillPrism is not the tool; generate code with an Agent or external generator first, then test it here.
-- If you need non-deterministic creative output without measurement, skillPrism adds no value.
+- 只想跑任意 Python 代码，直接用 `python`。
+- 想让引擎替你生成代码——skillPrism 不是这个工具；先用 Agent 或外部生成器产出，再来这里测。
+- 需要不可测量的非确定性创意输出，skillPrism 没有价值。
 
 ---
 
 ## Common Agent Mistakes and Corrections
 
-1. **Confusing `evaluate-skill` with `test-skill`**
-   - `evaluate-skill` measures the **SKILL.md** quality (static rubric).
-   - `test-skill` measures whether the skill **works on data** (dynamic benchmark).
-   - If the user asks "does it work?", use `test-skill`. If "is the doc good?", use `evaluate-skill`.
+1. **混淆 `evaluate-skill` 与 `test-skill`**
+   - `evaluate-skill` 测 **SKILL.md** 质量（静态 rubric）。
+   - `test-skill` 测 skill **在数据上是否 work**（动态 benchmark）。
+   - 用户问"能不能跑"用 `test-skill`；问"文档好不好"用 `evaluate-skill`。
 
-2. **Passing `--skill` as a flag to `evaluate-skill`**
-   - `evaluate-skill` takes the skill path as a positional argument: `evaluate-skill skills/my-skill`.
-   - `test-skill` and `skill-ci` take `--skill <name>` because they may also need `--task` or `--registry`.
+2. **把 `--skill` 当 flag 传给 `evaluate-skill`**
+   - `evaluate-skill` 用位置参数：`evaluate-skill skills/my-skill`。
+   - `test-skill`、`skill-ci` 用 `--skill <name>`（还可能需要 `--task` / `--registry`）。
 
-3. **Running `test-skill` without producing output first**
-   - `test-skill` defaults to verify-only mode. The output file must already exist.
-   - Recovery: spawn a sub-agent to generate the output, or use `--code <path>` to let the engine execute skill-generated code.
+3. **没先产出结果就跑 `test-skill`**
+   - `test-skill` 默认 results 模式，输出文件必须已存在。
+   - 恢复：派子 agent 生成输出，或用 `--code <path>` 让引擎执行 skill 生成的代码。
 
-4. **Forgetting `--apply` with `improve-skill`**
-   - `--judge`, `--auto-edit`, and `--record-baseline` are dry-run by default.
-   - Use `--apply` only after showing the user the planned change and receiving explicit approval.
+4. **`improve-skill` 忘了 `--apply`**
+   - `--judge`、`--auto-edit`、`--record-baseline` 默认 dry-run。
+   - 展示计划改动并获用户明确批准后，才用 `--apply`。
 
-5. **Using outdated command names**
-   - Correct: `evaluate-skill`, `test-skill`, `improve-skill`, `skill-pipeline`, `skill-ci`.
-   - Do **not** use `evaluate-skill-rubric` or `run-skill-benchmark`; those names are obsolete.
+5. **用过时命令名**
+   - 正确：`evaluate-skill`、`test-skill`、`build-skill-test`、`improve-skill`、`skill-pipeline`、`skill-ci`。
+   - **不要**用 `evaluate-skill-rubric`、`run-skill-benchmark`、`--verify-only`（已改名为 `--results`）；这些已废弃。
 
-6. **Writing artifacts into the skill tree**
-   - Use `--output` to redirect scorecards, reports, and generated prompts to a separate directory.
-   - Keep the skill source tree read-only unless explicitly editing SKILL.md or code assets.
+6. **把产物写进 skill 树或 skill-prism 文件夹**
+   - 生成物按 skill 放 `artifacts/<skill>/`：scorecard 用 `--output`，prompts 用 `--prompts-dir`，artifacts 用 `--output-dir`；跨 skill 汇总放 `reports/`。
+   - baseline 放 `benchmarks/<skill>/baselines/`。
+   - **绝不**写进 `skills/skill-prism/`；目标 skill 源码树保持只读，除非明确在编辑其 SKILL.md 或代码资产。
+
+7. **把"建 benchmark"当成一条命令**
+   - `build-skill-test` 只写 registry 条目；目录、task spec、数据、expected、metrics、代码要先按 §2 引导流程准备好。
 
 ## References
 
-- `docs/getting-started/index.md`: Human-facing getting-started guide.
-- `docs/getting-started/cli-cheatsheet.md`: One-page CLI and natural-language reference.
-- `docs/tutorial/04-building-your-first-benchmark.md`: Building benchmarks in the new task-spec architecture.
-- `docs/reference/skill-prism-architecture.md`: Architecture design document.
-- `docs/reference/agent-command.md`: External agent command details.
-- `references/LLM_JUDGE.md`: LLM judge details.
-- `docs/reference/natural-language-interaction.md`: Natural-language interaction best practices.
-- `docs/reference/test-prompts-verification.md`: Prompt verification details.
+- `references/AGENT_GUIDE.md`: Agent 调用 skillPrism 时的交互行为规范（必须加载）。
+- `references/LLM_JUDGE.md`: LLM judge 的 prompt 模板、外部 judge 命令接口与配置。

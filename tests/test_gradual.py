@@ -148,7 +148,7 @@ def test_main_fail(monkeypatch, tmp_path: Path) -> None:
         assert main() == 1
 
 
-def test_main_code_with_verify_only_error(tmp_path: Path) -> None:
+def test_main_code_with_results_mode_error(tmp_path: Path) -> None:
     code = tmp_path / "code.py"
     code.write_text("print('x')", encoding="utf-8")
     registry = tmp_path / "registry.yaml"
@@ -166,7 +166,7 @@ def test_main_code_with_verify_only_error(tmp_path: Path) -> None:
             str(tmp_path / "out"),
             "--code",
             str(code),
-            "--verify-only",
+            "--results",
         ],
     ):
         assert main() == 2

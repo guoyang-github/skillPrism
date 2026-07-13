@@ -1,6 +1,6 @@
 # External Agent Command
 
-> By default `test-skill` runs in **verify-only mode**: the Agent (or a sub-agent) produces the output and the engine only evaluates it. If you prefer, you can configure an **external agent command** that the engine invokes to produce the output.
+> By default `test-skill` runs in **results mode**: the Agent (or a sub-agent) produces the output and the engine only evaluates it. If you prefer, you can configure an **external agent command** that the engine invokes to produce the output.
 
 ## When to use
 
@@ -32,7 +32,7 @@ Then run `test-skill` as usual:
 test-skill --skill my-skill --task csv_summary
 ```
 
-When `SKILLPRISM_AGENT_COMMAND` is set, the engine automatically switches from verify-only to agent mode. To force verify-only anyway, pass `--verify-only`.
+When `SKILLPRISM_AGENT_COMMAND` is set, the engine automatically switches from results to agent mode. To force results anyway, pass `--results`.
 
 ## Command interface
 
@@ -51,8 +51,8 @@ See `examples/editor_wrappers/agent_caller.py`.
 
 | Mode | Trigger | Who produces the result |
 |---|---|---|
-| Verify-only | Default (no `SKILLPRISM_AGENT_COMMAND`, no `--code`) | Current Agent / sub-agent |
+| Results | Default (no `SKILLPRISM_AGENT_COMMAND`, no `--code`) | Current Agent / sub-agent |
 | External agent | `SKILLPRISM_AGENT_COMMAND` set | Configured external command |
 | Code | `--code <path>` | Engine executes the provided code |
 
-The three modes are mutually exclusive; `--code` and explicit `--verify-only` take precedence over `SKILLPRISM_AGENT_COMMAND`.
+The three modes are mutually exclusive; `--code` and explicit `--results` take precedence over `SKILLPRISM_AGENT_COMMAND`.

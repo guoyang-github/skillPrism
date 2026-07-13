@@ -129,7 +129,7 @@ def run_single_benchmark(
     code_path: Optional[Path],
     registry: Dict[str, Any],
     registry_dir: Path,
-    verify_only: bool = False,
+    results_mode: bool = False,
     agent_command: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     cache_dir = Path(registry.get("cache_dir", ".benchmark_cache"))
@@ -164,11 +164,11 @@ def run_single_benchmark(
 
         prompt = generate_agent_prompt(task_spec, benchmark)
 
-        if verify_only:
+        if results_mode:
             actual_path = output_path
             if not actual_path.exists():
                 return {
-                    "error": f"verify-only mode but output not found: {actual_path}",
+                    "error": f"results mode but output not found: {actual_path}",
                     "_all_pass": False,
                 }
         else:
@@ -182,7 +182,7 @@ def run_single_benchmark(
                 return {
                     "error": "No executor available. Use --code to run generated code, "
                     "set SKILLPRISM_AGENT_COMMAND for agent mode, "
-                    "or --verify-only to evaluate an existing output.",
+                    "or --results to evaluate an existing output.",
                     "_all_pass": False,
                 }
 
@@ -293,7 +293,7 @@ def run_benchmarks(
     output_format: str = "yaml",
     gpu: Optional[bool] = None,
     skill_dir: Optional[Path] = None,
-    verify_only: bool = False,
+    results_mode: bool = False,
     agent_command: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """Run all benchmarks for a skill and return results."""
@@ -337,8 +337,8 @@ def run_benchmarks(
         label_parts.append(f"suite: {suite}")
     if level:
         label_parts.append(f"level: {level}")
-    if verify_only:
-        label_parts.append("verify-only")
+    if results_mode:
+        label_parts.append("results")
     print(f"Running {len(benchmarks)} benchmarks ({', '.join(label_parts)})\n")
 
     all_pass = True
@@ -351,7 +351,7 @@ def run_benchmarks(
             code_path,
             registry,
             registry_dir,
-            verify_only=verify_only,
+            results_mode=results_mode,
             agent_command=agent_command,
         )
         _evaluate_expected_result(b, result)

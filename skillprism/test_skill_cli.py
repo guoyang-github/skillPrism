@@ -4,7 +4,7 @@
 Provides a single user-facing command for all skill testing needs:
 
 - ``test-skill --skill <name> --task <task>``: verify that the Agent has
-  already produced the expected output (verify-only mode by default). If
+  already produced the expected output (results mode by default). If
   ``SKILLPRISM_AGENT_COMMAND`` is set, the engine invokes that external agent
   instead.
 - ``test-skill --skill <name> --task <task> --code <path>``: execute the
@@ -35,7 +35,7 @@ def _run_single(
     level: Optional[int],
     suite: Optional[str],
     gpu: Optional[bool],
-    verify_only: bool = False,
+    results_mode: bool = False,
     agent_command: Optional[List[str]] = None,
     output_path: Optional[Path] = None,
     output_format: str = "yaml",
@@ -49,7 +49,7 @@ def _run_single(
         suite=suite,
         task=task,
         gpu=gpu,
-        verify_only=verify_only,
+        results_mode=results_mode,
         agent_command=agent_command,
         output_path=output_path,
         output_format=output_format,
@@ -65,7 +65,7 @@ def _run_gradual(
     output_dir: Path,
     ratchet: bool,
     gpu: Optional[bool],
-    verify_only: bool = True,
+    results_mode: bool = True,
     agent_command: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     # run_gradual_pipeline takes the skill and registry path. The code is
@@ -78,7 +78,7 @@ def _run_gradual(
         base_output_dir=output_dir,
         ratchet=ratchet,
         code_path=code_path,
-        verify_only=verify_only,
+        results_mode=results_mode,
         agent_command=agent_command,
     )
 
@@ -89,7 +89,7 @@ def _run_quick(
     registry_path: Path,
     suite: Optional[str],
     gpu: Optional[bool],
-    verify_only: bool = True,
+    results_mode: bool = True,
     agent_command: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """Run level 0 then level 1; fail fast."""
@@ -101,7 +101,7 @@ def _run_quick(
         level=0,
         suite=suite,
         gpu=gpu,
-        verify_only=verify_only,
+        results_mode=results_mode,
         agent_command=agent_command,
     )
     if not level0.get("_all_pass"):
@@ -119,7 +119,7 @@ def _run_quick(
         level=1,
         suite=suite,
         gpu=gpu,
-        verify_only=verify_only,
+        results_mode=results_mode,
         agent_command=agent_command,
     )
     return {
@@ -194,17 +194,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Run GPU-only benchmarks (default: auto-detect)",
     )
     parser.add_argument(
-        "--verify-only",
+        "--results",
+        dest="results_mode",
         action="store_true",
         default=None,
-        help="Skip execution; verify that the expected output path already exists (default: True). "
-        "Explicit --verify-only ignores SKILLPRISM_AGENT_COMMAND.",
+        help="Skip execution; evaluate the existing results at the expected output path "
+        "(default: True). Explicit --results ignores SKILLPRISM_AGENT_COMMAND.",
     )
     return parser
 
 
 def resolve_args(args: argparse.Namespace) -> int:
-    """Resolve execution mode from --code, --verify-only, and SKILLPRISM_AGENT_COMMAND.
+    """Resolve execution mode from --code, --results, and SKILLPRISM_AGENT_COMMAND.
 
     Returns 0 on success or a non-zero exit code when arguments conflict.
     """
@@ -213,23 +214,23 @@ def resolve_args(args: argparse.Namespace) -> int:
         if not code_path.exists():
             print(f"Error: code file not found: {code_path}")
             return 2
-        if args.verify_only is True:
-            print("Error: --verify-only cannot be used with --code")
+        if args.results_mode is True:
+            print("Error: --results cannot be used with --code")
             return 2
-        args.verify_only = False
+        args.results_mode = False
         return 0
 
-    if args.verify_only is True:
+    if args.results_mode is True:
         return 0
 
     # If an external agent command is configured and the user did not ask for
-    # verify-only, let the engine invoke the agent.
+    # results, let the engine invoke the agent.
     if os.environ.get("SKILLPRISM_AGENT_COMMAND"):
-        args.verify_only = False
+        args.results_mode = False
         return 0
 
-    if args.verify_only is None:
-        args.verify_only = True
+    if args.results_mode is None:
+        args.results_mode = True
     return 0
 
 
@@ -245,7 +246,7 @@ def main() -> int:
         return rc
 
     agent_command = None
-    if not args.verify_only and not args.code:
+    if not args.results_mode and not args.code:
         cmd = os.environ.get("SKILLPRISM_AGENT_COMMAND")
         if cmd:
             agent_command = cmd.split()
@@ -264,7 +265,7 @@ def main() -> int:
             level=args.level,
             suite=args.suite,
             gpu=args.gpu,
-            verify_only=args.verify_only,
+            results_mode=args.results_mode,
             agent_command=agent_command,
             output_path=Path(args.output) if args.output else None,
             output_format=args.output_format,
@@ -282,7 +283,7 @@ def main() -> int:
             output_dir=output_dir,
             ratchet=not args.no_ratchet,
             gpu=args.gpu,
-            verify_only=args.verify_only,
+            results_mode=args.results_mode,
             agent_command=agent_command,
         )
     else:  # quick
@@ -294,7 +295,7 @@ def main() -> int:
             registry_path=registry_path,
             suite=args.suite,
             gpu=args.gpu,
-            verify_only=args.verify_only,
+            results_mode=args.results_mode,
             agent_command=agent_command,
         )
 

@@ -25,6 +25,7 @@ nav:
       - tutorial/02-install-and-first-skill.md
       - tutorial/03-understanding-the-rubric.md
       - tutorial/04-building-your-first-benchmark.md
+      - tutorial/build-bio-benchmark-with-claude-code.md
       - tutorial/05-optimization-loop.md
       - tutorial/06-quality-pipeline.md
       - tutorial/07-extending-skillprism.md

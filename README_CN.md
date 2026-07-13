@@ -288,7 +288,7 @@ pip install "/path/to/Skills_Validation[all]"
 | 用户意图 | 对应引擎命令 | 是否需要人工确认 |
 |---|---|---|
 | "评估所有 skills" | `evaluate-skill --all --skills-dir ./skills` | 否 |
-| "测试 bio-single-cell-clustering" | `test-skill --skill ... --task ...` | 否（默认 verify-only，结果由 Agent/子 Agent 生成） |
+| "测试 bio-single-cell-clustering" | `test-skill --skill ... --task ...` | 否（默认 results，结果由 Agent/子 Agent 生成） |
 | "用代码测试 bio-single-cell-clustering" | `test-skill --skill ... --task ... --code ...` | 否（代码由 Agent 提供） |
 | "优化 bio-single-cell-clustering" | `improve-skill ... --record-baseline / --suggest / --judge` | **是**（每轮编辑） |
 | "运行 skill 质量流水线" | `skill-pipeline --intent "..."` | 否 |

@@ -28,7 +28,7 @@ def test_cell2location_level0_passes() -> None:
         REGISTRY_PATH,
         code_path=CODE_PATH,
         level=0,
-        verify_only=False,
+        results_mode=False,
     )
     assert results["_all_pass"] is True
     assert "c2l_level0_smoke" in results["benchmarks"]
@@ -43,7 +43,7 @@ def test_cell2location_darwin_up_to_level2() -> None:
         base_output_dir=EXAMPLE_DIR / "ci-output",
         ratchet=False,
         code_path=CODE_PATH,
-        verify_only=False,
+        results_mode=False,
     )
     assert overall["_all_pass"] is True
     assert set(overall["stages"].keys()) == {"level0", "level1", "level2"}
