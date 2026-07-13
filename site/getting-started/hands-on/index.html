@@ -15,10 +15,10 @@
         <link rel="canonical" href="https://nanobot-skills.github.io/Skills_Validation/getting-started/hands-on/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../install/">
       
       
-        <link rel="next" href="../install/">
+        <link rel="next" href="../evaluate/">
       
       
         
@@ -291,6 +291,13 @@
   
     
     
+      
+  
+  
+  
+  
+    
+    
       <li class="md-tabs__item">
         <a href="../../reference/overview/" class="md-tabs__link">
           
@@ -300,6 +307,9 @@
 
         </a>
       </li>
+    
+  
+
     
   
 
@@ -465,6 +475,62 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../beginner-handbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    新手操作手册：用说话的方式驱动 skillPrism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安装与环境
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -532,6 +598,17 @@
     <span class="md-ellipsis">
       
         前置条件
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#00-skill-frontmatter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.0 准备一个 Skill（模板结构 + frontmatter）
       
     </span>
   </a>
@@ -619,34 +696,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../install/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    安装与环境
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -750,7 +799,7 @@
   <span class="md-ellipsis">
     
   
-    Pipeline
+    运行完整流水线
   
 
     
@@ -778,7 +827,7 @@
   <span class="md-ellipsis">
     
   
-    Ci
+    CI 集成
   
 
     
@@ -916,34 +965,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/02-install-and-first-skill/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    第 2 章：安装与第一个 Skill
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../tutorial/03-understanding-the-rubric/" class="md-nav__link">
         
   
@@ -1028,90 +1049,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/05-optimization-loop/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    05 optimization loop
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorial/06-quality-pipeline/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    第 6 章：质量流水线与 CI
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorial/07-extending-skillprism/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    第 7 章：扩展 skillPrism
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../tutorial/08-gradual-testing-and-real-data/" class="md-nav__link">
         
   
@@ -1148,34 +1085,6 @@
     
   
     skillPrism 全周期 Skill 评估优化 Demo
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorial/langfuse-bio-demo/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Langfuse 集成下的全周期 Skill 评估优化 Demo（生物信息示例）
   
 
     
@@ -1284,6 +1193,60 @@
   
   
   
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架构与概念
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    架构与概念
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../reference/overview/" class="md-nav__link">
         
@@ -1293,90 +1256,6 @@
     
   
     skillPrism 体系概览
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/natural-language-interaction/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Natural-Language Interaction Best Practices
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/skill-prism-architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Skill prism architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/agent-command/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    External Agent Command
   
 
     
@@ -1425,6 +1304,96 @@
   
   
     <li class="md-nav__item">
+      <a href="../../reference/roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TODO 与路线图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Benchmark
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../reference/benchmark-guide/" class="md-nav__link">
         
   
@@ -1433,6 +1402,34 @@
     
   
     金标准 Benchmark 构建与迭代优化指南（手把手版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/benchmark-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark Metrics 参考与最佳实践
   
 
     
@@ -1537,14 +1534,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/llm-judge/" class="md-nav__link">
+      <a href="../../reference/cell2location/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    LLM Judge
+    Cell2location 示例完整指南
   
 
     
@@ -1558,29 +1555,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/langfuse-integration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    skillPrism × Langfuse 集成方案
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1592,43 +1569,33 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../reference/benchmark-metrics/" class="md-nav__link">
+    
+    
+    
+    
+      
+      
         
-  
-  
-  <span class="md-ellipsis">
+      
     
-  
-    Benchmark Metrics 参考与最佳实践
-  
-
     
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/test-prompts-verification/" class="md-nav__link">
-        
   
   
   <span class="md-ellipsis">
     
   
-    Test prompts verification
+    优化与评分
   
 
     
@@ -1636,11 +1603,19 @@
   
   
 
-      </a>
-    </li>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    优化与评分
   
 
-              
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -1656,35 +1631,7 @@
   <span class="md-ellipsis">
     
   
-    优化策略库
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/experiment-history/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    实验历史
+    优化策略与维度簇
   
 
     
@@ -1733,14 +1680,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/dimension-clusters/" class="md-nav__link">
+      <a href="../../reference/runtime-neutrality/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Dimension clusters
+    Runtime neutrality
   
 
     
@@ -1768,7 +1715,97 @@
   <span class="md-ellipsis">
     
   
-    Edge cases
+    边界情况与 FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    集成与接口
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    集成与接口
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/llm-judge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Judge（引擎侧参考）
   
 
     
@@ -1789,14 +1826,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/runtime-neutrality/" class="md-nav__link">
+      <a href="../../reference/agent-command/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Runtime neutrality
+    External Agent Command
   
 
     
@@ -1809,6 +1846,124 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/test-prompts-verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test-Prompts 验证（功能概述）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/langfuse-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    skillPrism × Langfuse 集成方案（设计提案）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    其他
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    其他
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -1845,90 +2000,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/operational-playbook/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    skillPrism 自然语言交互操作手册
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/gradual-testing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    渐进测试（Gradual Testing）
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/cell2location/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Cell2location 示例完整指南
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/api/" class="md-nav__link">
         
   
@@ -1937,144 +2008,6 @@
     
   
     API 参考
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/roadmap/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    TODO &amp; Roadmap
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_26" >
-        
-          
-          <label class="md-nav__link" for="__nav_4_26" id="__nav_4_26_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Examples
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_26_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_26">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Examples
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/examples/scorecard/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Skill Scorecard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/examples/review-bio-single-cell-clustering/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Skill 评估报告：bio-single-cell-clustering
   
 
     
@@ -2134,6 +2067,17 @@
     <span class="md-ellipsis">
       
         前置条件
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#00-skill-frontmatter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.0 准备一个 Skill（模板结构 + frontmatter）
       
     </span>
   </a>
@@ -2247,6 +2191,68 @@
 <li>Agent 已加载 <code>skills/skill-prism/SKILL.md</code></li>
 <li>有一个 skill 目录，例如 <code>skills/csv-summary-skill/</code></li>
 </ul>
+<h2 id="00-skill-frontmatter">0.0 准备一个 Skill（模板结构 + frontmatter）<a class="headerlink" href="#00-skill-frontmatter" title="Permanent link">&para;</a></h2>
+<p>如果你还没有 skill，可以用仓库自带模板快速创建（模板见仓库 <code>templates/</code> 目录）：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>skills/csv-summary-skill
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cp<span class="w"> </span>-r<span class="w"> </span>templates/analysis/*<span class="w"> </span>skills/csv-summary-skill/
+</code></pre></div>
+<p>模板目录结构：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>skills/csv-summary-skill/
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── SKILL.md              # 唯一必需：教 Agent/用户怎么用的说明书
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├── examples/             # 最小可运行示例（强烈建议）
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   └── minimal_example.py
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>├── requirements.txt      # 依赖清单（强烈建议）
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>└── tests/
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    └── test_smoke.py
+</code></pre></div>
+<p><code>SKILL.md</code> 的 frontmatter 逐字段说明：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>skill 名（kebab-case，与目录名一致）</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>一两句话说明用途、何时使用、产出什么；Agent 据此决定是否调用，要具体、关键词丰富</td>
+</tr>
+<tr>
+<td><code>tool_type</code></td>
+<td>工具类型：<code>python</code> / <code>r</code> / <code>cli</code> / <code>api</code> / <code>document</code></td>
+</tr>
+<tr>
+<td><code>primary_tool</code></td>
+<td>主要工具/库（如 <code>pandas</code>、<code>scanpy</code>）</td>
+</tr>
+<tr>
+<td><code>languages</code></td>
+<td>语言列表</td>
+</tr>
+<tr>
+<td><code>keywords</code></td>
+<td>关键词列表，用于检索与匹配</td>
+</tr>
+</tbody>
+</table>
+<p>示例：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nn">---</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">csv-summary-skill</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">对 CSV 做统计摘要</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">tool_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nt">primary_tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pandas</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nt">languages</span><span class="p">:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nt">keywords</span><span class="p">:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">csv</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">summary</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nn">---</span>
+</code></pre></div>
 <h2 id="01">0.1 先看文档质量<a class="headerlink" href="#01" title="Permanent link">&para;</a></h2>
 <p><strong>用户目标</strong>：了解 <code>csv-summary-skill</code> 的 SKILL.md 作为教练文档够不够好。</p>
 <p><strong>对 Agent 说</strong>：</p>
@@ -2254,20 +2260,23 @@
 <p>"先看看这个 csv-summary skill 的 SKILL.md 质量如何，告诉我哪里扣分最多。"</p>
 </blockquote>
 <p><strong>Agent 执行</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>evaluate-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span>--detailed
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>evaluate-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span>--detailed
 </code></pre></div>
 <p><strong>预期输出</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## csv-summary-skill
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Skill 类型: analysis
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Rubric 总分: 72.3 / 100
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- 等级: C
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- 最弱维度: D3 代码正确性 (1/5)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>## csv-summary-skill
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>- Skill 类型: analysis
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>- Rubric 总分: 72.3 / 100
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>- 等级: C
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>- 最弱维度: D3 代码正确性 (1/5)
 </code></pre></div>
 <p><strong>解读</strong>：</p>
 <ul>
 <li>总分 72.3，等级 C，说明 SKILL.md 还有改进空间。</li>
 <li>最弱维度是 D3 代码正确性，意味着 SKILL.md 里可能缺少可运行的代码示例或参数说明。</li>
 </ul>
+<blockquote>
+<p><strong>registry 从哪来？</strong> 从 0.2 起用到的 <code>benchmarks/csv-summary-skill/registry.yaml</code> 不是引擎自动生成的：需要由 Agent（或你）先用 <code>build-skill-test</code> 逐条注册 benchmark——task spec、输入数据、金标准、metrics 声明都在这一步落进 registry。完整构建流程见 <a href="../../tutorial/04-building-your-first-benchmark/">构建你的第一个 Benchmark</a>；Agent 场景下，Agent 会按 <code>skills/skill-prism/references/BUILD_BENCHMARK.md</code> 的引导流程（确认任务契约 → 准备数据 → 注册 → 验证）带你完成。</p>
+</blockquote>
 <h2 id="02">0.2 生成代码并快速验证<a class="headerlink" href="#02" title="Permanent link">&para;</a></h2>
 <p><strong>用户目标</strong>：让 Agent 按 SKILL.md 生成最小示例，看能不能跑通。</p>
 <p><strong>对 Agent 说</strong>：</p>
@@ -2281,17 +2290,17 @@
 <li>运行 quick gate（level 0 + level 1）</li>
 </ol>
 <p><strong>Agent 执行</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>test-skill<span class="w"> </span>--skill<span class="w"> </span>csv-summary-skill<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--registry<span class="w"> </span>benchmarks/csv-summary-skill/registry.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--code<span class="w"> </span>skills/csv-summary-skill/examples/minimal_example.py<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--mode<span class="w"> </span>quick
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>test-skill<span class="w"> </span>--skill<span class="w"> </span>csv-summary-skill<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--registry<span class="w"> </span>benchmarks/csv-summary-skill/registry.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--code<span class="w"> </span>skills/csv-summary-skill/examples/minimal_example.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--mode<span class="w"> </span>quick
 </code></pre></div>
 <p><strong>预期输出</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Running 2 benchmarks (skill: csv-summary-skill)
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>[PASS] level_0_smoke: ...
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>[FAIL] level_1_regression: row_count 2 &lt; 3
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Overall: FAIL
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Running 2 benchmarks (skill: csv-summary-skill)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>[PASS] level_0_smoke: ...
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>[FAIL] level_1_regression: row_count 2 &lt; 3
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Overall: FAIL
 </code></pre></div>
 <p><strong>解读</strong>：</p>
 <ul>
@@ -2306,43 +2315,43 @@
 <p>"D3 代码正确性只有 1 分，帮我优化到能通过 level 1 测试。先记录 baseline，然后只改 D3 相关部分，改完 judge 一下。"</p>
 </blockquote>
 <p><strong>Agent 执行</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. 记录 baseline</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>improve-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--record-baseline<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--benchmark-registry<span class="w"> </span>benchmarks/csv-summary-skill/registry.yaml
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># 2. 查看优化策略（P0-P3）和最弱维度</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>improve-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span>--suggest
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># 3. Agent 按策略编辑 SKILL.md（每轮只改一个维度），然后 judge</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>improve-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--judge<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--benchmark-registry<span class="w"> </span>benchmarks/csv-summary-skill/registry.yaml
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># 4. 如果 judge 建议 keep，确认应用</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>improve-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span>--apply
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># 5. 查看优化历史</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>improve-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span>--history
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. 记录 baseline</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>improve-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--record-baseline<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--benchmark-registry<span class="w"> </span>benchmarks/csv-summary-skill/registry.yaml
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># 2. 查看优化策略（P0-P3）和最弱维度</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>improve-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span>--suggest
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># 3. Agent 按策略编辑 SKILL.md（每轮只改一个维度），然后 judge</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>improve-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>--judge<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>--benchmark-registry<span class="w"> </span>benchmarks/csv-summary-skill/registry.yaml
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># 4. 如果 judge 建议 keep，确认应用</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>improve-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span>--apply
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># 5. 查看优化历史</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>improve-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span>--history
 </code></pre></div>
 <p><strong>judge 输出示例</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Current: 78.5 / 100 (Grade C)
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Baseline: 72.3 / 100
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Delta: +6.2
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Dimension changes (current - baseline):
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  D2: 0
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  D3: +1
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Benchmark gate: PASS
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Decision: KEEP (Rubric score improved)
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Edit kept and baseline updated.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Current: 78.5 / 100 (Grade C)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Baseline: 72.3 / 100
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Delta: +6.2
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Dimension changes (current - baseline):
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  D2: 0
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  D3: +1
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>Benchmark gate: PASS
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>Decision: KEEP (Rubric score improved)
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>Edit kept and baseline updated.
 </code></pre></div>
 <p><strong>如果 hill-climbing 触顶</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>improve-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--explore-rewrite<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--apply<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--benchmark-registry<span class="w"> </span>benchmarks/csv-summary-skill/registry.yaml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>improve-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>--explore-rewrite<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>--apply<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>--benchmark-registry<span class="w"> </span>benchmarks/csv-summary-skill/registry.yaml
 </code></pre></div>
 <h2 id="04">0.4 跑完整流水线<a class="headerlink" href="#04" title="Permanent link">&para;</a></h2>
 <p><strong>用户目标</strong>：验证单个 skill 改进后，在整体项目中的位置，以及下一步做什么。</p>
@@ -2351,16 +2360,16 @@
 <p>"现在跑完整流水线，看看所有 skills 里这个是不是最差的，以及下一步推荐做什么。"</p>
 </blockquote>
 <p><strong>Agent 执行</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>skill-pipeline<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--intent<span class="w"> </span><span class="s2">&quot;run full quality pipeline&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--skills-dir<span class="w"> </span>./skills<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--benchmark-registry<span class="w"> </span>benchmarks/csv-summary-skill/registry.yaml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>skill-pipeline<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>--intent<span class="w"> </span><span class="s2">&quot;run full quality pipeline&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--skills-dir<span class="w"> </span>./skills<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--benchmark-registry<span class="w"> </span>benchmarks/csv-summary-skill/registry.yaml
 </code></pre></div>
 <p><strong>预期输出</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Rubric: 78.5 / 100
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Benchmark: PASS
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Weakest dimension: D2
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Next recommended action: improve-skill skills/csv-summary-skill --judge
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Rubric: 78.5 / 100
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Benchmark: PASS
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Weakest dimension: D2
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Next recommended action: improve-skill skills/csv-summary-skill --judge
 </code></pre></div>
 <h2 id="05">0.5 可选：主观维度第二意见<a class="headerlink" href="#05" title="Permanent link">&para;</a></h2>
 <p><strong>用户目标</strong>：对 D2 可读性、D5 领域准确性做更细致的判断。</p>
@@ -2369,10 +2378,10 @@
 <p>"再帮我深入看看 D2 可读性和 D5 领域准确性，有没有文档写得不够清楚的地方。"</p>
 </blockquote>
 <p><strong>Agent 执行</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1. Agent 调用 LLM 多次，生成 judgments 文件</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># 2. 引擎消费 judgments 文件</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>evaluate-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>--llm-judgments<span class="w"> </span>artifacts/csv-summary-skill/llm_judgments.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Agent 调用 LLM 多次，生成 judgments 文件</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># 2. 引擎消费 judgments 文件</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>evaluate-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--llm-judgments<span class="w"> </span>artifacts/csv-summary-skill/llm_judgments.json
 </code></pre></div>
 <h2 id="06-test-prompts">0.6 可选：验证 test-prompts<a class="headerlink" href="#06-test-prompts" title="Permanent link">&para;</a></h2>
 <p><strong>用户目标</strong>：验证 skill 的 prompts 在不同场景下是否有效。</p>
@@ -2381,12 +2390,12 @@
 <p>"验证一下 test-prompts.json 里的 prompts，看看这个 skill 在实际调用时效果稳不稳。"</p>
 </blockquote>
 <p><strong>Agent 执行</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. Agent 读取 test-prompts.json</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># 2. 对每个 prompt 做 with/without skill 执行</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># 3. 生成 verification 文件</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 4. 引擎消费</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>evaluate-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--prompts-verification<span class="w"> </span>artifacts/csv-summary-skill/prompts_verification.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># 1. Agent 读取 test-prompts.json</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># 2. 对每个 prompt 做 with/without skill 执行</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># 3. 生成 verification 文件</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># 4. 引擎消费</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>evaluate-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span>--prompts-verification<span class="w"> </span>artifacts/csv-summary-skill/prompts_verification.json
 </code></pre></div>
 <h2 id="_2">下一步<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <ul>

@@ -1,19 +1,29 @@
 ---
 name: skill-prism
 description: >-
-  Unified Agent interface for skillPrism. Translates natural-language intents
-  into the six core commands: evaluate-skill, test-skill, build-skill-test,
-  improve-skill, skill-pipeline, and skill-ci. The engine itself never calls
-  LLMs; Agent handles all LLM interactions when needed.
+  用自然语言评估、测试、优化 AI Agent skill（SKILL.md）的质量。当用户说"评估/打个分/
+  体检一下这个 skill"、"哪里写得不好"、"建/跑 benchmark、出考题、测一下"、"优化/改进
+  这个 skill"、"出质量报告"、"接入 CI 检查"时触发。能力覆盖：rubric 九维评分、LLM 评委、
+  test-prompts 带/不带 skill 实测、benchmark 金标准对比判分、基线对比与自动回滚的改进闭环。
+  Maps natural-language requests to evaluate-skill, test-skill, build-skill-test,
+  improve-skill, skill-pipeline, skill-ci — use whenever the user wants to score,
+  benchmark, or improve an agent skill.
 tool_type: meta
 keywords:
   - skillprism
   - evaluate
+  - score
   - test
-  - build-skill-test
+  - benchmark
   - improve
+  - optimize
   - pipeline
   - quality
+  - 评估
+  - 打分
+  - 考题
+  - 优化
+  - 质量报告
 ---
 
 > **设计说明**：本 Skill 是 skillPrism 的**唯一 Agent 接口**。
@@ -85,7 +95,8 @@ skillPrism 回答三个问题：
 
 | 环节 | 用户说法（常用场景） | 最常用命令 |
 |---|---|---|
-| Evaluate | "帮我评估一下这个 skill 写得怎么样、哪里要改，主观的地方让 LLM 也评一评" | `evaluate-skill skills/<skill> --detailed --llm-judge` |
+| Evaluate | "全面评估一下这个 skill：打分、评委复核、出题实测一次做完" | **综合评估流程**（§1）：备/写正式 test-prompts（展示确认）→ with/without 实测 → 生成 `artifacts/<skill>/llm_judgments.json` → `evaluate-skill skills/<skill> --detailed`（引擎自动消费两个产物） |
+| Evaluate | "赶时间，快速打个分" | `evaluate-skill skills/<skill>` |
 | Evaluate | "把 skills 下所有 skill 都评一遍，出一份汇总报告" | `evaluate-skill --all --skills-dir ./skills --output ./reports/SKILL_SCORECARD.md` |
 | Build | "我想给这个 skill 建一套 benchmark，以后每次改动都能回归验证" | **进入 §2 引导流程**；最终落到 `build-skill-test --id <id> --skill <skill> --task <task> --input data/<level>/... --metric <id:type:args> --suite smoke --suite gradual --registry benchmarks/<skill>/registry.yaml` |
 | Test | "结果文件已经生成好了，帮我测测达不达标" | `test-skill --skill <skill> --registry benchmarks/<skill>/registry.yaml` |
@@ -97,7 +108,7 @@ skillPrism 回答三个问题：
 | CI | "在 CI 里加一道 skill 质量门禁" | `skill-ci --skill <skill>` |
 | CI | "CI 里除了静态检查，把 benchmark 也一起跑了" | `skill-ci --skill <skill> --registry benchmarks/<skill>/registry.yaml --run-benchmark --code <path>` |
 
-> 上表 Evaluate 行的 `--llm-judge` 需配置外部 judge 命令；未配置时，Agent 自己生成 `artifacts/<skill>/llm_judgments.json`（引擎自动发现），效果一致。详见 §1 的 Agent decision rule。
+> 综合评估的两个产物（`llm_judgments.json`、`prompts_verification.json`）由 Agent 按协议生成到 `artifacts/<skill>/`，引擎自动发现消费，无需额外参数；已配置外部 judge 命令时，第 ③ 步改在最终评估命令上加 `--llm-judge`。详见 §1 综合评估流程与 LLM judge 决策规则。
 
 ---
 
@@ -105,7 +116,7 @@ skillPrism 回答三个问题：
 
 ### 1. 评估 skill
 
-**默认**（用户只说"评估一下"时）：
+**默认**（用户说"评估一下"、"打个分"、"体检"时）：按下方**综合评估流程**执行——机器评分 + LLM 评委 + test-prompts 实测一次做完。仅当用户明确说"快速"、"只打个分"、"不要实测/评委"时，退化为纯机器评分：
 
 ```bash
 evaluate-skill skills/my-skill
@@ -136,7 +147,7 @@ evaluate-skill skills/my-skill
 **常用组合**（本环节最常用场景）：
 
 ```bash
-# 默认：快速确定性评分
+# 快速模式：纯机器评分（默认的综合评估流程见下方"综合评估流程"）
 evaluate-skill skills/my-skill
 
 # 详细评估 + 主观维度 LLM judge
@@ -151,6 +162,16 @@ evaluate-skill skills/my-skill --llm-judgments artifacts/my-skill/llm_judgments.
 # CI 前完整检查
 evaluate-skill skills/my-skill --detailed --run-smoke --run-deps --ratchet
 ```
+
+**综合评估流程**（"评估一下"的默认动作，按序执行）：
+
+1. **备 prompts**：检查 `artifacts/<skill>/test-prompts.json`；缺失或为占位模板（报告带 ⚠️ 警告）时，按 [`references/PROMPTS_VERIFICATION.md`](references/PROMPTS_VERIFICATION.md) Step 1 撰写 2–3 条正式 prompt，**展示给用户确认后**写入。
+2. **实测**：按协议 Step 2–4 执行 with/without 验证（每条 prompt 两个独立执行子 agent + 一个 judge 子 agent，互不共享上下文），写 `artifacts/<skill>/prompts_verification.json`。能真实执行必须 `full_test`。
+3. **评委**：按下方 LLM judge 决策规则准备 `artifacts/<skill>/llm_judgments.json`（默认 D2/D5，各 2 个独立 judge）；已配置外部 judge 命令时跳过本步，改在第 4 步加 `--llm-judge`。
+4. **汇总**：`evaluate-skill skills/<skill> --detailed`——引擎自动发现并消费两个产物，输出三合一成绩单。
+5. **解读**：向用户汇报总分/等级、主要扣分点、评委分歧、实测 pass_rate 与带/不带 skill 的差距。
+
+成本：第 2–3 步需起多个子 agent 并调用大模型，耗时几分钟、消耗模型额度；用户赶时间时用"快速打个分"跳过 1–3 步。
 
 **副作用**：
 
@@ -180,9 +201,9 @@ evaluate-skill skills/my-skill --detailed --run-smoke --run-deps --ratchet
 
 **Agent prompts 行为规则**：
 
-- **撰写**：用户说"写 test prompts"、"生成测试 prompts"时，按 [`references/PROMPTS_VERIFICATION.md`](references/PROMPTS_VERIFICATION.md) Step 1 撰写 2–3 条**具体输入 + 具体可验证期望**的 prompt，写入 `artifacts/<skill>/test-prompts.json`。写前向用户展示并获确认。
+- **撰写**：用户说"写 test prompts"、"生成测试 prompts"时，**或综合评估流程第 1 步发现 prompts 缺失/为占位模板时**，按 [`references/PROMPTS_VERIFICATION.md`](references/PROMPTS_VERIFICATION.md) Step 1 撰写 2–3 条**具体场景 + 行为可核对期望**的 prompt（是否澄清、是否按 SKILL.md 工作流、是否防护边界；**不校验数值结果**——结果正确性归 benchmark），写入 `artifacts/<skill>/test-prompts.json`。写前向用户展示并获确认。
 - **看到占位符警告要主动提议**：评估报告带 ⚠️ "template prompts are placeholders" 时，说明当前 prompts 只是引擎兜底模板、无测试价值。Agent 应主动提议："当前 test-prompts 是占位模板，要我按协议撰写正式版吗？"
-- **验证（D8 实测）**：用户说"验证 prompt 效果"、"带不带 skill 差多少"时，按协议 Step 2–4 执行：每条 prompt 起 with/without 两个独立子 agent 执行，第三个 judge 子 agent 打分；结果写 `artifacts/<skill>/prompts_verification.json`；`evaluate-skill` 不传 `--prompts-verification` 时自动发现该文件。
+- **验证（D8 实测）**：用户说"验证 prompt 效果"、"带不带 skill 差多少"时，**或综合评估流程第 2 步**，按协议 Step 2–4 执行：每条 prompt 起 with/without 两个独立子 agent 执行，第三个 judge 子 agent 打分；trigger 类允许小样数据/方案+关键步骤的**轻量执行**，不要求跑完整重计算；judge 只评行为符合度，不评数值正确性。结果写 `artifacts/<skill>/prompts_verification.json`；`evaluate-skill` 不传 `--prompts-verification` 时自动发现该文件。
 - 能真实执行就必须 `full_test`；`dry_run` 占比 > 30% 引擎会报警。
 
 ---

@@ -5,11 +5,11 @@
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/SKILL_SCORECARD/</loc>
+         <loc>https://nanobot-skills.github.io/Skills_Validation/getting-started/</loc>
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/getting-started/</loc>
+         <loc>https://nanobot-skills.github.io/Skills_Validation/getting-started/beginner-handbook/</loc>
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
@@ -45,6 +45,38 @@
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
+         <loc>https://nanobot-skills.github.io/Skills_Validation/guide/01-install-and-setup/</loc>
+         <lastmod>2026-07-13</lastmod>
+    </url>
+    <url>
+         <loc>https://nanobot-skills.github.io/Skills_Validation/guide/02-evaluate/</loc>
+         <lastmod>2026-07-13</lastmod>
+    </url>
+    <url>
+         <loc>https://nanobot-skills.github.io/Skills_Validation/guide/03-quick-verify/</loc>
+         <lastmod>2026-07-13</lastmod>
+    </url>
+    <url>
+         <loc>https://nanobot-skills.github.io/Skills_Validation/guide/04-build-benchmark/</loc>
+         <lastmod>2026-07-13</lastmod>
+    </url>
+    <url>
+         <loc>https://nanobot-skills.github.io/Skills_Validation/guide/05-run-benchmark/</loc>
+         <lastmod>2026-07-13</lastmod>
+    </url>
+    <url>
+         <loc>https://nanobot-skills.github.io/Skills_Validation/guide/06-optimize/</loc>
+         <lastmod>2026-07-13</lastmod>
+    </url>
+    <url>
+         <loc>https://nanobot-skills.github.io/Skills_Validation/guide/07-report-and-ci/</loc>
+         <lastmod>2026-07-13</lastmod>
+    </url>
+    <url>
+         <loc>https://nanobot-skills.github.io/Skills_Validation/guide/08-production-loop/</loc>
+         <lastmod>2026-07-13</lastmod>
+    </url>
+    <url>
          <loc>https://nanobot-skills.github.io/Skills_Validation/reference/adding-a-benchmark-task-type/</loc>
          <lastmod>2026-07-13</lastmod>
     </url>
@@ -77,23 +109,11 @@
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/reference/dimension-clusters/</loc>
-         <lastmod>2026-07-13</lastmod>
-    </url>
-    <url>
          <loc>https://nanobot-skills.github.io/Skills_Validation/reference/edge-cases/</loc>
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/reference/experiment-history/</loc>
-         <lastmod>2026-07-13</lastmod>
-    </url>
-    <url>
          <loc>https://nanobot-skills.github.io/Skills_Validation/reference/framework/</loc>
-         <lastmod>2026-07-13</lastmod>
-    </url>
-    <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/reference/gradual-testing/</loc>
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
@@ -102,14 +122,6 @@
     </url>
     <url>
          <loc>https://nanobot-skills.github.io/Skills_Validation/reference/llm-judge/</loc>
-         <lastmod>2026-07-13</lastmod>
-    </url>
-    <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/reference/natural-language-interaction/</loc>
-         <lastmod>2026-07-13</lastmod>
-    </url>
-    <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/reference/operational-playbook/</loc>
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
@@ -133,10 +145,6 @@
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/reference/skill-prism-architecture/</loc>
-         <lastmod>2026-07-13</lastmod>
-    </url>
-    <url>
          <loc>https://nanobot-skills.github.io/Skills_Validation/reference/test-prompts-verification/</loc>
          <lastmod>2026-07-13</lastmod>
     </url>
@@ -145,19 +153,7 @@
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/reference/examples/review-bio-single-cell-clustering/</loc>
-         <lastmod>2026-07-13</lastmod>
-    </url>
-    <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/reference/examples/scorecard/</loc>
-         <lastmod>2026-07-13</lastmod>
-    </url>
-    <url>
          <loc>https://nanobot-skills.github.io/Skills_Validation/tutorial/01-why-evaluate-skills/</loc>
-         <lastmod>2026-07-13</lastmod>
-    </url>
-    <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/tutorial/02-install-and-first-skill/</loc>
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
@@ -166,18 +162,6 @@
     </url>
     <url>
          <loc>https://nanobot-skills.github.io/Skills_Validation/tutorial/04-building-your-first-benchmark/</loc>
-         <lastmod>2026-07-13</lastmod>
-    </url>
-    <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/tutorial/05-optimization-loop/</loc>
-         <lastmod>2026-07-13</lastmod>
-    </url>
-    <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/tutorial/06-quality-pipeline/</loc>
-         <lastmod>2026-07-13</lastmod>
-    </url>
-    <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/tutorial/07-extending-skillprism/</loc>
          <lastmod>2026-07-13</lastmod>
     </url>
     <url>
@@ -194,10 +178,6 @@
     </url>
     <url>
          <loc>https://nanobot-skills.github.io/Skills_Validation/tutorial/full-cycle-demo/</loc>
-         <lastmod>2026-07-13</lastmod>
-    </url>
-    <url>
-         <loc>https://nanobot-skills.github.io/Skills_Validation/tutorial/langfuse-bio-demo/</loc>
          <lastmod>2026-07-13</lastmod>
     </url>
 </urlset>

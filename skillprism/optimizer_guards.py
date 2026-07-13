@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Anti-pattern guards for the skill optimization loop.
 
-Inspired by darwin-skill's anti-pattern blacklist and SkillOpt's
-validation-gated design. These guards run before an edit is applied and
-return violations that should block or warn about the candidate change.
+These guards run before an edit is applied and return violations that should
+block or warn about the candidate change.
 """
 
 from __future__ import annotations

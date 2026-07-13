@@ -146,14 +146,14 @@ def test_run_only_suite_benchmarks(tmp_path: Path) -> None:
             ),
         },
         "suites": {
-            "darwin": {
+            "gradual": {
                 "description": "Fast mock suite",
                 "benchmarks": ["table_a"],
             }
         },
     }
     registry_path = _write_registry(tmp_path, registry)
-    results = run_benchmarks("my-skill", registry_path, code_path=code_path, suite="darwin")
+    results = run_benchmarks("my-skill", registry_path, code_path=code_path, suite="gradual")
     assert set(results["benchmarks"].keys()) == {"table_a"}
     assert results["_all_pass"] is True
 

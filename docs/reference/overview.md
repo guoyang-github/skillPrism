@@ -29,20 +29,20 @@ skillPrism 是一个**项目无关、可安装、可扩展的 AI Agent Skill 质
 └───────────────────────────┬─────────────────────────────────┘
                             │
 ┌───────────────────────────▼─────────────────────────────────┐
-│  Layer 1: skillPrism 引擎（纯 Python 包）                     │
-│  evaluate_skill_rubric.py                                     │
-│  optimize_skill.py                                            │
-│  benchmark/runner.py                                          │
+│  Layer 1: skillPrism 引擎（纯 Python 包 skillprism）          │
+│  7 个 CLI：evaluate-skill / test-skill / build-skill-test /   │
+│  improve-skill / skill-pipeline / skill-ci / skill-gradual    │
 │  → 无 LLM 依赖、可复现、可测试、可 CI                        │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 **关键原则**：
 
-1. **引擎 LLM-free**：评分、benchmark、回滚全部确定性执行，不依赖任何 LLM provider。
+1. **引擎 LLM-free**：评分、benchmark、回滚全部确定性执行，不依赖任何 LLM provider。Agent 是执行者和 LLM 调用方，引擎只做测量。
 2. **LLM 能力可插拔**：自动编辑和 LLM judge 通过外部命令接入，用户选 provider。
-3. **人在回路**：默认 dry-run，必须 `--apply` 才真正修改文件。
-4. **可扩展**：新 Skill 类型通过 YAML 配置注册，通常不需要改引擎代码。
+3. **结构化文件交换**：Agent 与引擎之间通过 `artifacts/<skill>/` 下的 JSON 文件传递验证结果（schema 见 §7），所有生成物都不写进 skill 树。
+4. **人在回路**：默认 dry-run，必须 `--apply` 才真正修改文件。
+5. **可扩展**：新 Skill 类型通过 YAML 配置注册，通常不需要改引擎代码。
 
 ---
 
@@ -92,12 +92,18 @@ benchmarks:
         max: 2.0
 ```
 
-支持的任务类型：
+一个 benchmark 目录的结构：
 
-- `clustering`：scRNA-seq 聚类（需 scanpy/sklearn）。
-- `table`：CSV 表格任务。
-- `document`：文本/文档生成，支持 ROUGE-L、BERTScore、语义相似度等可选指标。
-- `deconvolution`：空间转录组去卷积，输出细胞类型比例矩阵。
+```text
+benchmarks/<skill>/
+├── registry.yaml        # benchmark 条目 + metrics（metrics 只写在这里）
+├── tasks/<task>.yaml    # task spec：prompt 模板 + input/output 契约（无 metrics、无 type 字段）
+├── data/                # 输入数据
+├── expected/            # 期望输出
+└── metrics.py           # 可选：用 @metric 装饰器注册自定义指标
+```
+
+**引擎没有内置 task 类型，也不加载任何 `runner.py`**。`task` 只是 registry 引用的 id，其输入/输出契约由 `tasks/<task>.yaml` 定义；指标函数通过 `skillprism.benchmark.metrics` 的 `@metric` 装饰器注册（内置一批通用指标，可用 per-registry `metrics.py` 扩展）。仓库 examples 中提供了 `clustering`、`table`、`document`、`deconvolution` 等任务示例。
 
 Benchmark 框架还支持 `level`（0-3 难度分级）、`requires_gpu`、`real_data` 标记，以及 suite 分组。
 
@@ -108,11 +114,13 @@ Benchmark 框架还支持 `level`（0-3 难度分级）、`requires_gpu`、`real
 - 分数提升且 benchmark 不 regress → **KEEP**
 - 分数没提升、benchmark 退化或触发 guard → **REVERT**
 
-`--apply` 才真正执行 keep/revert。`--ratchet` 保证分数不会低于历史最高。
+`--apply` 才真正执行 keep/revert。`--ratchet` 保证分数不会低于历史最高。这里的 baseline 指 `improve-skill` 的 scorecard baseline（`artifacts/<skill>/baseline/baseline.json`）——skillPrism 里共有三种 baseline，区别见 §6.3。
 
 ---
 
 ## 3. CLI 工具职责
+
+skillPrism 共 7 个 CLI（`pip install -e ".[dev]"` 后可用）：
 
 | 命令 | 职责 | 对应 Skill |
 |---|---|---|
@@ -121,8 +129,39 @@ Benchmark 框架还支持 `level`（0-3 难度分级）、`requires_gpu`、`real
 | `build-skill-test` | 构造 benchmark 定义 | `skill-prism` |
 | `skill-ci` | CI 模式下运行 benchmark 并做回归门控 | `skill-prism` |
 | `test-skill --mode gradual` | 失败优先的渐进式 benchmark 流水线 | `skill-prism` |
+| `skill-gradual` | `test-skill --mode gradual` 的便捷封装（`skillprism.gradual:main`） | `skill-prism` |
 | `improve-skill` | 测量、建议、judge、回滚 | `skill-prism` |
 | `skill-pipeline` | 评估 + benchmark + 找出最差 + 准备优化 | `skill-prism` |
+
+引擎本身**不调用 LLM**：Agent 是执行者和 LLM 调用方，引擎只做确定性测量，通过 CLI 参数和结构化交换文件（见 §7）消费 Agent 产出的结果。
+
+### 3.1 意图 → 命令映射
+
+`skills/skill-prism/SKILL.md` 是 Agent 的唯一入口，它把自然语言意图翻译成上述 CLI。高频映射：
+
+| 自然语言意图 | Agent 执行动作 |
+|---|---|
+| "评估这个 skill" | `evaluate-skill skills/<skill>` |
+| "跑 benchmark" | `test-skill --mode single --skill <skill> --registry benchmarks/<skill>/registry.yaml` |
+| "用代码跑 benchmark" | `test-skill --skill <skill> --registry benchmarks/<skill>/registry.yaml --code <path>` |
+| "渐进测试" | `test-skill --mode gradual --skill <skill> --registry benchmarks/<skill>/registry.yaml`（或 `skill-gradual`） |
+| "CI 回归门控" | `skill-ci --skill <skill> --registry benchmarks/<skill>/registry.yaml` |
+| "优化这个 skill" | `improve-skill skills/<skill> --record-baseline --suggest --judge` |
+| "查看优化历史" | `improve-skill skills/<skill> --history` |
+| "探索性重写" | `improve-skill skills/<skill> --explore-rewrite --apply` |
+| "跑完整流水线" | `skill-pipeline --intent "run full quality pipeline"` |
+| "再深入看看可读性和准确性" | `evaluate-skill skills/<skill> --llm-judge --llm-judge-count 3` |
+| "验证 test-prompts" | `evaluate-skill skills/<skill> --prompts-verification artifacts/<skill>/prompts_verification.json` |
+
+更多话术见 `skills/skill-prism/references/AGENT_GUIDE.md`。
+
+### 3.2 test-skill 的三种执行模式
+
+`test-skill` 的执行方式由 `--code`、`--results` 和环境变量 `SKILLPRISM_AGENT_COMMAND` 决定（优先级：`--code` > 显式 `--results` > `SKILLPRISM_AGENT_COMMAND` > 默认 results）：
+
+1. **results 模式（默认）**：Agent 已经执行 prompt 并产出结果文件，引擎只验证已有输出，不触发任何执行。这是 Agent 驱动工作流的常态。
+2. **external agent 模式**：配置了 `SKILLPRISM_AGENT_COMMAND` 时，引擎调用该外部命令执行任务。**这是引擎唯一会间接触发 LLM 的路径**，且完全由用户配置。
+3. **code 模式**：`--code <path>` 时，引擎在沙箱中执行给定代码并评估产出。`--code` 与 `--results` 互斥。
 
 ## 4. Skill 类型、Task、`--skill` 的关系
 
@@ -145,7 +184,7 @@ Benchmark 框架还支持 `level`（0-3 难度分级）、`requires_gpu`、`real
 
 1. **Skill 类型 ↔ `--skill`**：`--skill` 可以等于某个 Skill 类型（如 `analysis`），也可以等于具体 skill 名（如 `my-first-table`）。
 2. **Skill 类型 ↔ Task**：**没有强制绑定**，只有常见对应。`analysis` 类型 skill 可以测 `table`、`clustering`、`deconvolution`；`document` 类型 skill 通常测 `document`。
-3. **Task ↔ Metrics**：**强制相关**。每个 task 有默认 metrics 模板，例如 `table` 用 `row_count`/`col_count`，`clustering` 用 `n_clusters`/`silhouette_score`。
+3. **Task ↔ Metrics**：**强制相关**。metrics 不写在 task spec 里，而是写在 registry 的 benchmark 条目下（见 §2.2）；指标函数用 `@metric` 装饰器注册，例如 `table` 类任务常用 `row_count`/`col_count`，`clustering` 类任务常用 `n_clusters`/`silhouette_score`。
 
 简记：
 
@@ -167,7 +206,7 @@ pip install -e ".[dev]"
 
 ```bash
 evaluate-skill --all --skills-dir ./skills --run-smoke \
-    --output docs/SKILL_SCORECARD.md
+    --output reports/SKILL_SCORECARD.md
 ```
 
 ### 5.2 运行 benchmark
@@ -210,10 +249,12 @@ improve-skill skills/foo \
 skill-ci \
     --skill bio-spatial-deconvolution-cell2location \
     --registry examples/benchmark_cell2location/benchmarks/bio-spatial-deconvolution-cell2location/registry.yaml \
-    --baseline examples/benchmark_cell2location/baselines/bio-spatial-deconvolution-cell2location.yaml \
-    --suite darwin \
+    --baseline benchmarks/bio-spatial-deconvolution-cell2location/baselines/initial.yaml \
+    --suite gradual \
     --ratchet
 ```
+
+`--baseline` 指向的是**用户自己管理的 benchmark 结果对比文件**（YAML，记录各 benchmark 的指标基线值，惯例放在 `benchmarks/<skill>/baselines/<name>.yaml`，可用 `skill-ci --ratchet` 在全部检查通过后刷新为当前结果），与 `improve-skill` 的 scorecard baseline 不是同一个东西——三种 baseline 的区别见 §6.3。
 
 ### 5.6 渐进测试流水线
 
@@ -231,40 +272,136 @@ test-skill --mode gradual \
 ```bash
 skill-pipeline --intent "run full quality pipeline" \
     --skills-dir ./skills \
-    --benchmark-registry ./benchmarks/skill-prism/registry.yaml \
+    --benchmark-registry benchmarks/my-skill/registry.yaml \
     --run-smoke
 ```
 
+（`--benchmark-registry` 换成你自己 skill 的 registry 路径，格式为 `benchmarks/<skill>/registry.yaml`。）
+
 ---
 
-## 6. 配置文件
+## 6. 配置与生成物
 
-### `skill_rubric_types.yaml`
+### 6.1 `skill_rubric_types.yaml`
 
-唯一的核心配置文件，定义：
+唯一的核心配置文件，实际顶层键：
 
+- `scoring`：维度权重（`scoring.weights`）与等级阈值（`grade_thresholds`）。
 - `skill_types`：Skill 类型、目录结构要求、每类维度检查规则。
-- `scoring.weights`：维度权重与等级阈值。
-- `dimension_names`：D1–D9 的中文/英文名。
-- `benchmarks`：任务、数据集、指标、通过阈值。
+- `llm_tasks`：任务 prompt 模板（供外部 LLM/Agent 使用，引擎不执行）。
+- `security`：安全扫描规则。
 - `llm_judge`：可选 LLM judge 配置。
 - `editor`：可选自动 editor 配置。
+- `optimization`：优化循环参数。
 
-### `artifacts/<skill>/baseline/`
+（文件中还含 `dimension_names`、`required_frontmatter_base` 等元数据键。）
 
-每个 Skill 的 baseline 目录（生成物，位于 skill 树外），记录：
+注意：**这里没有 `benchmarks` 顶层键**。Benchmark 一律定义在 per-skill registry（`benchmarks/<skill>/registry.yaml`，见 §2.2），与本配置文件完全分离。
 
-- 当前 Rubric 分数和维度分（`baseline.json`，原子写 + `.bak`）；
-- benchmark 结果；
-- 历史最高分（用于 ratchet）；
-- SKILL.md 副本与滚动备份（`SKILL.md.bak.*`，无 git 时用于回滚）；
-- 代码资产快照（`code_snapshot/`）。
+### 6.2 `artifacts/<skill>/`（生成物，skill 树外）
 
-渐进测试每级独立的 baseline 则保存在 `artifacts/<skill>/ci/gradual/.baselines/<skill>/gradual_baseline_level<N>.yaml`。
+所有生成物写在项目根的 `artifacts/<skill>/` 下，**绝不写进 skill 树**：
+
+- `baseline/`：`improve-skill` 的 scorecard baseline（见 §6.3 ①）；
+- `test-prompts.json` / `llm_judgments.json` / `prompts_verification.json`：结构化交换文件（schema 见 §7）；
+- `history.jsonl`：优化历史，每行一条 JSON；
+- scorecard：评估结果；
+- `ci/`：CI artifacts（`skill-ci` 报告、渐进测试产物，含每级 baseline，见 §6.3 ③）。
+
+跨 skill 的汇总报告写在 `reports/`。
+
+### 6.3 三种 baseline 对照表
+
+"baseline" 在 skillPrism 里有三个互不相同的意思，不要混淆：
+
+| # | 含义 | 位置 | 用途 | 写入命令 |
+|---|---|---|---|---|
+| ① | **scorecard baseline**（`improve-skill`） | `artifacts/<skill>/baseline/baseline.json`（+ `SKILL.md` 快照、`code_snapshot/`、滚动备份） | Rubric 分数与维度分的基线，judge keep/revert 与 `--ratchet` 的真相源；原子写 + flock 锁（`optimize.lock`） | `improve-skill <skill> --record-baseline` |
+| ② | **benchmark 回归对比文件**（用户管理） | 用户指定路径，惯例 `benchmarks/<skill>/baselines/<name>.yaml` | 记录各 benchmark 指标基线值，供 `skill-ci --baseline <path>` 做回归对比 | `skill-ci --ratchet`（全部检查通过后刷新），或手工维护 |
+| ③ | **gradual 每级 baseline** | `artifacts/<skill>/ci/gradual/.baselines/<skill>/gradual_baseline_level<N>.yaml` | 渐进测试每个 level 独立 ratchet，失败即停 | `test-skill --mode gradual` / `skill-gradual` 自动维护（`--no-ratchet` 可禁用） |
 
 ---
 
-## 7. LLM 在 skillPrism 中的边界
+## 7. 结构化交换文件
+
+Agent 与引擎之间通过 `artifacts/<skill>/` 下的结构化 JSON 文件交换结果：**Agent 产生，引擎消费**。引擎不执行 prompt、不调用 LLM。以下 schema 以 `skills/skill-prism/references/` 下的权威参考为准。
+
+### 7.1 `test-prompts.json`
+
+2–3 条代表性 prompt，Agent 撰写（引擎模板仅为兜底占位）。覆盖 trigger / ambiguous / boundary 三种场景：
+
+```json
+[
+  {
+    "id": 1,
+    "scenario": "trigger",
+    "prompt": "我有一管 PBMC 的单细胞数据，想看看里面有哪些细胞群。",
+    "expected": "按 SKILL.md 工作流组织分析（QC→归一化→聚类）；主动询问数据位置和格式；可用小样演示关键步骤；不编造聚类结果。"
+  }
+]
+```
+
+要求：具体场景 + 行为可核对的期望（不校验数值结果——结果正确性归 benchmark），禁止 "Use the X skill to ..." 这类元指令。详见 `skills/skill-prism/references/PROMPTS_VERIFICATION.md`。
+
+### 7.2 `llm_judgments.json`
+
+多评委 LLM judge 结果（Agent 生成，引擎自动发现；也可 `evaluate-skill --llm-judgments <path>` 显式传入）：
+
+```json
+{
+  "judges": [
+    {
+      "dimension": "D2",
+      "scores": [4, 5],
+      "reasons": ["Clear examples.", "Well structured."],
+      "aggregated_score": 4,
+      "aggregate": "median",
+      "model": "moonshot-v1-8k",
+      "temperature": 0.2,
+      "prompt_version": "1.0"
+    }
+  ]
+}
+```
+
+- `dimension`：D2 / D5 / D6 / D8；
+- `scores` / `reasons`：每个独立 judge 的结果，长度一致；
+- `aggregated_score`：1–5 整数；`aggregate`：`median` / `mean` / `min` / `max`；
+- `model` / `temperature` / `prompt_version`：可复现性元数据（Agent 生成时必须带上）。
+
+详见 `skills/skill-prism/references/LLM_JUDGE.md`。
+
+### 7.3 `prompts_verification.json`
+
+test-prompts 的 with/without 对比验证结果（Agent 按验证协议生成，引擎自动发现；也可 `evaluate-skill --prompts-verification <path>` 显式传入）：
+
+```json
+{
+  "skill": "<skill-name>",
+  "results": [
+    {
+      "prompt_id": 1,
+      "prompt": "...",
+      "without_skill_output": "...",
+      "with_skill_output": "...",
+      "expected": "...",
+      "improvement_score": 1.0,
+      "passed": true,
+      "eval_mode": "full_test"
+    }
+  ]
+}
+```
+
+- `improvement_score`：0.0–1.0，由独立 judge 子 agent 给出；
+- `passed`：with-skill 输出是否满足 expected；
+- `eval_mode`：`full_test`（真实执行）/ `dry_run`（未执行、凭推测填写）。`dry_run` 占比 > 30% 时引擎告警，D8 分数不可信。
+
+引擎行为：pass_rate < 50% → D6/D8 减 1 分；≥ 90% → 加 1 分。完整协议（三个独立子 agent、不得修改被测 skill）见 `skills/skill-prism/references/PROMPTS_VERIFICATION.md`。
+
+---
+
+## 8. LLM 在 skillPrism 中的边界
 
 skillPrism **不内置 LLM**，但有三处可以接入 LLM：
 
@@ -280,11 +417,17 @@ skillPrism **不内置 LLM**，但有三处可以接入 LLM：
 - 不会被某个 LLM provider 锁定。
 - 测量结果可复现。
 
+### 设计禁忌：不要给引擎加交互层包装
+
+- **不要**围绕 skillPrism 构建 chatbot 包装或 REST API：引擎是确定性 Python 库 + CLI，交互层就是 Agent（`skills/skill-prism/SKILL.md`）。
+- **不要**让引擎解析自然语言意图——意图翻译是 Agent 的职责。
+- **不要**把 LLM judge 逻辑嵌入引擎——judge 通过外部命令或结构化文件接入。
+
 ---
 
-## 8. 扩展点
+## 9. 扩展点
 
-### 8.1 加新 Skill 类型
+### 9.1 加新 Skill 类型
 
 编辑 `skill_rubric_types.yaml`：
 
@@ -299,9 +442,12 @@ skill_types:
 
 只要检查基于文件存在性和关键词匹配，就无需改引擎。
 
-### 8.2 加新 benchmark 任务
+### 9.2 加新 benchmark 任务
 
-实现 `<task>/runner.py` 并注册到 YAML：
+引擎没有内置 task 类型，也**不需要实现 `runner.py`**。加一个任务只需两步：
+
+1. 写 task spec `benchmarks/my-skill/tasks/my-task.yaml`（prompt 模板 + input/output 契约，无 metrics、无 type 字段）；
+2. 在 registry 里登记 benchmark 条目，metrics 直接写在条目下：
 
 ```yaml
 # benchmarks/my-skill/registry.yaml
@@ -320,7 +466,20 @@ benchmarks:
         expected: true
 ```
 
-### 8.3 生成测试数据
+需要自定义指标时，在 registry 目录放 `metrics.py`，用 `@metric` 装饰器注册：
+
+```python
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+from skillprism.benchmark.metrics import metric
+
+@metric("exact_match")
+def exact_match(actual_path: Path, expected_path: Optional[Path], task_spec: Dict[str, Any]) -> bool:
+    ...
+```
+
+### 9.3 生成测试数据
 
 `skillprism.testing.mock_data` 提供合成数据生成器，帮助 benchmark 不依赖真实大数据：
 
@@ -329,12 +488,12 @@ from skillprism.testing.mock_data import generate_visium_data
 adata_sp, adata_ref = generate_visium_data(n_spots=200, n_cells_ref=500)
 ```
 
-### 8.4 CI 与渐进测试
+### 9.4 CI 与渐进测试
 
 - `skillprism.ci.pipeline` 可直接嵌入 CI workflow；
 - `test-skill --mode gradual` 为昂贵 Skill 提供失败优先的 level 0→3 渐进式测试。
 
-### 8.5 自定义 editor 或 judge
+### 9.5 自定义 editor 或 judge
 
 只要命令满足 stdin→stdout 约定即可：
 
@@ -343,63 +502,39 @@ adata_sp, adata_ref = generate_visium_data(n_spots=200, n_cells_ref=500)
 
 ---
 
-## 9. 与 darwin-skill 的关系
+## 10. 工程特性总览
 
-skillPrism 受 darwin-skill 启发，并已吸收其实证验证过的最佳实践：
+skillPrism 内置以下经过实践验证的质量机制：9 维 rubric + 规则增强（模糊词、AI 腔废话、失败模式编码、检查点标记、体积控制）、多评委 LLM judge（默认 n=2）、test-prompts 自动生成与验证、P0-P3 优化策略库、维度相关簇分析、探索性重写、runtime neutrality 红灯扫描、实验历史 JSONL 跟踪、干跑比例告警（dry_run > 30%）、单轮单维度约束、反模式 guard、dry-run judge + `--apply` 人在回路、ratchet/回归门控，以及 `test-skill --mode gradual` 失败优先的 level 0→3 渐进测试（每级独立 baseline、真实数据 completion-only 验收、GPU-only benchmark 自动跳过）。逐项状态见 `docs/reference/roadmap.md`，机制细节见 `docs/reference/rubric-enhancements.md`、`docs/reference/optimization-strategy.md` 等专题文档。
 
-- 9 维 rubric + 规则增强（模糊词、AI 腔废话、失败模式编码、检查点标记、体积控制）；
-- 多评委 LLM judge（默认 n=2）；
-- test-prompts 自动生成与验证；
-- P0-P3 优化策略库；
-- 维度相关簇分析；
-- 探索性重写；
-- runtime neutrality 红灯扫描；
-- 实验历史 JSONL 跟踪；
-- 干跑比例控制与警告（dry_run > 30% 告警）；
-- 异常与边界处理（自动 git init、revert fallback、体积守卫）；
-- 单轮单维度约束；
-- 视觉成果卡片（可选 reporter）；
-- dry-run judge + `--apply` 人在回路；
-- 反模式 guard；
-- ratchet/回归门控；
-- benchmark 验证。
+工程独立性：
 
-现在 skillPrism 还直接实现了 darwin-skill 的核心测试策略：
-
-- `test-skill --mode gradual` CLI：level 0→3 失败优先的渐进式 benchmark；
-- 每级独立 baseline 与 ratchet；
-- 真实数据 benchmark 只做 completion-only 验收；
-- GPU-only benchmark 在无 GPU 环境自动跳过。
-
-但 skillPrism 仍保持**完全独立**：
-
-- 不依赖 darwin-skill 代码；
-- 引擎无 LLM；
+- 引擎无 LLM 依赖；
 - 可安装为 Python 包；
 - 支持任意 editor/judge 命令。
 
 ---
 
-## 10. 文档地图
+## 11. 文档地图
 
 | 文档 | 阅读场景 |
 |---|---|
-| `README.md` / `README_EN.md` | 快速开始、安装、CLI 速查 |
+| `README_CN.md` / `README.md`（英文） | 快速开始、安装、CLI 速查 |
 | `docs/reference/overview.md`（本文） | 理解整体架构与设计 |
 | `docs/reference/framework.md` | Rubric 细节、评分算法、扩展指南 |
-| `docs/reference/operational-playbook.md` | 自然语言交互操作手册：从安装、数据准备到评估/优化/流水线的 step-by-step 指南 |
+| `docs/getting-started/cli-cheatsheet.md` | CLI 与自然语言速查表：想做什么、对 Agent 怎么说、对应 CLI 与关键参数 |
 | `docs/reference/benchmark-guide.md` | 如何构造 benchmark |
 | `docs/reference/cell2location.md` | cell2location 渐进四级示例完整指南 |
-| `docs/reference/gradual-testing.md` | 渐进测试失败优先测试策略 |
-| `docs/tutorial/08-gradual-testing-and-real-data.md` | 教程第 8 章：渐进测试与真实数据验收 |
+| `docs/tutorial/08-gradual-testing-and-real-data.md` | 教程第 8 章：渐进测试失败优先策略与真实数据验收 |
 | `docs/reference/roadmap.md` | 已完成项与待办 |
 | `skills/skill-prism/references/AGENT_GUIDE.md` | Agent 与 skillPrism 交互的标准话术 |
+| `skills/skill-prism/references/LLM_JUDGE.md` | `llm_judgments.json` 权威 schema 与 judge 协议 |
+| `skills/skill-prism/references/PROMPTS_VERIFICATION.md` | test-prompts 验证协议与 `prompts_verification.json` 权威 schema |
 | `skills/skill-prism/SKILL.md` | 统一 Agent 入口：evaluate / test / improve / pipeline / ci |
 | `examples/editor_wrappers/README.md` | 接入 OpenAI/Anthropic/Ollama/国产模型 |
 | `examples/benchmark_cell2location/README.md` | 可一键运行的 渐进四级 benchmark 示例 |
 
 ---
 
-## 11. 一句话总结
+## 12. 一句话总结
 
 > **skillPrism = 无 LLM 依赖的 Skill 评估/验证引擎 + 可选的 LLM 自动编辑 + 可选的 LLM judge，通过 YAML 配置扩展，通过 `--apply` 和 guard 保证人在回路。**

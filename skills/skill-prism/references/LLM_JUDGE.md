@@ -34,7 +34,9 @@
 
 ## 辅助脚本
 
-不想手写上述流程时，可直接运行仓库中的辅助脚本：
+不想手写上述流程时，可直接运行仓库中的辅助脚本。
+注意：该脚本**仅在 skillPrism 仓库内可用**，不随 skill 复制到 `.claude/skills/`；
+在仓库外使用时，Agent 应按上文协议自行生成 `llm_judgments.json`。
 
 ```bash
 export OPENAI_API_KEY=<your-key>
@@ -44,7 +46,7 @@ export OPENAI_MODEL=moonshot-v1-8k
 python scripts/generate_llm_judgments.py skills/my-skill \
     --dimensions D2 D5 \
     --count 2 \
-    --aggregate median
+    --aggregate mean
 ```
 
 默认输出 `artifacts/my-skill/llm_judgments.json`（`--output` 可覆盖），引擎自动发现该文件。

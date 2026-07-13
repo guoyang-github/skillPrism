@@ -4,7 +4,7 @@ This example demonstrates how to benchmark an `analysis` skill that performs
 spatial transcriptomics deconvolution with
 [cell2location](https://github.com/BayraktarLab/cell2location).
 
-It follows the **Darwin** testing strategy:
+It follows a **gradual, failure-mode-first** testing strategy:
 
 | Stage | Level | Data | Purpose |
 |-------|-------|------|---------|
@@ -42,7 +42,7 @@ examples/benchmark_cell2location/
 python examples/benchmark_cell2location/scripts/generate_data.py
 ```
 
-2. Run the full Darwin pipeline up to integration level:
+2. Run the full gradual pipeline up to integration level:
 
 ```bash
 test-skill --mode gradual \
@@ -80,5 +80,5 @@ test-skill --mode single \
   via `--code`.
 - Level 3 (`real_data: true`) is marked `requires_gpu: true` and is checked for
   completion only, not scored, because real Visium data is expensive to run.
-- The `darwin` suite is used by `test-skill --mode gradual` to progress from cheap unit tests
+- The `gradual` suite is used by `test-skill --mode gradual` to progress from cheap unit tests
   to expensive release acceptance.

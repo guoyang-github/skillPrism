@@ -35,7 +35,7 @@ def test_cell2location_level0_passes() -> None:
 
 
 @pytest.mark.skipif(not REGISTRY_PATH.exists(), reason="cell2location example not present")
-def test_cell2location_darwin_up_to_level2() -> None:
+def test_cell2location_gradual_up_to_level2() -> None:
     overall = run_gradual_pipeline(
         "bio-spatial-deconvolution-cell2location",
         REGISTRY_PATH,

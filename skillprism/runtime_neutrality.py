@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Runtime neutrality checks inspired by darwin-skill.
+"""Runtime neutrality checks.
 
 Ensures that a skill is not tied to a single agent runtime (Claude Code,
 Cursor, Codex, etc.) so that it can be installed in any skills-compatible

@@ -233,3 +233,45 @@ class TestAutoEdit:
 
         # Should stop after the first regression round.
         assert len(calls) == 1
+
+    def test_no_stop_on_regression_continues_rounds(self, tmp_path: Path) -> None:
+        """--no-stop-on-regression: reverted edits should not stop remaining rounds."""
+        skill_dir = tmp_path / "test_skill"
+        skill_dir.mkdir()
+        skill_md = skill_dir / "SKILL.md"
+        skill_md.write_text(GOOD_SKILL_MD)
+
+        config = load_config(DEFAULT_CONFIG)
+        from skillprism.evaluate_skill_rubric import evaluate_skill
+
+        report = evaluate_skill(skill_dir, config)
+        save_baseline(skill_dir, report)
+
+        calls: list[str] = []
+
+        def fake_editor(prompt: str) -> str:
+            calls.append(prompt)
+            # Always return unchanged content, so every round is reverted.
+            return GOOD_SKILL_MD
+
+        editor = SkillEditor(caller=fake_editor)
+
+        _run_auto_edit_rounds(
+            skill_dir,
+            config,
+            editor,
+            benchmark_registry=None,
+            benchmark_output_dir=None,
+            code=None,
+            min_gain=1.0,
+            allow_regression=0.0,
+            stop_on_regression=False,
+            ratchet=False,
+            context=None,
+            verbose=False,
+            llm_judge=None,
+            max_rounds=3,
+        )
+
+        # All rounds should run despite every edit being reverted.
+        assert len(calls) == 3

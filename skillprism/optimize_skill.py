@@ -859,8 +859,8 @@ def _explore_rewrite_unlocked(
 ) -> JudgeResult:
     """Perform an exploratory rewrite of SKILL.md to escape local optima.
 
-    Inspired by darwin-skill Phase 2.5: stash the current best, rewrite from
-    scratch, and keep only if the rewrite scores higher.
+    Stash the current best, rewrite from scratch, and keep only if the
+    rewrite scores higher.
     """
     if not editor.is_available():
         print("Error: no skill editor configured for exploratory rewrite.")
@@ -1152,10 +1152,11 @@ def _run_auto_edit_rounds_unlocked(
             if round_idx == max_rounds:
                 print("Edit kept. Max rounds reached.")
         else:
-            print("Edit reverted. Stopping auto-edit loop.")
             if stop_on_regression:
-                print("--stop-on-regression enabled: no further rounds will run.")
-            return 1
+                print("Edit reverted. Stopping auto-edit loop.")
+                print("Pass --no-stop-on-regression to continue after a reverted edit.")
+                return 1
+            print("Edit reverted. Continuing to next round (--no-stop-on-regression).")
 
     return final_exit
 

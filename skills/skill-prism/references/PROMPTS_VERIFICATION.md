@@ -2,6 +2,8 @@
 
 引擎**不执行** prompt，只消费结果。本协议规定 Agent 如何通过「带 skill / 不带 skill」对比，产出引擎可消费的验证文件，用于 D8（measured performance）评分。
 
+**职责边界**：本机制只验证**行为质量**——真实用户语言下，带 skill 的 Agent 是否更会澄清、更遵循 SKILL.md 工作流、更能防护边界。产出物的**结果正确性**（数值、结构、文件内容 vs 金标准）由 benchmark（`test-skill`）负责，**不在此校验**。
+
 涉及两个文件，默认都放在 `artifacts/<skill>/`（项目根目录下，skill 树保持只读）：
 
 | 文件 | 作用 | 谁写 |
@@ -11,15 +13,15 @@
 
 ## Step 1：撰写 test-prompts.json
 
-要求：**具体输入 + 具体可验证的期望**，禁止 "Use the X skill to ..." 这类元指令。覆盖三种场景：
+要求：**具体场景 + 行为可核对的期望**。expected 是 judge 能从执行过程记录直接核对的行为清单（是否澄清、是否按 SKILL.md 工作流、是否防护边界），**禁止结果数值校验**（"文件存在""数值在某区间""结构比对"——那是 benchmark 的职责）；禁止 "Use the X skill to ..." 这类元指令。覆盖三种场景：
 
 ```json
 [
   {
     "id": 1,
-    "scenario": "happy path",
-    "prompt": "用 pbmc3k 数据做单细胞聚类，输出 h5ad。",
-    "expected": "输出文件存在，obs 中含 leiden 列，cluster 数在 5–15 之间。"
+    "scenario": "trigger",
+    "prompt": "我有一管 PBMC 的单细胞数据，想看看里面有哪些细胞群。",
+    "expected": "按 SKILL.md 工作流组织分析（QC→归一化→聚类）；主动询问数据位置和格式；可用小样演示关键步骤；不编造聚类结果。"
   },
   {
     "id": 2,
@@ -36,14 +38,16 @@
 ]
 ```
 
+三种场景的分工：`trigger` 验触发与工作流遵循（真实需求语言，不带 skill 名）；`ambiguous` 验澄清行为；`boundary` 验风险识别与优雅处理。
+
 ## Step 2：执行 with / without
 
 对每条 prompt 各起**两个独立子 agent**（不得共享上下文）：
 
-- **with-skill 子 agent**：被测 skill 在可发现路径（如 `.claude/skills/<skill>`）下，执行 prompt，记录完整输出。
-- **without-skill 子 agent**：相同环境但**不含**被测 skill（临时移出或换干净目录），执行同一 prompt，记录输出。
+- **with-skill 子 agent**：被测 skill 在可发现路径（如 `.claude/skills/<skill>`）下，执行 prompt，记录执行过程和输出。
+- **without-skill 子 agent**：相同环境但**不含**被测 skill（临时移出或换干净目录），执行同一 prompt，记录执行过程和输出。
 
-两次执行均真实跑完后，`eval_mode` 记 `full_test`。
+**轻量执行**：trigger 类 prompt 允许用小样数据、或「方案 + 关键步骤演示」后终止——验证的是做事方式是否符合 skill 指引，**不要求跑完整重计算、不要求产出最终结果文件**。真实启动并执行了关键步骤即记 `full_test`。
 
 ## Step 3：评判
 
@@ -56,11 +60,15 @@ Expected: {expected}
 Output WITHOUT skill: {without_skill_output}
 Output WITH skill: {with_skill_output}
 
+Judge ONLY process behavior: whether the with-skill agent followed the skill's
+guidance (workflow, tool choice, clarification, risk handling). Do NOT judge
+numeric correctness of outputs — result correctness belongs to benchmarks.
+
 Score improvement_score from 0.0 to 1.0:
-- 1.0: with-skill output fully meets expected; without-skill does not
+- 1.0: with-skill behavior fully meets expected; without-skill does not
 - 0.5: with-skill partially better
 - 0.0: no improvement or with-skill is worse
-Set passed=true iff the with-skill output meets the expected criteria.
+Set passed=true iff the with-skill behavior meets the expected criteria.
 Return only JSON: {"improvement_score": 0.0, "passed": false, "reason": "..."}
 ```
 
@@ -110,6 +118,8 @@ evaluate-skill skills/<skill> --prompts-verification artifacts/<skill>/prompts_v
 
 ## 规则
 
+- expected 只写**行为可核对项**；结果正确性（数值、文件内容、结构 vs 金标准）由 benchmark 负责，写进 test-prompts 属于越权。
+- trigger 类允许**轻量执行**（小样数据 / 方案 + 关键步骤演示）；真实启动并执行了关键步骤即记 `full_test`，不要求产出最终结果文件。
 - 三个子 agent（with / without / judge）必须相互独立，不得共享推理上下文。
 - 执行与评判全程**不得修改被测 skill**。
 - 中间文件只写 `artifacts/<skill>/`，不写 skill 树。

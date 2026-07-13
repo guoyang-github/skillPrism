@@ -15,10 +15,10 @@
         <link rel="canonical" href="https://nanobot-skills.github.io/Skills_Validation/reference/langfuse-integration/">
       
       
-        <link rel="prev" href="../llm-judge/">
+        <link rel="prev" href="../test-prompts-verification/">
       
       
-        <link rel="next" href="../benchmark-metrics/">
+        <link rel="next" href="../visual-result-cards/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>skillPrism × Langfuse 集成方案 - skillPrism</title>
+        <title>skillPrism × Langfuse 集成方案（设计提案） - skillPrism</title>
       
     
     
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              skillPrism × Langfuse 集成方案
+              skillPrism × Langfuse 集成方案（设计提案）
             
           </span>
         </div>
@@ -291,6 +291,15 @@
   
     
     
+      
+  
+  
+  
+    
+  
+  
+    
+    
       <li class="md-tabs__item md-tabs__item--active">
         <a href="../overview/" class="md-tabs__link">
           
@@ -300,6 +309,9 @@
 
         </a>
       </li>
+    
+  
+
     
   
 
@@ -465,14 +477,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/hands-on/" class="md-nav__link">
+      <a href="../../getting-started/beginner-handbook/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    🙌 手把手教程：用 skillPrism 评估并改进一个 Skill
+    新手操作手册：用说话的方式驱动 skillPrism
   
 
     
@@ -501,6 +513,34 @@
     
   
     安装与环境
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/hands-on/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🙌 手把手教程：用 skillPrism 评估并改进一个 Skill
   
 
     
@@ -612,7 +652,7 @@
   <span class="md-ellipsis">
     
   
-    Pipeline
+    运行完整流水线
   
 
     
@@ -640,7 +680,7 @@
   <span class="md-ellipsis">
     
   
-    Ci
+    CI 集成
   
 
     
@@ -778,34 +818,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/02-install-and-first-skill/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    第 2 章：安装与第一个 Skill
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../tutorial/03-understanding-the-rubric/" class="md-nav__link">
         
   
@@ -890,90 +902,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/05-optimization-loop/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    05 optimization loop
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorial/06-quality-pipeline/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    第 6 章：质量流水线与 CI
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorial/07-extending-skillprism/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    第 7 章：扩展 skillPrism
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../tutorial/08-gradual-testing-and-real-data/" class="md-nav__link">
         
   
@@ -1010,34 +938,6 @@
     
   
     skillPrism 全周期 Skill 评估优化 Demo
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorial/langfuse-bio-demo/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Langfuse 集成下的全周期 Skill 评估优化 Demo（生物信息示例）
   
 
     
@@ -1149,6 +1049,63 @@
   
   
   
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架构与概念
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    架构与概念
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
       <a href="../overview/" class="md-nav__link">
         
@@ -1158,90 +1115,6 @@
     
   
     skillPrism 体系概览
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../natural-language-interaction/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Natural-Language Interaction Best Practices
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../skill-prism-architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Skill prism architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../agent-command/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    External Agent Command
   
 
     
@@ -1290,6 +1163,99 @@
   
   
     <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TODO 与路线图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Benchmark
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../benchmark-guide/" class="md-nav__link">
         
   
@@ -1298,6 +1264,34 @@
     
   
     金标准 Benchmark 构建与迭代优化指南（手把手版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmark-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark Metrics 参考与最佳实践
   
 
     
@@ -1402,6 +1396,276 @@
   
   
     <li class="md-nav__item">
+      <a href="../cell2location/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cell2location 示例完整指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    优化与评分
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    优化与评分
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../optimization-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    优化策略与维度簇
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rubric-enhancements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rubric enhancements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runtime-neutrality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runtime neutrality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../edge-cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    边界情况与 FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    集成与接口
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    集成与接口
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../llm-judge/" class="md-nav__link">
         
   
@@ -1409,7 +1673,63 @@
   <span class="md-ellipsis">
     
   
-    LLM Judge
+    LLM Judge（引擎侧参考）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agent-command/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Agent Command
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test-prompts-verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test-Prompts 验证（功能概述）
   
 
     
@@ -1446,7 +1766,7 @@
   <span class="md-ellipsis">
     
   
-    skillPrism × Langfuse 集成方案
+    skillPrism × Langfuse 集成方案（设计提案）
   
 
     
@@ -1464,7 +1784,7 @@
   <span class="md-ellipsis">
     
   
-    skillPrism × Langfuse 集成方案
+    skillPrism × Langfuse 集成方案（设计提案）
   
 
     
@@ -1991,29 +2311,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../benchmark-metrics/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Benchmark Metrics 参考与最佳实践
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2025,43 +2325,36 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../test-prompts-verification/" class="md-nav__link">
+    
+    
+    
+    
+      
+      
         
-  
-  
-  <span class="md-ellipsis">
+          
+          
+        
+      
     
-  
-    Test prompts verification
-  
-
     
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="">
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../optimization-strategy/" class="md-nav__link">
-        
   
   
   <span class="md-ellipsis">
     
   
-    优化策略库
+    其他
   
 
     
@@ -2069,151 +2362,19 @@
   
   
 
-      </a>
-    </li>
-  
-
-              
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
             
-              
-                
   
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../experiment-history/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    实验历史
+    其他
   
 
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../rubric-enhancements/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Rubric enhancements
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../dimension-clusters/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Dimension clusters
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../edge-cases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Edge cases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../runtime-neutrality/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Runtime neutrality
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2250,90 +2411,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../operational-playbook/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    skillPrism 自然语言交互操作手册
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../gradual-testing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    渐进测试（Gradual Testing）
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cell2location/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Cell2location 示例完整指南
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../api/" class="md-nav__link">
         
   
@@ -2342,147 +2419,6 @@
     
   
     API 参考
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../roadmap/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    TODO &amp; Roadmap
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-          
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_26" >
-        
-          
-          <label class="md-nav__link" for="__nav_4_26" id="__nav_4_26_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Examples
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_26_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_26">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Examples
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../examples/scorecard/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Skill Scorecard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../examples/review-bio-single-cell-clustering/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Skill 评估报告：bio-single-cell-clustering
   
 
     
@@ -3050,11 +2986,11 @@
   
 
 
-<h1 id="skillprism-langfuse">skillPrism × Langfuse 集成方案<a class="headerlink" href="#skillprism-langfuse" title="Permanent link">&para;</a></h1>
+<h1 id="skillprism-langfuse">skillPrism × Langfuse 集成方案（设计提案）<a class="headerlink" href="#skillprism-langfuse" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p>将 skillPrism 的「Skill 评估 + 优化」能力嫁接到 Langfuse 的可观测/实验体系上，
 形成团队级、跨机器、可追溯的工程化评估优化闭环。</p>
-<p>状态：设计稿。实施前需确认部署形态（自建 / Cloud）与数据合规边界。</p>
+<p>状态：<strong>设计提案（Design Proposal），尚未实施</strong>。实施前需确认部署形态（自建 / Cloud）与数据合规边界。</p>
 </blockquote>
 <hr />
 <h2 id="1">1. 背景与目标<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
@@ -3459,7 +3395,7 @@ Langfuse 对接落在<strong>可选观测层</strong>，与 editor/judge 同层�
 </tbody>
 </table>
 <p>注入采用「<code>get_backend()</code> 默认 noop」方式，引擎函数只多 1-2 行 wrapper 调用，
-不破坏现有 207 测试（noop 路径零行为变化）。</p>
+不破坏现有测试套件（noop 路径零行为变化）。</p>
 <h3 id="53-sink">5.3 sink 映射器<a class="headerlink" href="#53-sink" title="Permanent link">&para;</a></h3>
 <p><code>skillprism/observability/sink.py</code> 负责把引擎数据结构映射为 trace/score：</p>
 <ul>
@@ -3829,7 +3765,7 @@ P5-P6 是高阶闭环。建议 P0-P2 先落地验证，再按价值推进。Ratc
 <tbody>
 <tr>
 <td>引擎确定性被观测层污染</td>
-<td>Backend 只读采集，不回写引擎结果；noop 默认；全套 207 测试在 noop 路径不变</td>
+<td>Backend 只读采集，不回写引擎结果；noop 默认；全套测试在 noop 路径行为不变</td>
 </tr>
 <tr>
 <td>SKILL.md 正文 / 代码内容外泄</td>
@@ -3881,7 +3817,7 @@ P5-P6 是高阶闭环。建议 P0-P2 先落地验证，再按价值推进。Ratc
 <p><strong>P1 可观测</strong>：
 1. <code>SKILLPRISM_OBSERVABILITY=langfuse</code> 时，<code>evaluate-skill skills/foo</code> 在 Langfuse 出现一条 trace，
    含 9 span + 9 Dn score + 1 <code>rubric_total</code> score。
-2. 未设该环境变量时，引擎输出与本轮改造后完全一致（207 测试全绿）。
+2. 未设该环境变量时，引擎输出与本轮改造后完全一致（测试全绿）。
 3. LangfuseBackend 在网络异常/SDK 缺失时降级 noop，不抛引擎。
 4. §4.1 隐私字段：SKILL.md 正文、绝对路径、evidence 默认<strong>不在</strong> trace 出现（断言测试）。</p>
 <p><strong>P3.5 R1 双写</strong>：
@@ -3894,14 +3830,14 @@ P5-P6 是高阶闭环。建议 P0-P2 先落地验证，再按价值推进。Ratc
 <h2 id="14">14. 与现有最佳实践改造的关系<a class="headerlink" href="#14" title="Permanent link">&para;</a></h2>
 <p>本轮最佳实践改造已为 Langfuse 对接铺好基础：</p>
 <ul>
-<li><strong>原子状态 + flock</strong>（P1-1）→ Langfuse 成为真相源后，本地状态降级为缓存仍保持完整。</li>
-<li><strong><code>_run_auto_edit_rounds</code> locked wrapper</strong>（P1-1）→ trace 注入点清晰（一个外层函数）。</li>
-<li><strong><code>_judge_candidate_unlocked</code> / <code>_run_bloat_gate</code></strong>（P0-4/P2-1）→ 决策点已结构化，
+<li><strong>原子状态 + flock</strong> → Langfuse 成为真相源后，本地状态降级为缓存仍保持完整。</li>
+<li><strong><code>_run_auto_edit_rounds</code> locked wrapper</strong> → trace 注入点清晰（一个外层函数）。</li>
+<li><strong><code>_judge_candidate_unlocked</code> / <code>_run_bloat_gate</code></strong> → 决策点已结构化，
   <code>score(decision)</code> 注入位置明确。</li>
-<li><strong>regression 方向感知</strong>（P0-6）→ metric score 的 <code>:lower_better</code> 后缀有现成依据。</li>
-<li><strong>outlier 日志</strong>（P2-8）→ 桥接 Langfuse event 的现成 hook。</li>
-<li><strong>config schema</strong>（P2-4）→ 新增 <code>llm_judge.backend</code> 配置项自动被校验。</li>
-<li><strong>静默 except 改日志</strong>（P2-9）→ 观测层降级路径的失败可见。</li>
+<li><strong>regression 方向感知</strong> → metric score 的 <code>:lower_better</code> 后缀有现成依据。</li>
+<li><strong>outlier 日志</strong> → 桥接 Langfuse event 的现成 hook。</li>
+<li><strong>config schema</strong> → 新增 <code>llm_judge.backend</code> 配置项自动被校验。</li>
+<li><strong>静默 except 改日志</strong> → 观测层降级路径的失败可见。</li>
 </ul>
 <p>即：最佳实践改造让 Langfuse 注入点从「散落在 280 行 god-function 里」变成「结构化、已测试、
 单一职责的函数边界」，对接成本与回归风险都显著降低。</p>

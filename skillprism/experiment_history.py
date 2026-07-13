@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Experiment history tracking for skill optimization.
 
-Inspired by darwin-skill's results.tsv, but using JSONL for easier parsing
-and integration with Python tooling. Each evaluate-skill and improve-skill
-run appends a record to ``artifacts/<skill>/history.jsonl`` (relative to the
+Uses JSONL for easy parsing and integration with Python tooling. Each
+evaluate-skill and improve-skill run appends a record to
+``artifacts/<skill>/history.jsonl`` (relative to the
 current working directory), keeping the skill source tree read-only.
 """
 

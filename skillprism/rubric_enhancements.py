@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rubric scoring enhancements inspired by darwin-skill / SkillLens.
+"""Rubric scoring enhancements inspired by SkillLens.
 
 These are deterministic, rule-based checks that make the rubric more sensitive
 to real quality issues (vague wording, missing failure modes, missing checkpoints,
@@ -45,7 +45,7 @@ class RubricEnhancements:
         return min(penalty, 5)
 
 
-# darwin-skill / SkillLens inspired blacklists
+# SkillLens-inspired blacklists
 VAGUE_WORDS = [
     "建议",
     "可以考虑",

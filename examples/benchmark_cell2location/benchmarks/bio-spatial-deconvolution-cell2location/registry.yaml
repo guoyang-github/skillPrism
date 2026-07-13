@@ -9,7 +9,7 @@ suites:
     description: Fast smoke tests using tiny synthetic data
     benchmarks:
       - c2l_level0_smoke
-  darwin:
+  gradual:
     description: Failure-mode-first progression from unit to release
     benchmarks:
       - c2l_level0_smoke

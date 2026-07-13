@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Test prompt management for skill effect verification.
 
-Inspired by darwin-skill's test-prompts.json: each skill should have 2-3
-representative prompts that exercise its claimed capability. The prompts are
+Each skill should have 2-3 representative prompts that exercise its claimed
+capability. The prompts are
 used by `--llm-judge` or external agents to verify dim8 "measured performance".
 """
 
@@ -16,9 +16,9 @@ from typing import Any, Dict, List, cast
 DEFAULT_PROMPTS: List[Dict[str, Any]] = [
     {
         "id": 1,
-        "scenario": "happy path",
-        "prompt": "Use this skill for its most typical happy-path task.",
-        "expected": "A concise description of the expected output.",
+        "scenario": "trigger",
+        "prompt": "Use this skill for its most typical task.",
+        "expected": "A concise description of the expected behavior (workflow conformance, not numeric results).",
     },
     {
         "id": 2,
@@ -87,7 +87,7 @@ def generate_test_prompts(skill_path: Path) -> List[Dict[str, Any]]:
     agent-authored prompts created per ``references/PROMPTS_VERIFICATION.md``.
 
     Uses the skill name, description, and first workflow section to create:
-    1. A happy-path prompt
+    1. A trigger/workflow-conformance prompt
     2. An ambiguous/complex prompt
     3. A boundary/failure-mode prompt
     """
@@ -105,9 +105,9 @@ def generate_test_prompts(skill_path: Path) -> List[Dict[str, Any]]:
     prompts = [
         {
             "id": 1,
-            "scenario": "happy path",
+            "scenario": "trigger",
             "prompt": f"Use the {name} skill to {first_step} under normal conditions.",
-            "expected": f"The skill should follow its documented workflow and produce a correct result for {name}.",
+            "expected": f"The agent should follow the skill's documented workflow (tool choice, step order, output structure) for {name}; a light walkthrough on small sample data suffices — no full computation or numeric result checks required.",
         },
         {
             "id": 2,

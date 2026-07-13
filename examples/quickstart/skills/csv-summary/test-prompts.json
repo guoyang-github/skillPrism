@@ -1,9 +1,9 @@
 [
   {
     "id": 1,
-    "scenario": "happy path",
+    "scenario": "trigger",
     "prompt": "Use the csv-summary skill to perform its main task under normal conditions.",
-    "expected": "The skill should follow its documented workflow and produce a correct result for csv-summary."
+    "expected": "The agent should follow the skill's documented workflow (tool choice, step order, output structure) for csv-summary; a light walkthrough on small sample data suffices — no full computation or numeric result checks required."
   },
   {
     "id": 2,

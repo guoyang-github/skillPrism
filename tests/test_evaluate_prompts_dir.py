@@ -82,7 +82,7 @@ def test_authored_prompts_no_warning(tmp_path: Path) -> None:
     prompts_dir = tmp_path / "artifacts" / "sample-skill"
     prompts_dir.mkdir(parents=True)
     (prompts_dir / "test-prompts.json").write_text(
-        json.dumps([{"id": 1, "scenario": "happy path", "prompt": "p", "expected": "e"}]),
+        json.dumps([{"id": 1, "scenario": "trigger", "prompt": "p", "expected": "e"}]),
         encoding="utf-8",
     )
     cfg = load_config(DEFAULT_CONFIG)

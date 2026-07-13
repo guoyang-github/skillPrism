@@ -96,7 +96,7 @@ HEDGE_WORDS_CJK = [
     "大概",
 ]
 
-# Explicit checkpoint markers required by darwin-skill dim4
+# Explicit checkpoint markers for the executability dimension
 CHECKPOINT_MARKERS = [
     "🔴",
     "🛑",
@@ -244,7 +244,7 @@ def evaluate_skill_lens(skill_path: Path) -> SkillLensResult:
             evidence.append("未发现高危操作")
             suggestions.append("建议显式声明高风险操作黑名单（如 rm -rf /、git reset --hard）")
 
-    # 4. Explicit Checkpoint Markers (darwin-skill dim4)
+    # 4. Explicit Checkpoint Markers
     if not content:
         checkpoint_score = 1
         suggestions.append("SKILL.md 不存在，无法评估检查点设计")

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Dimension cluster analysis for skill optimization.
 
-Inspired by darwin-skill's observation that some rubric dimensions are
-correlated (e.g. improving D3 often lifts D2 and D4). This module helps the
-optimizer avoid redundant edits by showing which dimensions move together.
+Some rubric dimensions are correlated (e.g. improving D3 often lifts D2 and
+D4). This module helps the optimizer avoid redundant edits by showing which
+dimensions move together.
 """
 
 from __future__ import annotations

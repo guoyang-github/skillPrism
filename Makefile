@@ -27,7 +27,7 @@ format-check:
 	$(PYTHON) -m ruff format --check .
 
 docs-ci:
-	evaluate-skill --all --skills-dir ./skills --config skill_rubric_types.yaml --output docs/SKILL_SCORECARD.md --run-smoke
+	evaluate-skill --all --skills-dir ./skills --config skill_rubric_types.yaml --output reports/SKILL_SCORECARD.md --run-smoke
 	test-skill --mode single --skill document-demo \
 	    --registry examples/benchmark_minimal/benchmarks/document-demo/registry.yaml \
 	    --code examples/benchmark_minimal/sample_document_skill_code.py \

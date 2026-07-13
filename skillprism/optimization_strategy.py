@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Optimization strategy library.
 
-Inspired by darwin-skill's P0-P3 strategy library. Strategies are sorted by
-priority: runtime/effect issues first, then structure, specificity, and finally
-readability.
+A P0-P3 strategy library. Strategies are sorted by priority: runtime/effect
+issues first, then structure, specificity, and finally readability.
 """
 
 from __future__ import annotations

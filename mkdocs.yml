@@ -12,8 +12,9 @@ nav:
   - Home: index.md
   - 🚀 Getting Started:
       - getting-started/index.md
-      - getting-started/hands-on.md
+      - getting-started/beginner-handbook.md
       - getting-started/install.md
+      - getting-started/hands-on.md
       - getting-started/evaluate.md
       - getting-started/test.md
       - getting-started/improve.md
@@ -22,46 +23,37 @@ nav:
       - getting-started/cli-cheatsheet.md
   - 📖 Tutorial:
       - tutorial/01-why-evaluate-skills.md
-      - tutorial/02-install-and-first-skill.md
       - tutorial/03-understanding-the-rubric.md
       - tutorial/04-building-your-first-benchmark.md
       - tutorial/build-bio-benchmark-with-claude-code.md
-      - tutorial/05-optimization-loop.md
-      - tutorial/06-quality-pipeline.md
-      - tutorial/07-extending-skillprism.md
       - tutorial/08-gradual-testing-and-real-data.md
       - tutorial/full-cycle-demo.md
-      - tutorial/langfuse-bio-demo.md
       - tutorial/agent-langfuse-production-loop.md
   - 📚 Reference:
-      - reference/overview.md
-      - reference/natural-language-interaction.md
-      - reference/skill-prism-architecture.md
-      - reference/agent-command.md
-      - reference/framework.md
-      - reference/benchmark-guide.md
-      - reference/benchmark-bioinformatics.md
-      - reference/data-building-decisions.md
-      - reference/adding-a-benchmark-task-type.md
-      - reference/llm-judge.md
-      - reference/langfuse-integration.md
-      - reference/benchmark-metrics.md
-      - reference/test-prompts-verification.md
-      - reference/optimization-strategy.md
-      - reference/experiment-history.md
-      - reference/rubric-enhancements.md
-      - reference/dimension-clusters.md
-      - reference/edge-cases.md
-      - reference/runtime-neutrality.md
-      - reference/visual-result-cards.md
-      - reference/operational-playbook.md
-      - reference/gradual-testing.md
-      - reference/cell2location.md
-      - reference/api.md
-      - reference/roadmap.md
-      - Examples:
-          - reference/examples/scorecard.md
-          - reference/examples/review-bio-single-cell-clustering.md
+      - 架构与概念:
+          - reference/overview.md
+          - reference/framework.md
+          - reference/roadmap.md
+      - Benchmark:
+          - reference/benchmark-guide.md
+          - reference/benchmark-metrics.md
+          - reference/benchmark-bioinformatics.md
+          - reference/data-building-decisions.md
+          - reference/adding-a-benchmark-task-type.md
+          - reference/cell2location.md
+      - 优化与评分:
+          - reference/optimization-strategy.md
+          - reference/rubric-enhancements.md
+          - reference/runtime-neutrality.md
+          - reference/edge-cases.md
+      - 集成与接口:
+          - reference/llm-judge.md
+          - reference/agent-command.md
+          - reference/test-prompts-verification.md
+          - reference/langfuse-integration.md
+      - 其他:
+          - reference/visual-result-cards.md
+          - reference/api.md
 
 theme:
   name: material

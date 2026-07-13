@@ -15,10 +15,10 @@
         <link rel="canonical" href="https://nanobot-skills.github.io/Skills_Validation/reference/llm-judge/">
       
       
-        <link rel="prev" href="../adding-a-benchmark-task-type/">
+        <link rel="prev" href="../edge-cases/">
       
       
-        <link rel="next" href="../langfuse-integration/">
+        <link rel="next" href="../agent-command/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>LLM Judge - skillPrism</title>
+        <title>LLM Judge（引擎侧参考） - skillPrism</title>
       
     
     
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              LLM Judge
+              LLM Judge（引擎侧参考）
             
           </span>
         </div>
@@ -291,6 +291,15 @@
   
     
     
+      
+  
+  
+  
+    
+  
+  
+    
+    
       <li class="md-tabs__item md-tabs__item--active">
         <a href="../overview/" class="md-tabs__link">
           
@@ -300,6 +309,9 @@
 
         </a>
       </li>
+    
+  
+
     
   
 
@@ -465,14 +477,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/hands-on/" class="md-nav__link">
+      <a href="../../getting-started/beginner-handbook/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    🙌 手把手教程：用 skillPrism 评估并改进一个 Skill
+    新手操作手册：用说话的方式驱动 skillPrism
   
 
     
@@ -501,6 +513,34 @@
     
   
     安装与环境
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/hands-on/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🙌 手把手教程：用 skillPrism 评估并改进一个 Skill
   
 
     
@@ -612,7 +652,7 @@
   <span class="md-ellipsis">
     
   
-    Pipeline
+    运行完整流水线
   
 
     
@@ -640,7 +680,7 @@
   <span class="md-ellipsis">
     
   
-    Ci
+    CI 集成
   
 
     
@@ -778,34 +818,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/02-install-and-first-skill/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    第 2 章：安装与第一个 Skill
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../tutorial/03-understanding-the-rubric/" class="md-nav__link">
         
   
@@ -890,90 +902,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/05-optimization-loop/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    05 optimization loop
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorial/06-quality-pipeline/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    第 6 章：质量流水线与 CI
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorial/07-extending-skillprism/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    第 7 章：扩展 skillPrism
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../tutorial/08-gradual-testing-and-real-data/" class="md-nav__link">
         
   
@@ -1010,34 +938,6 @@
     
   
     skillPrism 全周期 Skill 评估优化 Demo
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorial/langfuse-bio-demo/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Langfuse 集成下的全周期 Skill 评估优化 Demo（生物信息示例）
   
 
     
@@ -1149,6 +1049,63 @@
   
   
   
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架构与概念
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    架构与概念
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
       <a href="../overview/" class="md-nav__link">
         
@@ -1158,90 +1115,6 @@
     
   
     skillPrism 体系概览
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../natural-language-interaction/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Natural-Language Interaction Best Practices
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../skill-prism-architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Skill prism architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../agent-command/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    External Agent Command
   
 
     
@@ -1290,6 +1163,99 @@
   
   
     <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TODO 与路线图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Benchmark
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../benchmark-guide/" class="md-nav__link">
         
   
@@ -1298,6 +1264,34 @@
     
   
     金标准 Benchmark 构建与迭代优化指南（手把手版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmark-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark Metrics 参考与最佳实践
   
 
     
@@ -1399,186 +1393,74 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../cell2location/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
     
   
+    Cell2location 示例完整指南
+  
+
+    
+  </span>
   
   
-    <li class="md-nav__item md-nav__item--active">
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
       
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
       
       
         
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
           
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Judge
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+          
         
-  
-  
-  <span class="md-ellipsis">
+      
     
-  
-    LLM Judge
-  
-
     
-  </span>
-  
-  
-
-      </a>
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
-
-<nav class="md-nav md-nav--secondary" aria-label="目录">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        设计原则
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#judgments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        谁来控制生成 judgments？
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        使用方式
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="使用方式">
-      <ul class="md-nav__list">
         
-          <li class="md-nav__item">
-  <a href="#agent-judgments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        方式一：Agent 生成 judgments 文件（推荐）
-      
-    </span>
-  </a>
-  
-</li>
+          
         
-          <li class="md-nav__item">
-  <a href="#judge" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        方式二：引擎直接调用外部 judge
-      
-    </span>
-  </a>
-  
-</li>
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        配置
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#judge_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Judge 命令接口
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        实现位置
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../langfuse-integration/" class="md-nav__link">
-        
   
   
   <span class="md-ellipsis">
     
   
-    skillPrism × Langfuse 集成方案
+    优化与评分
   
 
     
@@ -1586,67 +1468,19 @@
   
   
 
-      </a>
-    </li>
-  
-
-              
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
             
-              
-                
   
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../benchmark-metrics/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Benchmark Metrics 参考与最佳实践
+    优化与评分
   
 
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../test-prompts-verification/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Test prompts verification
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -1662,35 +1496,7 @@
   <span class="md-ellipsis">
     
   
-    优化策略库
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../experiment-history/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    实验历史
+    优化策略与维度簇
   
 
     
@@ -1739,14 +1545,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../dimension-clusters/" class="md-nav__link">
+      <a href="../runtime-neutrality/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Dimension clusters
+    Runtime neutrality
   
 
     
@@ -1774,7 +1580,241 @@
   <span class="md-ellipsis">
     
   
-    Edge cases
+    边界情况与 FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    集成与接口
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    集成与接口
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Judge（引擎侧参考）
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Judge（引擎侧参考）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设计原则
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        两种接入方式
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#judge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        外部 judge 命令配置
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        命令接口契约
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#judgments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        judgments 文件格式
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现位置
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agent-command/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Agent Command
   
 
     
@@ -1795,14 +1835,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../runtime-neutrality/" class="md-nav__link">
+      <a href="../test-prompts-verification/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Runtime neutrality
+    Test-Prompts 验证（功能概述）
   
 
     
@@ -1815,6 +1855,99 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../langfuse-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    skillPrism × Langfuse 集成方案（设计提案）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    其他
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    其他
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -1851,90 +1984,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../operational-playbook/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    skillPrism 自然语言交互操作手册
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../gradual-testing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    渐进测试（Gradual Testing）
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cell2location/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Cell2location 示例完整指南
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../api/" class="md-nav__link">
         
   
@@ -1943,147 +1992,6 @@
     
   
     API 参考
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../roadmap/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    TODO &amp; Roadmap
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-          
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_26" >
-        
-          
-          <label class="md-nav__link" for="__nav_4_26" id="__nav_4_26_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Examples
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_26_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_26">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Examples
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../examples/scorecard/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Skill Scorecard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../examples/review-bio-single-cell-clustering/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Skill 评估报告：bio-single-cell-clustering
   
 
     
@@ -2150,10 +2058,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#judgments" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        谁来控制生成 judgments？
+        两种接入方式
       
     </span>
   </a>
@@ -2161,41 +2069,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        使用方式
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="使用方式">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#agent-judgments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        方式一：Agent 生成 judgments 文件（推荐）
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#judge" class="md-nav__link">
     <span class="md-ellipsis">
       
-        方式二：引擎直接调用外部 judge
+        外部 judge 命令配置
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2203,7 +2083,7 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        配置
+        命令接口契约
       
     </span>
   </a>
@@ -2211,10 +2091,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#judge_1" class="md-nav__link">
+  <a href="#judgments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Judge 命令接口
+        judgments 文件格式
       
     </span>
   </a>
@@ -2252,90 +2132,114 @@
   
 
 
-<h1 id="llm-judge">LLM Judge<a class="headerlink" href="#llm-judge" title="Permanent link">&para;</a></h1>
+<h1 id="llm-judge">LLM Judge（引擎侧参考）<a class="headerlink" href="#llm-judge" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p><code>evaluate-skill</code> 默认使用确定性规则评分。对于主观维度（D2 文档、D5 领域准确性），可以启用 LLM judge 作为第二意见。</p>
-<p>对 Agent 用户来说，直接说"再帮我看看可读性和领域准确性"即可，Agent 会自己决定是否启用；本页面向需要手动配置或自定义 judge 命令的用户。</p>
+<p>本文只描述<strong>引擎侧</strong>的行为与配置。Agent 如何生成 judgments 文件的协议（prompt 模板、决策规则、聚合口径），权威文档是随 skill 复制的 <code>skills/skill-prism/references/LLM_JUDGE.md</code>，两侧不复述。</p>
 </blockquote>
 <h2 id="_1">设计原则<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>引擎不调用 LLM</strong>：LLM judge 由 Agent 或外部脚本调用，结果以结构化文件写回。</li>
+<li><strong>引擎不直接依赖 LLM provider</strong>：LLM judge 通过外部命令（stdin/stdout 契约）或 Agent 预先生成的 judgments 文件接入，引擎本身保持 provider 无关。</li>
 <li><strong>可选</strong>：不启用时，评分完全确定性。</li>
 <li><strong>多评委</strong>：默认 2 个独立评委，可按需增减。</li>
 </ul>
-<h2 id="judgments">谁来控制生成 judgments？<a class="headerlink" href="#judgments" title="Permanent link">&para;</a></h2>
-<p><strong>Agent 自己决定。</strong></p>
-<p>当用户表达"再用 LLM 看看可读性/领域准确性"等主观维度评估意图时，Agent 按以下逻辑选择路径：</p>
-<ol>
-<li>检查环境是否配置了 <code>SKILLPRISM_LLM_JUDGE_COMMAND</code> 或 <code>skill_rubric_types.yaml</code> 中 <code>llm_judge.command</code>。</li>
-<li><strong>如果已配置</strong>：直接调用 <code>evaluate-skill --llm-judge</code>。</li>
-<li><strong>如果未配置</strong>：Agent 自己调用 LLM 生成 <code>artifacts/&lt;skill&gt;/llm_judgments.json</code>（引擎自动发现，也可显式 <code>--llm-judgments &lt;file&gt;</code>）。</li>
-</ol>
-<p>第二种方式不需要用户配置任何外部命令，是 Agent 自包含的 fallback。</p>
-<h2 id="_2">使用方式<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<h3 id="agent-judgments">方式一：Agent 生成 judgments 文件（推荐）<a class="headerlink" href="#agent-judgments" title="Permanent link">&para;</a></h3>
-<p>Agent 直接调用 LLM，生成 <code>artifacts/&lt;skill&gt;/llm_judgments.json</code>，然后让引擎消费。此方式不需要配置 <code>SKILLPRISM_LLM_JUDGE_COMMAND</code>。</p>
-<p><strong>Agent 工作流</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. 读取 skills/my-skill/SKILL.md
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>2. 为 D2 / D5 构造 judge prompt
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>3. 对每个维度独立调用 2 次 LLM（不通过引擎）
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>4. 解析每个返回的 {&quot;score&quot;: int, &quot;reason&quot;: str}
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>5. 按 median/mean/min/max 聚合
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>6. 写入 artifacts/&lt;skill&gt;/llm_judgments.json
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>7. 调用 evaluate-skill（引擎自动发现该文件）
+<h2 id="_2">两种接入方式<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>谁来调 LLM</th>
+<th>引擎入口</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>外部 judge 命令</td>
+<td>引擎通过子进程调用配置的命令</td>
+<td><code>evaluate-skill --llm-judge</code></td>
+</tr>
+<tr>
+<td>预生成 judgments 文件</td>
+<td>Agent 或外部脚本自行调用 LLM，写 <code>artifacts/&lt;skill&gt;/llm_judgments.json</code></td>
+<td>引擎自动发现该文件，也可显式 <code>--llm-judgments &lt;file&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>Agent 侧选择哪条路径、如何构造 judge prompt，见 <code>skills/skill-prism/references/LLM_JUDGE.md</code>。</p>
+<h2 id="judge">外部 judge 命令配置<a class="headerlink" href="#judge" title="Permanent link">&para;</a></h2>
+<p>二选一：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 方式一：环境变量</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SKILLPRISM_LLM_JUDGE_COMMAND</span><span class="o">=</span><span class="s2">&quot;python examples/editor_wrappers/openai_compatible_judge.py&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>evaluate-skill<span class="w"> </span>skills/my-skill<span class="w"> </span>--llm-judge<span class="w"> </span>--llm-judge-count<span class="w"> </span><span class="m">3</span>
 </code></pre></div>
-<p><strong>文件格式</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;judges&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">&quot;dimension&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;D2&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">&quot;scores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">],</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="nt">&quot;reasons&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Clear examples.&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Well structured.&quot;</span><span class="p">],</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nt">&quot;aggregated_score&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="nt">&quot;aggregate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;median&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="p">]</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 方式二：skill_rubric_types.yaml</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">llm_judge</span><span class="p">:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="c1"># command: python examples/editor_wrappers/openai_compatible_judge.py</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">n_judges</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">aggregate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">median</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="c1"># 可复现性字段</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">moonshot-v1-8k</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="nt">prompt_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.0&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="nt">system_prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;You</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">expert</span><span class="nv"> </span><span class="s">reviewer...&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="nt">prompts</span><span class="p">:</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="nt">D2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Evaluate</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">following</span><span class="nv"> </span><span class="s">SKILL.md</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">dimension</span><span class="nv"> </span><span class="s">{dimension}</span><span class="nv"> </span><span class="s">({focus}).</span><span class="nv"> </span><span class="s">Engine</span><span class="nv"> </span><span class="s">score:</span><span class="nv"> </span><span class="s">{engine_score}/5.\n{content}&quot;</span>
 </code></pre></div>
-<p><strong>引擎消费</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>evaluate-skill<span class="w"> </span>skills/my-skill<span class="w"> </span>--llm-judgments<span class="w"> </span>artifacts/my-skill/llm_judgments.json
+<p>示例命令实现见 <code>examples/editor_wrappers/openai_compatible_judge.py</code>。</p>
+<h2 id="_3">命令接口契约<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>Judge 命令从 stdin 接收 prompt 文本，stdout 返回单个 JSON 对象，退出码 0 表示成功：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span><span class="nt">&quot;score&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concise explanation.&quot;</span><span class="p">}</span>
 </code></pre></div>
-<p><strong>辅助脚本</strong>：</p>
-<p>仓库提供了 <code>scripts/generate_llm_judgments.py</code>，把上述流程自动化：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>&lt;your-key&gt;
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_BASE_URL</span><span class="o">=</span>https://api.moonshot.cn/v1
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_MODEL</span><span class="o">=</span>moonshot-v1-8k
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>python<span class="w"> </span>scripts/generate_llm_judgments.py<span class="w"> </span>skills/my-skill<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>--dimensions<span class="w"> </span>D2<span class="w"> </span>D5<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span>--count<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>--aggregate<span class="w"> </span>median
+<ul>
+<li><code>score</code>：1–5 的整数。</li>
+<li><code>reason</code>：一句话理由。</li>
+</ul>
+<h2 id="judgments">judgments 文件格式<a class="headerlink" href="#judgments" title="Permanent link">&para;</a></h2>
+<p><code>artifacts/&lt;skill&gt;/llm_judgments.json</code> 的 schema（与 <code>skills/skill-prism/references/LLM_JUDGE.md</code> 一致）：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;judges&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">      </span><span class="nt">&quot;dimension&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;D2&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="nt">&quot;scores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">],</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="nt">&quot;reasons&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Clear examples.&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Well structured.&quot;</span><span class="p">],</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">      </span><span class="nt">&quot;aggregated_score&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">      </span><span class="nt">&quot;aggregate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">      </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;moonshot-v1-8k&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">      </span><span class="nt">&quot;temperature&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.2</span><span class="p">,</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">      </span><span class="nt">&quot;prompt_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
 </code></pre></div>
-<p>默认输出 <code>artifacts/my-skill/llm_judgments.json</code>（<code>--output</code> 可覆盖），引擎自动发现该文件。</p>
-<h3 id="judge">方式二：引擎直接调用外部 judge<a class="headerlink" href="#judge" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SKILLPRISM_LLM_JUDGE_COMMAND</span><span class="o">=</span><span class="s2">&quot;python examples/editor_wrappers/openai_compatible_judge.py&quot;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>evaluate-skill<span class="w"> </span>skills/my-skill<span class="w"> </span>--llm-judge<span class="w"> </span>--llm-judge-count<span class="w"> </span><span class="m">3</span>
+<ul>
+<li><code>dimension</code>：D2 / D5 / D6 / D8。</li>
+<li><code>scores</code> / <code>reasons</code>：每个独立 judge 的结果，长度一致。</li>
+<li><code>aggregated_score</code>：1–5 的整数。</li>
+<li><code>aggregate</code>：<code>median</code> / <code>mean</code> / <code>min</code> / <code>max</code>。Agent 生成文件时按 <code>mean</code> 聚合（与 <code>skills/skill-prism/SKILL.md</code> 一致）；引擎外部 judge 路径的默认聚合方式由 <code>skill_rubric_types.yaml</code> 的 <code>llm_judge.aggregate</code> 决定（默认 <code>median</code>）。</li>
+<li><code>model</code> / <code>temperature</code> / <code>prompt_version</code>：可复现性元数据。</li>
+</ul>
+<p>引擎消费：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>evaluate-skill<span class="w"> </span>skills/my-skill<span class="w"> </span>--llm-judgments<span class="w"> </span>artifacts/my-skill/llm_judgments.json
 </code></pre></div>
-<p>此方式需要配置外部命令。示例命令见 <code>examples/editor_wrappers/openai_compatible_judge.py</code>。</p>
-<h2 id="_3">配置<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
-<p>在 <code>skill_rubric_types.yaml</code> 中：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">llm_judge</span><span class="p">:</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="c1"># command: python examples/editor_wrappers/openai_compatible_judge.py</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">n_judges</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nt">aggregate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">median</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span>
+<p><strong>辅助脚本</strong>：仓库提供 <code>scripts/generate_llm_judgments.py</code>，把"调 LLM → 聚合 → 写文件"的流程自动化（仅在 skillPrism 仓库内可用）：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>&lt;your-key&gt;
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_BASE_URL</span><span class="o">=</span>https://api.moonshot.cn/v1
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_MODEL</span><span class="o">=</span>moonshot-v1-8k
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>python<span class="w"> </span>scripts/generate_llm_judgments.py<span class="w"> </span>skills/my-skill<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>--dimensions<span class="w"> </span>D2<span class="w"> </span>D5<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span>--count<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>--aggregate<span class="w"> </span>mean
 </code></pre></div>
-<h2 id="judge_1">Judge 命令接口<a class="headerlink" href="#judge_1" title="Permanent link">&para;</a></h2>
-<p>Judge 命令从 stdin 接收 prompt，stdout 返回 JSON：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span><span class="nt">&quot;score&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concise explanation.&quot;</span><span class="p">}</span>
-</code></pre></div>
+<p>默认输出 <code>artifacts/my-skill/llm_judgments.json</code>（<code>--output</code> 可覆盖），引擎自动发现该文件。聚合口径以 <code>skills/skill-prism/references/LLM_JUDGE.md</code> 为准。</p>
 <h2 id="_4">实现位置<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>skillprism/llm_judge.py</code>：<code>LLMJudge</code> 类、结果解析、多评委聚合、分数混合。</li>
 <li><code>skillprism/evaluate_skill_rubric.py</code>：读取 <code>--llm-judgments</code> 并应用到 D2/D5/D6/D8。</li>
-<li><code>scripts/generate_llm_judgments.py</code>：Agent 直接生成 judgments 文件的参考实现。</li>
-<li><code>examples/editor_wrappers/openai_compatible_judge.py</code>：单条 judge 调用的参考实现。</li>
+<li><code>scripts/generate_llm_judgments.py</code>：生成 judgments 文件的参考实现（仅仓库内可用）。</li>
+<li><code>examples/editor_wrappers/openai_compatible_judge.py</code>：单条 judge 命令的参考实现。</li>
 </ul>
 
 

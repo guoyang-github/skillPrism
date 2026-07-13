@@ -1,9 +1,9 @@
 [
   {
     "id": 1,
-    "scenario": "happy path",
+    "scenario": "trigger",
     "prompt": "Use the skill-prism skill to **SKILL.md**: the instruction document that teaches an Agent how to do something. under normal conditions.",
-    "expected": "The skill should follow its documented workflow and produce a correct result for skill-prism."
+    "expected": "The agent should follow the skill's documented workflow (tool choice, step order, output structure) for skill-prism; a light walkthrough on small sample data suffices — no full computation or numeric result checks required."
   },
   {
     "id": 2,

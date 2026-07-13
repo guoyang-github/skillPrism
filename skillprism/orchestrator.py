@@ -387,7 +387,7 @@ def _build_pipeline_parser() -> argparse.ArgumentParser:
         help="Directory for benchmark baselines",
     )
     parser.add_argument(
-        "--output", default="docs/SKILL_QUALITY_REPORT.md", help="Combined report output path"
+        "--output", default="reports/SKILL_QUALITY_REPORT.md", help="Combined report output path"
     )
     parser.add_argument("--run-smoke", action="store_true")
     parser.add_argument(
@@ -572,7 +572,7 @@ def main() -> int:
     ):
         return _dispatch_evaluate(args, config)
 
-    if any(k in intent_lower for k in ["gradual", "渐进", "darwin"]):
+    if any(k in intent_lower for k in ["gradual", "渐进"]):
         return _dispatch_gradual(args, config)
 
     if (

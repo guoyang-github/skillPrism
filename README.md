@@ -3,34 +3,18 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > A project-agnostic Python framework for evaluating, benchmarking, and optimizing AI agent skills.
+>
+> 中文 README: [README_CN.md](README_CN.md)
+>
+> Want to understand the whole system first? Read [`docs/reference/overview.md`](docs/reference/overview.md).
 
 skillPrism separates **measurement** (the engine) from **LLM-driven editing** (the skill/agent layer). It provides:
 
 - A configurable 9-dimension rubric for static skill quality.
 - A benchmark registry for task-level correctness (clustering, table, document generation, etc.).
-- CLI tools and a Python API.
-- Human-in-the-loop optimization workflow via companion skills.
-
-For the Chinese README, see [README.md](README.md).
-
-> Want to understand the whole system first? Read [`docs/OVERVIEW.md`](docs/OVERVIEW.md).
-
----
-
-## Table of Contents
-
-- [Architecture](#architecture)
-- [Design Principles](#design-principles)
-- [Quick Start](#quick-start)
-- [CLI Commands](#cli-commands)
-- [Skill Types](#skill-types)
-- [Rubric Dimensions](#rubric-dimensions)
-- [Benchmarks](#benchmarks)
-- [Optimization Workflow](#optimization-workflow)
-- [Quality Pipeline](#quality-pipeline)
-- [Relationship to darwin-skill](#relationship-to-darwin-skill)
-- [Project Structure](#project-structure)
-- [License](#license)
+- A human-in-the-loop optimization loop: baseline → suggest → edit → judge → keep/revert (dry-run by default, `--apply` to modify files).
+- CI quality gates: ratchet against historical best, regression comparison, multi-Python workflow template.
+- An agent-native entry: copy `skills/skill-prism/` into your agent's skills directory and drive the whole workflow in natural language.
 
 ---
 
@@ -55,25 +39,14 @@ Engine layer (skillprism Python package, no LLM dependency)
   orchestrator.py              → quality pipeline orchestration
 ```
 
-**Core principles**: the engine has no LLM dependency, measurements are reproducible, the default is dry-run, and `--apply` is required before any file is modified.
+**Design principles**:
 
-For a full architectural overview, see [`docs/OVERVIEW.md`](docs/OVERVIEW.md).
+1. **Engine has no LLM dependency** — rubric scoring, benchmark execution, and regression checks are deterministic measurements. Any LLM usage lives in skills/agents or user-provided commands.
+2. **Skills are the user interface** — after installing `skillprism`, users drive the workflow in natural language via the `skill-prism` skill.
+3. **Human remains in control** — the engine measures and suggests; editing assets and final acceptance require explicit human approval by default.
+4. **Project-agnostic** — types, weights, thresholds, and checks are defined in `skill_rubric_types.yaml`. Point `--skills-dir` and `--config` at any project.
 
----
-
-## Design Principles
-
-1. **Engine has no LLM dependency.**
-   Rubric scoring, benchmark execution, and regression checks are deterministic measurements. Any LLM usage happens inside skills/agents, not in `skillprism`.
-
-2. **Skills are the user interface.**
-   After installing `skillprism`, users can drive the whole workflow through natural language via the `skill-prism` skill.
-
-3. **Human remains in control.**
-   The engine can measure and suggest, but editing code assets or final acceptance requires explicit human approval by default.
-
-4. **Project-agnostic.**
-   Types, weights, thresholds, and checks are defined in `skill_rubric_types.yaml`. Point `--skills-dir` and `--config` at any project.
+For a full architectural overview, see [`docs/reference/overview.md`](docs/reference/overview.md).
 
 ---
 
@@ -83,15 +56,8 @@ For a full architectural overview, see [`docs/OVERVIEW.md`](docs/OVERVIEW.md).
 
 ```bash
 pip install -e .
-```
-
-Optional benchmark dependencies:
-
-```bash
-pip install -e ".[all]"          # security + dev
-pip install sentence-transformers  # semantic document similarity
-pip install rouge-score            # ROUGE-L document metric
-pip install bert-score             # BERTScore document metric
+pip install -e ".[all]"          # optional: security + dev
+pip install -e ".[benchmark]"    # optional: benchmark extras (scanpy, scikit-learn, etc.)
 ```
 
 ### Evaluate one skill
@@ -105,8 +71,7 @@ evaluate-skill skills/bio-single-cell-clustering --detailed
 ```bash
 evaluate-skill --all \
     --skills-dir ./skills \
-    --config skill_rubric_types.yaml \
-    --output docs/SKILL_SCORECARD.md \
+    --output reports/SKILL_SCORECARD.md \
     --run-smoke
 ```
 
@@ -115,15 +80,15 @@ evaluate-skill --all \
 ```bash
 test-skill --mode single --skill document-demo \
     --registry examples/benchmark_minimal/benchmarks/document-demo/registry.yaml \
-    --code examples/benchmark_minimal/sample_document_skill_code.py \
-    --output /tmp/result.yaml
+    --code examples/benchmark_minimal/sample_document_skill_code.py
 ```
 
-The `document-demo` benchmark in `examples/benchmark_minimal/document_benchmark/` is a
-real, runnable document-generation task. It reads a prompt from `prompt.txt`, uses a
-deterministic generator (`generator.py`, no LLM required) to produce a SKILL.md, and
-compares it to the golden reference `expected/best_skill.md` using structural,
-lexical, length, and optional semantic/ROUGE-L/BERTScore metrics.
+The `document-demo` benchmark in `examples/benchmark_minimal/` is a real, runnable
+document-generation task: `benchmarks/document-demo/data/prompt.txt` holds the prompt,
+`sample_document_skill_code.py` is a deterministic generator (no LLM required) that
+produces a SKILL.md, and the output is compared to the golden reference
+`benchmarks/document-demo/expected/best_skill.md` using structural, lexical, length,
+and optional semantic/ROUGE-L/BERTScore metrics.
 
 ### Build a new benchmark
 
@@ -131,11 +96,11 @@ lexical, length, and optional semantic/ROUGE-L/BERTScore metrics.
 build-skill-test \
     --id skill_md_generation \
     --name "SKILL.md Generation" \
-    --skill-type document \
+    --skill my-skill \
     --task document \
-    --dataset-source prompts/write_skill_md.txt \
+    --input prompts/write_skill_md.txt \
     --expected-path expected/best_skill.md \
-    --registry benchmarks/<skill>/registry.yaml
+    --registry benchmarks/my-skill/registry.yaml
 ```
 
 ---
@@ -147,9 +112,12 @@ After installation, the following commands are available:
 | Command | Purpose |
 |---|---|
 | `evaluate-skill` | Run rubric evaluation on one or all skills. |
-| `test-skill --mode single|gradual|quick` | Run benchmarks for a skill from a registry. |
+| `test-skill --mode single\|gradual\|quick` | Run benchmarks: single-level / failure-first gradual / quick. |
 | `build-skill-test` | Scaffold a new benchmark registry entry. |
+| `improve-skill` | Optimization loop: baseline / suggest / judge / rollback (no LLM calls by itself). |
 | `skill-pipeline` | Run the full quality pipeline (rubric + benchmark + report). |
+| `skill-ci` | CI quality gates. |
+| `skill-gradual` | Convenience wrapper for `test-skill --mode gradual`. |
 
 ---
 
@@ -165,7 +133,9 @@ After installation, the following commands are available:
 | `document` | Document generation / scientific writing / orchestration skills |
 | `generic` | Fallback when no specific type fits |
 
-Each type can override dimension names, weights, and checks.
+Each type can override dimension names, weights, and checks. To add a new type, add an
+entry under `skill_types` — file-existence and keyword checks need no engine changes
+(see [`docs/reference/framework.md`](docs/reference/framework.md)).
 
 ---
 
@@ -183,7 +153,9 @@ Each type can override dimension names, weights, and checks.
 | D8 | 0.04 | Maintainability |
 | D9 | 0.08 | Security and trust |
 
-Weights and thresholds are configurable in `skill_rubric_types.yaml`.
+Weights and thresholds are configurable in `skill_rubric_types.yaml`. Subjective
+dimensions (D2, D5) rely on lightweight heuristics by default; treat them as quality
+signals and combine with `--llm-judge` or human review for critical skills.
 
 ---
 
@@ -197,18 +169,11 @@ Supported tasks:
 - `table`: CSV table metrics
 - `document`: text/document generation quality
 
-### Document benchmark metrics
-
-| Metric | Meaning |
-|---|---|
-| `section_overlap` | Ratio of expected markdown headers present in output |
-| `token_jaccard` | Word-level Jaccard similarity |
-| `length_ratio` | `len(output) / len(expected)` |
-| `semantic_similarity` | Sentence-embedding cosine similarity (optional) |
-| `rouge_l` | ROUGE-L F-measure (optional) |
-| `bert_score_f1` | BERTScore F1 (optional) |
-
-Optional metrics are only computed when listed in the registry and skip gracefully if their libraries are not installed.
+Design notes: `metrics` and `expected` live in the `registry.yaml` benchmark entry
+(not in the task spec). Shared metric implementations are registered in
+`skillprism/benchmark/metrics.py` via the `@metric("id")` decorator; each registry
+directory may add a private `metrics.py`. Custom metrics:
+see [`docs/reference/benchmark-metrics.md`](docs/reference/benchmark-metrics.md).
 
 ---
 
@@ -218,10 +183,11 @@ Optional metrics are only computed when listed in the registry and skip graceful
 
 | Mode | How it edits | Best for |
 |---|---|---|
-| Manual / Agent (default) | Agent / user edits `SKILL.md` manually; skillprism measures and rolls back | Manual or agent-guided iteration with human review of every diff |
+| Manual / Agent (default) | Agent / user edits `SKILL.md` manually; skillprism measures and rolls back | Human review of every diff |
 | `--auto-edit` | `improve-skill ... --auto-edit --apply` | Fully autonomous analyze → edit → judge → keep/revert loop |
 
-**Independence**: `skillprism` does not depend on any external skill or LLM provider. The optional `--auto-edit` mode calls a user-provided editor command (which may use an LLM), while the engine itself stays LLM-free.
+By default only `SKILL.md` is edited. Editing code assets (`scripts/`, `examples/`,
+`requirements.txt`) requires explicit authorization plus smoke-test / benchmark gates.
 
 ### Typical loop (manual / agent)
 
@@ -246,7 +212,7 @@ improve-skill skills/<skill> --judge --apply
 Configure any editor command that reads a prompt from stdin and prints the updated SKILL.md to stdout:
 
 ```bash
-export SKILLPRISM_EDITOR_COMMAND="python scripts/my_skill_editor.py"
+export SKILLPRISM_EDITOR_COMMAND="python examples/editor_wrappers/openai_editor.py"
 
 improve-skill skills/<skill> \
   --record-baseline \
@@ -258,24 +224,13 @@ improve-skill skills/<skill> \
 
 - `--auto-edit` rewrites `SKILL.md`, so it requires `--apply` to actually run the edit + judge + keep/revert cycle.
 - `--max-rounds N` iterates up to N rounds, using each kept edit as the new baseline for the next round.
-- Ready-to-use wrappers for common providers are in `examples/editor_wrappers/`:
-  - `openai_editor.py`
-  - `anthropic_editor.py`
-  - `ollama_editor.py`
+- Ready-to-use wrappers for common providers are in `examples/editor_wrappers/` (OpenAI / Anthropic / Ollama).
 
 ### Safety features
 
-- `--judge` is a **dry-run** by default; it prints the decision but does not keep or revert.
-- `--apply` is required to actually enforce the decision.
-- Anti-pattern guards run automatically and warn/block on:
-  - one round changing multiple dimensions
-  - dry-run ratio > 30%
-  - `git reset --hard` in docs/scripts
-  - SKILL.md bloat without score gain
-  - same model editing and judging
-- `--ratchet` ensures the score never drops below the historical best.
-
-By default, only `SKILL.md` is edited. Editing code assets (`scripts/`, `examples/`, `requirements.txt`) requires explicit authorization and additional gates.
+- `--judge` is a **dry-run** by default; it prints the decision but does not keep or revert. `--apply` is required to enforce it.
+- Anti-pattern guards run automatically and warn/block on: one round changing multiple dimensions, dry-run ratio > 30%, `git reset --hard` in docs/scripts, SKILL.md bloat without score gain, same model editing and judging, silently skipped errors.
+- `--ratchet` ensures the score never drops below the historical best (also available on `evaluate-skill`).
 
 ### Optional LLM-as-judge
 
@@ -298,7 +253,6 @@ The judge command reads a prompt from stdin and must print JSON:
 - The judge is defensive by default: JSON schema validation, score clamping to 1–5,
   retries on parse/schema failures, and outlier rejection when the LLM score deviates
   more than `outlier_threshold` (default 2) from the engine score.
-- The engine remains deterministic and provider-agnostic; the LLM is just an optional plugin.
 - Configure `weight`, `max_retries`, `outlier_threshold`, and `require_reason` in the
   `llm_judge` section of `skill_rubric_types.yaml`.
 
@@ -312,18 +266,8 @@ The judge command reads a prompt from stdin and must print JSON:
 skill-pipeline --intent "run full quality pipeline" \
     --skills-dir ./skills \
     --benchmark-registry ./benchmarks/<skill>/registry.yaml \
-    --output docs/SKILL_QUALITY_REPORT.md \
+    --output reports/SKILL_QUALITY_REPORT.md \
     --run-smoke
-```
-
-```bash
-# Identify the worst skill and prepare optimization
-skill-pipeline --intent "optimize skills" \
-    --skills-dir ./skills \
-    --benchmark-registry ./benchmarks/<skill>/registry.yaml
-
-# If SKILLPRISM_EDITOR_COMMAND is configured, the report will include the
-# corresponding --auto-edit --apply command for the worst skill.
 ```
 
 Supported intents:
@@ -333,64 +277,41 @@ Supported intents:
 - `"run full quality pipeline"`: rubric → benchmark → worst-skill report
 - `"optimize skills"`: pipeline → record baseline for worst skill → provide next judge command
 
-If `SKILLPRISM_EDITOR_COMMAND` is configured, you can switch the suggested next command to `--auto-edit --apply` for a fully autonomous optimization round.
+If `SKILLPRISM_EDITOR_COMMAND` is configured, the report will include the
+corresponding `--auto-edit --apply` command for the worst skill.
 
 ---
 
 ## Agent-Native Skill Entry
 
-`skills/skill-prism/references/AGENT_GUIDE.md` defines a standard interaction protocol for agents using
-skillPrism: greeting templates, approval checkpoints, diff display, failure
-recovery, and final report format. The single agent entry point is:
+Copy `skills/skill-prism/` into your agent's skills directory and drive the workflow in natural language:
 
-- `skills/skill-prism/SKILL.md` — covers evaluate / test / build-skill-test / improve / pipeline / CI intents.
+| User intent | Engine command | Approval needed |
+|---|---|---|
+| "Evaluate all skills" | `evaluate-skill --all --skills-dir ./skills` | No |
+| "Test bio-single-cell-clustering" | `test-skill --skill ... --task ...` | No |
+| "Optimize bio-single-cell-clustering" | `improve-skill ... --record-baseline / --suggest / --judge` | **Yes** (every edit) |
+| "Run the skill quality pipeline" | `skill-pipeline --intent "..."` | No |
+
+`skills/skill-prism/references/AGENT_GUIDE.md` defines the standard interaction
+protocol: greeting templates, approval checkpoints, diff display, failure recovery,
+and final report format.
 
 ---
 
 ## Engineering Tooling
 
 ```bash
-# Development install
-pip install -e ".[dev]"
-
-# Run tests
-make test
-
-# Coverage report
-make coverage
-
-# Lint and format
-make lint
-make format
-
-# CI-style rubric + benchmark run
-make docs-ci
+pip install -e ".[dev]"   # Development install
+make test                 # Run tests
+make coverage             # Coverage report
+make lint && make format  # Lint and format
+make docs-ci              # CI-style rubric + benchmark run
 ```
 
-Configured out of the box:
-
-- `pyproject.toml`: pytest, coverage, and ruff settings.
-- `.pre-commit-config.yaml`: ruff + basic hooks + local pytest.
-- `.github/workflows/skill-rubric-ci.yaml`: multi-Python matrix with lint/test/rubric/benchmark/security jobs.
-- `CONTRIBUTING.md`: setup, PR checklist, and style guide.
-
----
-
-## Relationship to darwin-skill
-
-[darwin-skill](https://github.com/alchaincyf/darwin-skill) is an excellent *skill* that runs inside an agent tool (Claude Code, etc.) and optimizes other skills with a human-in-the-loop, multi-judge, validation-gated workflow. skillprism absorbs several of those safety ideas (dry-run judge, anti-pattern guards, ratchet, benchmark gating) while remaining a fully independent engine-first framework.
-
-**Key difference**: skillprism does **not** depend on darwin-skill. The optional `--auto-edit` mode calls a user-provided editor command, which can be any LLM wrapper, agent tool, or even a deterministic generator. The engine itself stays LLM-free and provider-agnostic.
-
-Use **skillPrism** when you need:
-- A reusable, installable evaluation engine.
-- Deterministic rubric scoring and benchmark gates.
-- CI integration without external skill dependencies.
-- Independence from any particular agent tool or LLM provider.
-
-Use **darwin-skill** directly if you specifically want its proven agent-native optimizer inside a supported agent tool.
-
----
+Configured out of the box: `pyproject.toml` (pytest, coverage, ruff, mypy),
+`.pre-commit-config.yaml`, `.github/workflows/skill-rubric-ci.yaml` (multi-Python
+matrix with lint/test/rubric/benchmark/security jobs), and `CONTRIBUTING.md`.
 
 ---
 
@@ -403,50 +324,23 @@ Skills_Validation/
 │   ├── optimize_skill.py
 │   ├── gradual.py              # failure-mode-first staged pipeline
 │   ├── rubric_enhancements.py
-│   ├── experiment_history.py
 │   ├── optimization_strategy.py
-│   ├── dimension_clusters.py
-│   ├── runtime_neutrality.py
 │   ├── security_evaluator.py
-│   ├── smoke_test_runner.py
-│   ├── dependency_checker.py
-│   ├── skill_lens_checks.py
-│   ├── benchmark/
-│   │   ├── runner.py
-│   │   ├── builder.py
-│   │   ├── metrics.py
-│   │   ├── regression.py
-│   │   └── plugins.py
+│   ├── benchmark/              # runner / builder / metrics / plugins
 │   ├── ci/
-│   ├── testing/
 │   └── orchestrator.py
 ├── skill_rubric_types.yaml     # Type and rubric configuration
-├── skills/                     # Agent-facing skill entry
-│   ├── skill-prism/
-│   │   └── SKILL.md
-│   └── AGENT_GUIDE.md          # Agent interaction protocol
-├── benchmarks/                 # Per-skill benchmark registry
-│   └── <skill>/
-│       ├── registry.yaml
-│       └── tasks/
-│           └── <task>.yaml
-├── examples/                   # Minimal benchmark example
+├── skills/skill-prism/         # Agent-facing skill entry
+│   ├── SKILL.md
+│   └── references/             # AGENT_GUIDE / LLM_JUDGE protocol docs
+├── benchmarks/<skill>/         # Per-skill benchmark registry
+├── examples/                   # Minimal benchmarks, cell2location demo, editor wrappers
+├── templates/                  # Skill templates + regression test script
 ├── tests/                      # pytest unit tests
 ├── docs/                       # Documentation
-│   ├── reference/
-│   │   ├── overview.md         # System overview (start here)
-│   │   ├── framework.md
-│   │   ├── operational-playbook.md
-│   │   ├── benchmark-guide.md
-│   │   ├── gradual-testing.md
-│   │   ├── rubric-enhancements.md
-│   │   ├── optimization-strategy.md
-│   │   ├── experiment-history.md
-│   │   ├── runtime-neutrality.md
-│   │   ├── cell2location.md
-│   │   └── roadmap.md
-│   ├── getting-started/
-│   └── tutorial/
+│   ├── reference/              # Topic guides (overview.md is the entry point)
+│   ├── getting-started/        # Install, CLI cheatsheet, per-command walkthroughs
+│   └── tutorial/               # Step-by-step tutorials
 ├── LICENSE                     # MIT
 └── pyproject.toml
 ```

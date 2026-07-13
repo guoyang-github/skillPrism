@@ -15,10 +15,10 @@
         <link rel="canonical" href="https://nanobot-skills.github.io/Skills_Validation/reference/optimization-strategy/">
       
       
-        <link rel="prev" href="../test-prompts-verification/">
+        <link rel="prev" href="../cell2location/">
       
       
-        <link rel="next" href="../experiment-history/">
+        <link rel="next" href="../rubric-enhancements/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>优化策略库 - skillPrism</title>
+        <title>优化策略与维度簇 - skillPrism</title>
       
     
     
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              优化策略库
+              优化策略与维度簇
             
           </span>
         </div>
@@ -291,6 +291,15 @@
   
     
     
+      
+  
+  
+  
+    
+  
+  
+    
+    
       <li class="md-tabs__item md-tabs__item--active">
         <a href="../overview/" class="md-tabs__link">
           
@@ -300,6 +309,9 @@
 
         </a>
       </li>
+    
+  
+
     
   
 
@@ -465,14 +477,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/hands-on/" class="md-nav__link">
+      <a href="../../getting-started/beginner-handbook/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    🙌 手把手教程：用 skillPrism 评估并改进一个 Skill
+    新手操作手册：用说话的方式驱动 skillPrism
   
 
     
@@ -501,6 +513,34 @@
     
   
     安装与环境
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/hands-on/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🙌 手把手教程：用 skillPrism 评估并改进一个 Skill
   
 
     
@@ -612,7 +652,7 @@
   <span class="md-ellipsis">
     
   
-    Pipeline
+    运行完整流水线
   
 
     
@@ -640,7 +680,7 @@
   <span class="md-ellipsis">
     
   
-    Ci
+    CI 集成
   
 
     
@@ -778,34 +818,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/02-install-and-first-skill/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    第 2 章：安装与第一个 Skill
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../tutorial/03-understanding-the-rubric/" class="md-nav__link">
         
   
@@ -890,90 +902,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/05-optimization-loop/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    05 optimization loop
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorial/06-quality-pipeline/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    第 6 章：质量流水线与 CI
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorial/07-extending-skillprism/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    第 7 章：扩展 skillPrism
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../tutorial/08-gradual-testing-and-real-data/" class="md-nav__link">
         
   
@@ -1010,34 +938,6 @@
     
   
     skillPrism 全周期 Skill 评估优化 Demo
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorial/langfuse-bio-demo/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Langfuse 集成下的全周期 Skill 评估优化 Demo（生物信息示例）
   
 
     
@@ -1149,6 +1049,63 @@
   
   
   
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架构与概念
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    架构与概念
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
       <a href="../overview/" class="md-nav__link">
         
@@ -1158,90 +1115,6 @@
     
   
     skillPrism 体系概览
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../natural-language-interaction/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Natural-Language Interaction Best Practices
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../skill-prism-architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Skill prism architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../agent-command/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    External Agent Command
   
 
     
@@ -1290,6 +1163,99 @@
   
   
     <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TODO 与路线图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Benchmark
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../benchmark-guide/" class="md-nav__link">
         
   
@@ -1298,6 +1264,34 @@
     
   
     金标准 Benchmark 构建与迭代优化指南（手把手版）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmark-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark Metrics 参考与最佳实践
   
 
     
@@ -1402,14 +1396,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../llm-judge/" class="md-nav__link">
+      <a href="../cell2location/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    LLM Judge
+    Cell2location 示例完整指南
   
 
     
@@ -1423,29 +1417,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../langfuse-integration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    skillPrism × Langfuse 集成方案
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1455,45 +1429,38 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../benchmark-metrics/" class="md-nav__link">
+  
+    
+    
+    
+    
+      
+      
         
-  
-  
-  <span class="md-ellipsis">
+          
+          
+        
+      
     
-  
-    Benchmark Metrics 参考与最佳实践
-  
-
     
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../test-prompts-verification/" class="md-nav__link">
-        
   
   
   <span class="md-ellipsis">
     
   
-    Test prompts verification
+    优化与评分
   
 
     
@@ -1501,11 +1468,19 @@
   
   
 
-      </a>
-    </li>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    优化与评分
   
 
-              
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -1530,7 +1505,7 @@
   <span class="md-ellipsis">
     
   
-    优化策略库
+    优化策略与维度簇
   
 
     
@@ -1548,7 +1523,7 @@
   <span class="md-ellipsis">
     
   
-    优化策略库
+    优化策略与维度簇
   
 
     
@@ -1595,38 +1570,71 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        维度相关簇
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="维度相关簇">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么需要相关簇
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        默认簇定义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-suggest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        在 --suggest 中查看
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        簇对优化策略的影响
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../experiment-history/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    实验历史
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1647,62 +1655,6 @@
     
   
     Rubric enhancements
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../dimension-clusters/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Dimension clusters
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../edge-cases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Edge cases
   
 
     
@@ -1751,14 +1703,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../visual-result-cards/" class="md-nav__link">
+      <a href="../edge-cases/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    视觉成果卡片
+    边界情况与 FAQ
   
 
     
@@ -1772,141 +1724,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../operational-playbook/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    skillPrism 自然语言交互操作手册
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../gradual-testing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    渐进测试（Gradual Testing）
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cell2location/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Cell2location 示例完整指南
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../api/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    API 参考
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../roadmap/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    TODO &amp; Roadmap
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1937,17 +1757,17 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_26" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
         
           
-          <label class="md-nav__link" for="__nav_4_26" id="__nav_4_26_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="">
             
   
   
   <span class="md-ellipsis">
     
   
-    Examples
+    集成与接口
   
 
     
@@ -1958,12 +1778,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_26_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_26">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Examples
+    集成与接口
   
 
           </label>
@@ -1976,14 +1796,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/scorecard/" class="md-nav__link">
+      <a href="../llm-judge/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Skill Scorecard
+    LLM Judge（引擎侧参考）
   
 
     
@@ -2004,14 +1824,191 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/review-bio-single-cell-clustering/" class="md-nav__link">
+      <a href="../agent-command/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Skill 评估报告：bio-single-cell-clustering
+    External Agent Command
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test-prompts-verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test-Prompts 验证（功能概述）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../langfuse-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    skillPrism × Langfuse 集成方案（设计提案）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    其他
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    其他
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../visual-result-cards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    视觉成果卡片
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API 参考
   
 
     
@@ -2088,6 +2085,67 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        维度相关簇
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="维度相关簇">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么需要相关簇
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        默认簇定义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-suggest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        在 --suggest 中查看
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        簇对优化策略的影响
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2108,8 +2166,9 @@
   
 
 
-<h1 id="_1">优化策略库<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<p>skillPrism 的优化策略库受 darwin-skill 启发，按 P0-P3 优先级组织建议。</p>
+<h1 id="_1">优化策略与维度簇<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>skillPrism 的优化策略库按 P0-P3 优先级组织建议；
+维度相关簇分析帮助识别会一起变动的维度，避免无效的单维度编辑。</p>
 <h2 id="_2">优先级<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2166,6 +2225,62 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>improve-skill<span class="w"> </span>skills/my-skill<span class="w"> </span>--suggest
 </code></pre></div>
 <p>输出会按优先级列出当前适用的策略。</p>
+<h2 id="_4">维度相关簇<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>维度相关簇分析：某些 rubric 维度在优化时会一起变动，识别这些簇可以避免无效的单维度编辑。</p>
+</blockquote>
+<h3 id="_5">为什么需要相关簇<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>在优化 SKILL.md 时，修一个维度可能带动其他维度一起涨。例如：</p>
+<ul>
+<li>补充 if-then fallback 表（D3）时，通常也会让文档更清晰（D2）、依赖说明更完整（D4）。</li>
+<li>添加具体参数示例（D5）时，LLM callability（D6）往往也会提升。</li>
+</ul>
+<p>如果不知道这些相关性，可能会重复优化，或者错过一次编辑带来的复合收益。</p>
+<h3 id="_6">默认簇定义<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>簇</th>
+<th>维度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>结构簇</td>
+<td>D1、D2、D3、D4</td>
+<td>frontmatter、workflow、失败模式、检查点</td>
+</tr>
+<tr>
+<td>执行簇</td>
+<td>D3、D5、D6</td>
+<td>可执行性、具体性、LLM 调用能力</td>
+</tr>
+<tr>
+<td>维护簇</td>
+<td>D7、D8、D9</td>
+<td>可读性、可维护性、安全性</td>
+</tr>
+</tbody>
+</table>
+<p>簇定义见 <code>skillprism/dimension_clusters.py</code> 的 <code>CLUSTERS</code>。</p>
+<h3 id="-suggest">在 <code>--suggest</code> 中查看<a class="headerlink" href="#-suggest" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>improve-skill<span class="w"> </span>skills/my-skill<span class="w"> </span>--suggest
+</code></pre></div>
+<p>输出示例：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Weakest dimension: D3 (score 2/5)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Cluster: Execution cluster
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Related dimensions in the same cluster:
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- D5: 3/5
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>- D6: 3/5
+</code></pre></div>
+<p>这意味着：优化 D3 时，可以顺带检查 D5 和 D6 是否也能一起提升。</p>
+<h3 id="_7">簇对优化策略的影响<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li>如果最弱维度在结构簇，优先使用 P1 "structure" 策略。</li>
+<li>如果最弱维度在执行簇，优先使用 P2 "specificity" 或 "failure_mode_encoding" 策略。</li>
+<li>如果相关簇中多个维度都低，一次更全面的重写可能比多轮单维度编辑更高效。</li>
+</ul>
 
 
 

@@ -466,7 +466,7 @@ def evaluate_skill(
                 elif pass_rate >= 0.9:
                     dim.score = min(5, dim.score + 1)
 
-    # Rubric enhancements (darwin-skill / SkillLens inspired rule-based checks)
+    # Rubric enhancements (SkillLens-inspired rule-based checks)
     try:
         fm, _ = _read_frontmatter(skill_path)
         content = _read_skill_md(skill_path)
