@@ -124,6 +124,7 @@ evaluate-skill skills/my-skill
 | "judge 次数" | `--llm-judge-count N` | judge 数量（默认 2） |
 | "Agent 已生成 judgments" | `--llm-judgments <path>` | 消费 Agent 预生成的 judgments 文件 |
 | "已验证 prompts"、"验证 prompt 效果" | `--prompts-verification <path>` | 消费 prompt 验证结果（不传则自动发现 `artifacts/<skill>/prompts_verification.json`）；执行流程见 [`references/PROMPTS_VERIFICATION.md`](references/PROMPTS_VERIFICATION.md) |
+| "写 test prompts"、"生成测试 prompts" | （Agent 行为，非引擎参数） | 按 [`references/PROMPTS_VERIFICATION.md`](references/PROMPTS_VERIFICATION.md) Step 1 撰写 2–3 条具体 prompt → `artifacts/<skill>/test-prompts.json` |
 | "对比 baseline"、"别 regress" | `--ratchet` | 分数退步即失败 |
 | "输出报告"、"生成 scorecard" | `--output <path>` | 写 scorecard/report（单 skill 建议 `artifacts/<skill>/scorecard.md`；跨 skill 汇总用 `reports/`） |
 | "追踪历史"、"趋势" | `--output-history <path>` | 追加到 JSONL 趋势文件（建议 `artifacts/<skill>/history.jsonl`） |
@@ -178,10 +179,11 @@ evaluate-skill skills/my-skill --detailed --run-smoke --run-deps --ratchet
 - 启用：`evaluate-skill skills/<skill> --llm-judge --llm-judge-count 2`。
 - 完整接口规范与 prompt 模板见 [`references/LLM_JUDGE.md`](references/LLM_JUDGE.md)。
 
-**Agent prompts verification（D8 实测）**:
+**Agent prompts 行为规则**:
 
-- 用户说"验证 prompt 效果"、"带不带 skill 差多少"时，按 [`references/PROMPTS_VERIFICATION.md`](references/PROMPTS_VERIFICATION.md) 执行：每条 prompt 起 with/without 两个独立子 agent 执行，第三个 judge 子 agent 打分。
-- 结果写 `artifacts/<skill>/prompts_verification.json`；`evaluate-skill` 不传 `--prompts-verification` 时自动发现该文件。
+- **撰写**：用户说"写 test prompts"、"生成测试 prompts"时，按 [`references/PROMPTS_VERIFICATION.md`](references/PROMPTS_VERIFICATION.md) Step 1 撰写 2–3 条**具体输入 + 具体可验证期望**的 prompt，写入 `artifacts/<skill>/test-prompts.json`。写前向用户展示并获确认。
+- **看到占位符警告要主动提议**：评估报告带 ⚠️ "template prompts are placeholders" 时，说明当前 prompts 只是引擎兜底模板、无测试价值。Agent 应主动提议："当前 test-prompts 是占位模板，要我按协议撰写正式版吗？"
+- **验证（D8 实测）**：用户说"验证 prompt 效果"、"带不带 skill 差多少"时，按协议 Step 2–4 执行：每条 prompt 起 with/without 两个独立子 agent 执行，第三个 judge 子 agent 打分；结果写 `artifacts/<skill>/prompts_verification.json`；`evaluate-skill` 不传 `--prompts-verification` 时自动发现该文件。
 - 能真实执行就必须 `full_test`；`dry_run` 占比 > 30% 引擎会报警。
 
 ---
