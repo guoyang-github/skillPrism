@@ -45,7 +45,6 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, cast
 
 from ._baseline import (
-    BASELINE_DIR,
     clear_baseline,
     load_baseline,
     load_baseline_skill_md,
@@ -79,6 +78,7 @@ from .optimizer_guards import GuardViolation, format_violations, run_guards
 from .rubric_enhancements import check_bloat, check_failure_mode_encoding
 from .skill_editor import SkillEditor, build_editor_prompt
 from .smoke_test_runner import run_smoke_tests
+from .test_prompts import baseline_dir
 from .utils import read_skill_md as _read_skill_md
 
 # --------------------------------------------------------------------------- #
@@ -392,7 +392,7 @@ def render_diff(
     """Render a diff between baseline and current SKILL.md.
 
     Uses ``difflib`` against the passed ``baseline_md`` (the
-    ``.skillprism_baseline/SKILL.md`` copy). Previously this ran
+    ``artifacts/<skill>/baseline/SKILL.md`` copy). Previously this ran
     ``git add SKILL.md`` then ``git diff --cached`` to compare against HEAD —
     a read-only diff that mutated the git index even in dry-run, and compared
     against the wrong base (HEAD, not the recorded baseline). The difflib path
@@ -442,13 +442,14 @@ def judge_candidate(
 ) -> JudgeResult:
     """Judge the current SKILL.md against the stored baseline.
 
-    Public entry point: acquires an advisory lock (``.skillprism.lock``) so
+    Public entry point: acquires an advisory lock (``optimize.lock`` under the
+    baseline dir) so
     concurrent optimizers (CI + local dev) cannot race the baseline
     read-modify-write or clobber each other's keep/revert. Internal callers
     that already hold the lock use ``_judge_candidate_unlocked`` directly to
     avoid re-entrant flock deadlock.
     """
-    with file_lock(skill_path / ".skillprism.lock"):
+    with file_lock(baseline_dir(skill_path) / "optimize.lock"):
         return _judge_candidate_unlocked(
             skill_path,
             config,
@@ -488,7 +489,7 @@ def _run_bloat_gate(
     # Pass the baseline SKILL.md copy explicitly — check_bloat's default lookup
     # targets a .bak file that save_baseline never writes, so without this the
     # guard would silently never fire.
-    baseline_md_path = skill_path / BASELINE_DIR / "SKILL.md"
+    baseline_md_path = baseline_dir(skill_path) / "SKILL.md"
     bloat_check = check_bloat(
         skill_path, current_md_text, baseline_md_path if baseline_md_path.exists() else None
     )
@@ -821,7 +822,7 @@ def explore_rewrite(
     Serializes concurrent optimizers on the same skill directory before
     delegating to the unlocked implementation.
     """
-    with file_lock(skill_path / ".skillprism.lock"):
+    with file_lock(baseline_dir(skill_path) / "optimize.lock"):
         return _explore_rewrite_unlocked(
             skill_path,
             config,
@@ -887,7 +888,9 @@ def _explore_rewrite_unlocked(
     baseline_score = baseline.get("score", 0.0)
 
     # Save current best to a stash file
-    stash_path = skill_path / BASELINE_DIR / "SKILL.md.stash"
+    stash_dir = baseline_dir(skill_path)
+    stash_dir.mkdir(parents=True, exist_ok=True)
+    stash_path = stash_dir / "SKILL.md.stash"
     current_md = _read_skill_md(skill_path)
     stash_path.write_text(current_md, encoding="utf-8")
     print(f"Stashed current best to {stash_path}")
@@ -986,7 +989,7 @@ def _run_auto_edit_rounds(
     edit_code: bool = False,
 ) -> int:
     """Locked entry: serialize concurrent auto-edit runs on the same skill."""
-    with file_lock(skill_path / ".skillprism.lock"):
+    with file_lock(baseline_dir(skill_path) / "optimize.lock"):
         return _run_auto_edit_rounds_unlocked(
             skill_path,
             config,
@@ -1122,7 +1125,7 @@ def _run_auto_edit_rounds_unlocked(
         (skill_path / "SKILL.md").write_text(result.content, encoding="utf-8")
 
         # Judge and apply keep/revert against the current baseline.
-        # Unlocked variant: _run_auto_edit_rounds already holds .skillprism.lock.
+        # Unlocked variant: _run_auto_edit_rounds already holds optimize.lock.
         judge_result = _judge_candidate_unlocked(
             skill_path,
             config,

@@ -109,11 +109,13 @@ class TestNoResetHard:
         assert v.severity == "block"
         assert "rollback.sh" in v.message
 
-    def test_baseline_snapshot_ignored(self, tmp_path: Path) -> None:
-        """A previously-reverted snapshot containing the command must not block."""
-        base = tmp_path / ".skillprism_baseline"
-        base.mkdir()
-        (base / "SKILL.md.bak").write_text("git reset --hard\n")
+    def test_baseline_snapshot_outside_tree_ignored(self, tmp_path: Path) -> None:
+        """The baseline snapshot lives outside the skill tree and is never scanned."""
+        from skillprism._baseline import baseline_dir
+
+        snap = baseline_dir(tmp_path)
+        snap.mkdir(parents=True)
+        (snap / "SKILL.md.bak").write_text("git reset --hard\n")
         (tmp_path / "SKILL.md").write_text("clean doc")
         assert guard_no_reset_hard(tmp_path) is None
 
@@ -124,9 +126,11 @@ class TestNoBloat:
         assert guard_no_bloat(tmp_path) is None
 
     def test_bloat_warn(self, tmp_path: Path) -> None:
-        baseline_dir = tmp_path / ".skillprism_baseline"
-        baseline_dir.mkdir()
-        (baseline_dir / "SKILL.md").write_text("Line1\nLine2\n")
+        from skillprism._baseline import baseline_dir
+
+        snap = baseline_dir(tmp_path)
+        snap.mkdir(parents=True)
+        (snap / "SKILL.md").write_text("Line1\nLine2\n")
         long_text = "\n".join([f"filler line {i}" for i in range(20)])
         (tmp_path / "SKILL.md").write_text(long_text)
         v = guard_no_bloat(tmp_path, {"score": 50.0, "candidate_score": 50.5})

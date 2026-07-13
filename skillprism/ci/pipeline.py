@@ -34,6 +34,7 @@ from skillprism.evaluate_skill_rubric import (
     load_config,
 )
 from skillprism.security_evaluator import evaluate_d9_security
+from skillprism.test_prompts import artifacts_dir
 
 
 class CIPipeline:
@@ -50,7 +51,7 @@ class CIPipeline:
         self.skill = skill
         self.registry_path = registry_path
         self.baseline_path = baseline_path
-        self.output_dir = output_dir or Path("ci-output")
+        self.output_dir = output_dir or artifacts_dir(Path(skill)) / "ci"
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.config_path = config_path or DEFAULT_CONFIG
         self.config = load_config(self.config_path)

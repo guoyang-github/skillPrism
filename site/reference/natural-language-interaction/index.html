@@ -2504,9 +2504,10 @@ fully deterministic and LLM-free.</p>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│       ├── registry.yaml
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│       └── tasks/
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│           └── &lt;task&gt;.yaml
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>├── docs/
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   └── SKILL_SCORECARD.md        # Auto-generated report
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>└── ci-output/                    # CI artifacts (gitignored)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>├── artifacts/
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   └── &lt;your-skill&gt;/             # Generated artifacts (gitignored)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>└── reports/
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    └── SKILL_SCORECARD.md        # Cross-skill summary report
 </code></pre></div>
 <p>Generated measurement files stay under <code>artifacts/&lt;skill&gt;/</code>, not inside the
 skill source tree:</p>

@@ -24,7 +24,6 @@ _EXCLUDED_DIR_PARTS = {
     "node_modules",
     "venv",
     ".venv",
-    ".skillprism_baseline",
 }
 
 

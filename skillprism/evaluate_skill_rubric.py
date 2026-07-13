@@ -22,15 +22,15 @@ Usage:
 
     # Evaluate all skills with smoke tests and dependency checks
     python evaluate_skill_rubric.py --all --skills-dir ./skills \
-        --run-smoke --run-deps --output docs/SKILL_SCORECARD.md
+        --run-smoke --run-deps --output reports/SKILL_SCORECARD.md
 
     # Batch with history tracking
     python evaluate_skill_rubric.py --all --skills-dir ./skills \
-        --output docs/SKILL_SCORECARD.md --output-history docs/skill_history.jsonl
+        --output reports/SKILL_SCORECARD.md --output-history artifacts/skill_history.jsonl
 
     # Ratchet mode: fail if any skill regresses from previous scorecard
     python evaluate_skill_rubric.py --all --skills-dir ./skills \
-        --output docs/SKILL_SCORECARD.md --ratchet
+        --output reports/SKILL_SCORECARD.md --ratchet
 """
 
 from __future__ import annotations

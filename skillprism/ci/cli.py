@@ -19,6 +19,7 @@ from pathlib import Path
 
 from skillprism.ci.pipeline import run_ci_pipeline
 from skillprism.ci.reports import format_report, write_report
+from skillprism.test_prompts import artifacts_dir
 
 
 def main() -> int:
@@ -37,8 +38,8 @@ def main() -> int:
     )
     parser.add_argument(
         "--output-dir",
-        default="ci-output",
-        help="Directory for CI artifacts",
+        default=None,
+        help="Directory for CI artifacts (default: artifacts/<skill>/ci)",
     )
     parser.add_argument(
         "--config",
@@ -102,11 +103,14 @@ def main() -> int:
             file=__import__("sys").stderr,
         )
 
+    output_dir = (
+        Path(args.output_dir) if args.output_dir else artifacts_dir(Path(args.skill)) / "ci"
+    )
     results = run_ci_pipeline(
         skill=args.skill,
         registry_path=Path(args.registry),
         baseline_path=Path(args.baseline) if args.baseline else None,
-        output_dir=Path(args.output_dir),
+        output_dir=output_dir,
         config_path=Path(args.config) if args.config else None,
         suite=args.suite,
         level=args.level,
@@ -123,7 +127,7 @@ def main() -> int:
     )
 
     report = format_report(results, args.output_format)
-    report_path = Path(args.output_dir) / f"report.{args.output_format}"
+    report_path = output_dir / f"report.{args.output_format}"
     write_report(report, report_path)
     print(report)
     print(f"\nReport written to {report_path}")

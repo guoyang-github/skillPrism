@@ -207,13 +207,14 @@ skills/
     └── SKILL.md                  # 统一 Agent 入口
 
 <skill-path>/
-├── SKILL.md
-└── .skillprism_baseline/         # baseline 与备份
-    ├── SKILL.md
-    ├── SKILL.md.bak.<timestamp>
-    └── optimization_result.json
+└── SKILL.md                      # skill 树保持只读
 
-artifacts/<skill>/                # 生成物（gitignored），skill 树保持只读
+artifacts/<skill>/                # 生成物（gitignored）
+├── baseline/                     # baseline 与备份
+│   ├── baseline.json
+│   ├── SKILL.md
+│   ├── SKILL.md.bak.<timestamp>
+│   └── optimization_result.json
 ├── test-prompts.json
 ├── llm_judgments.json            # 可选
 ├── prompts_verification.json     # 可选

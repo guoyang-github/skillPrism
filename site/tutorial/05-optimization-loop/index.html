@@ -2468,7 +2468,7 @@
 <h2 id="54-baseline">5.4 记录 Baseline<a class="headerlink" href="#54-baseline" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>improve-skill<span class="w"> </span>skills/my-first-analysis<span class="w"> </span>--record-baseline
 </code></pre></div>
-<p>这会保存当前 <code>SKILL.md</code> 的 Rubric 分数、benchmark 结果到 <code>.skillprism_baseline/</code>，并写入 <code>artifacts/&lt;skill&gt;/history.jsonl</code>。</p>
+<p>这会保存当前 <code>SKILL.md</code> 的 Rubric 分数、benchmark 结果到 <code>artifacts/&lt;skill&gt;/baseline/</code>，并写入 <code>artifacts/&lt;skill&gt;/history.jsonl</code>。</p>
 <h2 id="55">5.5 识别短板<a class="headerlink" href="#55" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>improve-skill<span class="w"> </span>skills/my-first-analysis<span class="w"> </span>--suggest
 </code></pre></div>
@@ -2548,7 +2548,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>improve-skill<span class="w"> </span>skills/my-first-analysis<span class="w"> </span>--explore-rewrite<span class="w"> </span>--apply
 </code></pre></div>
 <p>这会：
-1. 备份当前最优版本到 <code>.skillprism_baseline/SKILL.md.stash</code>
+1. 备份当前最优版本到 <code>artifacts/&lt;skill&gt;/baseline/SKILL.md.stash</code>
 2. 调用 editor 从头重写
 3. judge 重写版
 4. 如果更好则保留，否则恢复 stash</p>

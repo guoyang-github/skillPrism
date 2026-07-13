@@ -100,9 +100,10 @@ project/
 │       ├── registry.yaml
 │       └── tasks/
 │           └── <task>.yaml
-├── docs/
-│   └── SKILL_SCORECARD.md        # Auto-generated report
-└── ci-output/                    # CI artifacts (gitignored)
+├── artifacts/
+│   └── <your-skill>/             # Generated artifacts (gitignored)
+└── reports/
+    └── SKILL_SCORECARD.md        # Cross-skill summary report
 ```
 
 Generated measurement files stay under `artifacts/<skill>/`, not inside the

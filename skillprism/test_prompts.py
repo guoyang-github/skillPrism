@@ -60,6 +60,16 @@ def artifacts_dir(skill_path: Path) -> Path:
     return Path("artifacts") / skill_path.name
 
 
+def baseline_dir(skill_path: Path) -> Path:
+    """Baseline snapshot directory: ``artifacts/<skill>/baseline/``.
+
+    Lives outside the skill source tree (previously
+    ``<skill>/.skillprism_baseline.json`` and ``<skill>/.skillprism_baseline/``),
+    keeping the checked-out skill repo read-only.
+    """
+    return artifacts_dir(skill_path) / "baseline"
+
+
 def default_prompts_dir(skill_path: Path) -> Path:
     """Default directory for prompt artifacts: ``artifacts/<skill>/``.
 

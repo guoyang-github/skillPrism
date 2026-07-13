@@ -18,7 +18,6 @@ echo "== 2. CI static gate =="
 skill-ci \
     --skill csv-summary \
     --registry "$REGISTRY" \
-    --output-dir ci-output \
     --output-format markdown
 
 echo ""
@@ -28,7 +27,6 @@ skill-ci \
     --registry "$REGISTRY" \
     --run-benchmark \
     --code sample_skill_code.py \
-    --output-dir ci-output \
     --output-format yaml
 
 echo ""
@@ -36,12 +34,11 @@ echo "== 4. Gradual pipeline (level 0 unit/boundary gate) =="
 skill-gradual \
     --skill csv-summary \
     --registry "$REGISTRY" \
-    --output-dir gradual-output \
     --max-level 0 \
     --no-ratchet
 
 echo ""
 echo "Quickstart complete. Inspect the generated reports in:"
 echo "  - quickstart-report.md"
-echo "  - ci-output/report.*"
-echo "  - gradual-output/"
+echo "  - artifacts/csv-summary/ci/report.*"
+echo "  - artifacts/csv-summary/ci/gradual/"

@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from .evaluate_skill_rubric import SkillReport
+from .test_prompts import baseline_dir
 
 
 @dataclass
@@ -82,14 +83,13 @@ def guard_no_reset_hard(
     """Detect dangerous rollback commands in runnable skill scripts.
 
     Scoped to executable file types (``.sh``/``.py``) only and excludes
-    ``SKILL.md`` plus the ``.skillprism_baseline/**`` snapshot tree. The D9
-    editing strategy instructs the editor to write ``git reset --hard`` into
-    SKILL.md as a *forbidden-command example*; scanning SKILL.md would
-    self-defeatingly block the very edit the strategy mandated. A match in a
-    runnable script is a real hazard and is blocked.
+    ``SKILL.md``. The D9 editing strategy instructs the editor to write
+    ``git reset --hard`` into SKILL.md as a *forbidden-command example*;
+    scanning SKILL.md would self-defeatingly block the very edit the strategy
+    mandated. A match in a runnable script is a real hazard and is blocked.
     """
     pattern = re.compile(r"git\s+reset\s+--hard", re.IGNORECASE)
-    excluded_parts = {".skillprism_baseline", "__pycache__", ".git", ".pytest_cache"}
+    excluded_parts = {"__pycache__", ".git", ".pytest_cache"}
     risky_files: List[str] = []
     for p in skill_path.rglob("*"):
         if not p.is_file():
@@ -128,7 +128,7 @@ def guard_no_bloat(
         return None
 
     current_lines = len(skill_md.read_text(encoding="utf-8", errors="replace").splitlines())
-    baseline_md = skill_path / ".skillprism_baseline" / "SKILL.md"
+    baseline_md = baseline_dir(skill_path) / "SKILL.md"
     if not baseline_md.exists():
         return None
 

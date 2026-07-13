@@ -61,7 +61,7 @@ skill-ci \
 
 ## 实现细节
 
-- 每级 baseline 保存在 `<skill>/.skillprism_baseline/gradual_baseline_level<N>.yaml`
+- 每级 baseline 保存在 `artifacts/<skill>/ci/gradual/.baselines/<skill>/gradual_baseline_level<N>.yaml`
 - GPU-only benchmark 在无 GPU 环境自动跳过
 
 ## 历史说明

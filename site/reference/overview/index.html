@@ -1438,10 +1438,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#skillprism_baselinejson-skillprism_baseline" class="md-nav__link">
+  <a href="#artifactsskillbaseline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        .skillprism_baseline.json &amp; .skillprism_baseline/
+        artifacts/&lt;skill&gt;/baseline/
       
     </span>
   </a>
@@ -2633,10 +2633,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#skillprism_baselinejson-skillprism_baseline" class="md-nav__link">
+  <a href="#artifactsskillbaseline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        .skillprism_baseline.json &amp; .skillprism_baseline/
+        artifacts/&lt;skill&gt;/baseline/
       
     </span>
   </a>
@@ -3087,15 +3087,16 @@
 <li><code>llm_judge</code>：可选 LLM judge 配置。</li>
 <li><code>editor</code>：可选自动 editor 配置。</li>
 </ul>
-<h3 id="skillprism_baselinejson-skillprism_baseline"><code>.skillprism_baseline.json</code> &amp; <code>.skillprism_baseline/</code><a class="headerlink" href="#skillprism_baselinejson-skillprism_baseline" title="Permanent link">&para;</a></h3>
-<p>每个 Skill 目录下自动生成的 baseline 文件，记录：</p>
+<h3 id="artifactsskillbaseline"><code>artifacts/&lt;skill&gt;/baseline/</code><a class="headerlink" href="#artifactsskillbaseline" title="Permanent link">&para;</a></h3>
+<p>每个 Skill 的 baseline 目录（生成物，位于 skill 树外），记录：</p>
 <ul>
-<li>当前 Rubric 分数和维度分；</li>
+<li>当前 Rubric 分数和维度分（<code>baseline.json</code>，原子写 + <code>.bak</code>）；</li>
 <li>benchmark 结果；</li>
 <li>历史最高分（用于 ratchet）；</li>
-<li>渐进测试模式下每级独立的 baseline（<code>gradual_baseline_level&lt;N&gt;.yaml</code>）；</li>
-<li>SKILL.md 副本与代码资产快照（无 git 时用于回滚）。</li>
+<li>SKILL.md 副本与滚动备份（<code>SKILL.md.bak.*</code>，无 git 时用于回滚）；</li>
+<li>代码资产快照（<code>code_snapshot/</code>）。</li>
 </ul>
+<p>渐进测试每级独立的 baseline 则保存在 <code>artifacts/&lt;skill&gt;/ci/gradual/.baselines/&lt;skill&gt;/gradual_baseline_level&lt;N&gt;.yaml</code>。</p>
 <hr />
 <h2 id="7-llm-skillprism">7. LLM 在 skillPrism 中的边界<a class="headerlink" href="#7-llm-skillprism" title="Permanent link">&para;</a></h2>
 <p>skillPrism <strong>不内置 LLM</strong>，但有三处可以接入 LLM：</p>

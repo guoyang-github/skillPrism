@@ -6,8 +6,8 @@ from __future__ import annotations
 from pathlib import Path
 
 from skillprism._baseline import (
-    BASELINE_DIR,
     BASELINE_FILE,
+    baseline_dir,
     clear_baseline,
     load_baseline,
     load_baseline_skill_md,
@@ -65,7 +65,7 @@ def test_clear_baseline(tmp_path: Path) -> None:
     cfg = load_config(DEFAULT_CONFIG)
     report = evaluate_skill(skill_dir, cfg)
     save_baseline(skill_dir, report)
-    baseline_file = skill_dir / BASELINE_FILE
+    baseline_file = baseline_dir(skill_dir) / BASELINE_FILE
     assert baseline_file.exists()
 
     clear_baseline(skill_dir)
@@ -77,8 +77,8 @@ def test_baseline_dir_created(tmp_path: Path) -> None:
     cfg = load_config(DEFAULT_CONFIG)
     report = evaluate_skill(skill_dir, cfg)
     save_baseline(skill_dir, report)
-    assert (skill_dir / BASELINE_DIR / "SKILL.md").exists()
-    assert (skill_dir / BASELINE_DIR / "SKILL.md.bak").exists()
+    assert (baseline_dir(skill_dir) / "SKILL.md").exists()
+    assert (baseline_dir(skill_dir) / "SKILL.md.bak").exists()
 
 
 def test_snapshot_code_assets(tmp_path: Path) -> None:

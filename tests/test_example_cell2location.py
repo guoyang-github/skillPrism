@@ -40,7 +40,7 @@ def test_cell2location_darwin_up_to_level2() -> None:
         "bio-spatial-deconvolution-cell2location",
         REGISTRY_PATH,
         max_level=2,
-        base_output_dir=EXAMPLE_DIR / "ci-output",
+        base_output_dir=EXAMPLE_DIR / "artifacts",
         ratchet=False,
         code_path=CODE_PATH,
         results_mode=False,

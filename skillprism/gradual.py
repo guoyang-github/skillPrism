@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from skillprism.ci.pipeline import CIPipeline
+from skillprism.test_prompts import artifacts_dir
 
 LEVEL_NAMES = {
     0: "unit",
@@ -40,7 +41,7 @@ def _default_baseline_path(
     name = f"gradual_baseline_level{level}"
     if suite:
         name += f"_{suite}"
-    base = output_dir or Path("ci-output") / "gradual"
+    base = output_dir or artifacts_dir(skill_path) / "ci" / "gradual"
     return base / ".baselines" / skill_path.name / f"{name}.yaml"
 
 
@@ -57,7 +58,7 @@ def run_gradual_stage(
     agent_command: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """Run a single Gradual stage and compare against the stage baseline."""
-    output_dir = output_dir or Path("ci-output") / "gradual"
+    output_dir = output_dir or artifacts_dir(Path(skill)) / "ci" / "gradual"
     stage_output_dir = output_dir / f"level{level}"
 
     pipeline = CIPipeline(
@@ -101,7 +102,7 @@ def run_gradual_pipeline(
     if max_level < 0 or max_level > 3:
         raise ValueError("max_level must be between 0 and 3")
 
-    base_output_dir = base_output_dir or Path("ci-output") / "gradual"
+    base_output_dir = base_output_dir or artifacts_dir(Path(skill)) / "ci" / "gradual"
     overall: Dict[str, Any] = {
         "skill": skill,
         "suite": suite,
@@ -158,8 +159,8 @@ def main() -> int:
     )
     parser.add_argument(
         "--output-dir",
-        default="ci-output/gradual",
-        help="Directory for Gradual stage artifacts",
+        default=None,
+        help="Directory for Gradual stage artifacts (default: artifacts/<skill>/ci/gradual)",
     )
     parser.add_argument(
         "--no-ratchet",
@@ -203,7 +204,7 @@ def main() -> int:
         registry_path=Path(args.registry),
         suite=args.suite,
         max_level=args.max_level,
-        base_output_dir=Path(args.output_dir),
+        base_output_dir=Path(args.output_dir) if args.output_dir else None,
         ratchet=not args.no_ratchet,
         code_path=code_path,
         results_mode=results_mode,

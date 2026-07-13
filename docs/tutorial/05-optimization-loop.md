@@ -65,7 +65,7 @@ Agent：
 improve-skill skills/my-first-analysis --record-baseline
 ```
 
-这会保存当前 `SKILL.md` 的 Rubric 分数、benchmark 结果到 `.skillprism_baseline/`，并写入 `artifacts/<skill>/history.jsonl`。
+这会保存当前 `SKILL.md` 的 Rubric 分数、benchmark 结果到 `artifacts/<skill>/baseline/`，并写入 `artifacts/<skill>/history.jsonl`。
 
 ## 5.5 识别短板
 
@@ -177,7 +177,7 @@ improve-skill skills/my-first-analysis --explore-rewrite --apply
 ```
 
 这会：
-1. 备份当前最优版本到 `.skillprism_baseline/SKILL.md.stash`
+1. 备份当前最优版本到 `artifacts/<skill>/baseline/SKILL.md.stash`
 2. 调用 editor 从头重写
 3. judge 重写版
 4. 如果更好则保留，否则恢复 stash

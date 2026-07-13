@@ -6,7 +6,7 @@ skillPrism 提供一个可选的视觉成果卡片生成器，用于展示单次
 
 ```bash
 python examples/reporters/visual_result_card.py \
-  --input .skillprism_baseline/optimization_result.json \
+  --input artifacts/<skill>/baseline/optimization_result.json \
   --output result-card.html
 ```
 
@@ -17,7 +17,7 @@ pip install playwright
 playwright install
 
 python examples/reporters/visual_result_card.py \
-  --input .skillprism_baseline/optimization_result.json \
+  --input artifacts/<skill>/baseline/optimization_result.json \
   --output result-card.html \
   --screenshot
 ```

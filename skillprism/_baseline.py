@@ -16,9 +16,9 @@ from .evaluate_skill_rubric import (
     get_weights,
     load_config,
 )
+from .test_prompts import baseline_dir
 
-BASELINE_FILE = ".skillprism_baseline.json"
-BASELINE_DIR = ".skillprism_baseline"
+BASELINE_FILE = "baseline.json"
 
 CODE_ASSET_PATTERNS = [
     "scripts",
@@ -32,11 +32,11 @@ CODE_ASSET_PATTERNS = [
 
 
 def _baseline_path(skill_path: Path) -> Path:
-    return skill_path / BASELINE_FILE
+    return baseline_dir(skill_path) / BASELINE_FILE
 
 
 def _baseline_bak_path(skill_path: Path) -> Path:
-    return skill_path / f"{BASELINE_FILE}.bak"
+    return baseline_dir(skill_path) / f"{BASELINE_FILE}.bak"
 
 
 def load_baseline(skill_path: Path) -> Optional[Dict[str, Any]]:
@@ -82,28 +82,28 @@ def save_baseline(
     payload = json.dumps(data, indent=2)
 
     # Atomic write of the primary JSON + a .bak for corruption recovery.
+    target_dir = baseline_dir(skill_path)
+    target_dir.mkdir(parents=True, exist_ok=True)
     atomic_write_text(_baseline_path(skill_path), payload)
     atomic_write_text(_baseline_bak_path(skill_path), payload)
 
     # Also save a copy of SKILL.md for bloat detection and rollback
-    baseline_dir = skill_path / BASELINE_DIR
-    baseline_dir.mkdir(exist_ok=True)
     skill_md = skill_path / "SKILL.md"
     if skill_md.exists():
         content = skill_md.read_text(encoding="utf-8", errors="replace")
-        atomic_write_text(baseline_dir / "SKILL.md", content)
+        atomic_write_text(target_dir / "SKILL.md", content)
         # Stable backup used by bloat detection and manual recovery.
-        atomic_write_text(baseline_dir / "SKILL.md.bak", content)
+        atomic_write_text(target_dir / "SKILL.md.bak", content)
         # Timestamped backup for recovery from corruption
         ts = datetime.now().strftime("%Y%m%d-%H%M%S")
-        atomic_write_text(baseline_dir / f"SKILL.md.bak.{ts}", content)
+        atomic_write_text(target_dir / f"SKILL.md.bak.{ts}", content)
         # Prune rolling backups to the most recent few.
-        prune_rolling_backups(baseline_dir, "SKILL.md.bak.*", keep=5)
+        prune_rolling_backups(target_dir, "SKILL.md.bak.*", keep=5)
     return data
 
 
 def load_baseline_skill_md(skill_path: Path) -> str:
-    baseline_md = skill_path / BASELINE_DIR / "SKILL.md"
+    baseline_md = baseline_dir(skill_path) / "SKILL.md"
     if baseline_md.exists():
         return baseline_md.read_text(encoding="utf-8", errors="replace")
     return ""
@@ -118,7 +118,7 @@ def clear_baseline(skill_path: Path) -> None:
 
 def snapshot_code_assets(skill_path: Path) -> Path:
     """Copy editable code assets into the baseline snapshot directory."""
-    snapshot_dir = skill_path / BASELINE_DIR / "code_snapshot"
+    snapshot_dir = baseline_dir(skill_path) / "code_snapshot"
     if snapshot_dir.exists():
         shutil.rmtree(snapshot_dir)
     snapshot_dir.mkdir(parents=True, exist_ok=True)
@@ -140,7 +140,7 @@ def restore_code_assets(skill_path: Path) -> bool:
 
     Returns True if a snapshot existed and was restored, False otherwise.
     """
-    snapshot_dir = skill_path / BASELINE_DIR / "code_snapshot"
+    snapshot_dir = baseline_dir(skill_path) / "code_snapshot"
     if not snapshot_dir.exists():
         return False
 

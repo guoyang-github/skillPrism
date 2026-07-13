@@ -49,7 +49,7 @@ test-skill --mode gradual \
     --skill bio-spatial-deconvolution-cell2location \
     --registry examples/benchmark_cell2location/benchmarks/bio-spatial-deconvolution-cell2location/registry.yaml \
     --max-level 2 \
-    --output-dir examples/benchmark_cell2location/ci-output
+    --output-dir examples/benchmark_cell2location/artifacts
 ```
 
 3. Run a single level manually:

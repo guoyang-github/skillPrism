@@ -2519,7 +2519,7 @@
 再获取改进建议。<strong>每轮编辑前我会说明计划并等你批准，编辑后展示 diff 和分数变化。</strong></p>
 <p>▶ <code>improve-skill skills/data-summary --record-baseline</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Baseline recorded: score=47.2, historical_best=47.2
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  → .skillprism_baseline.json (原子写 + .bak)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  → artifacts/data-summary/baseline/baseline.json (原子写 + .bak)
 </code></pre></div>
 <p>▶ <code>improve-skill skills/data-summary --suggest</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Current score: 47.2 / 100 (Grade 2)
@@ -2589,7 +2589,7 @@
 本轮 baseline（第 2 轮版本），并 <code>record_attempt</code> 写历史。如果是 guard block（如多维度同改、
 bloat、<code>git reset --hard</code> 出现在可执行脚本），同样自动回滚并记录违规。</p>
 <p><strong>用户</strong>：如果我不小心把 SKILL.md 改坏了，能恢复吗？</p>
-<p><strong>Agent</strong>：能。<code>.skillprism_baseline/SKILL.md.bak.*</code> 有滚动备份（保留最近 5 份），
+<p><strong>Agent</strong>：能。<code>artifacts/data-summary/baseline/SKILL.md.bak.*</code> 有滚动备份（保留最近 5 份），
 <code>load_baseline</code> 主文件损坏时自动回退 <code>.bak</code>。也可以 <code>git log</code> 看每次 keep 的提交。</p>
 <hr />
 <h2 id="8">8. 渐进测试（失败优先）<a class="headerlink" href="#8" title="Permanent link">&para;</a></h2>
@@ -2602,7 +2602,7 @@ bloat、<code>git reset --hard</code> 出现在可执行脚本），同样自动
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Gradual pipeline passed through level 2.
 </code></pre></div>
 <blockquote>
-<p>baseline 写在 <code>ci-output/gradual/.baselines/data-summary/</code>（不污染 skill 源码树）。</p>
+<p>baseline 写在 <code>artifacts/data-summary/ci/gradual/.baselines/data-summary/</code>（不污染 skill 源码树）。</p>
 </blockquote>
 <hr />
 <h2 id="9-ci-ratchet">9. CI 门控 + ratchet<a class="headerlink" href="#9-ci-ratchet" title="Permanent link">&para;</a></h2>
@@ -2622,7 +2622,7 @@ bloat、<code>git reset --hard</code> 出现在可执行脚本），同样自动
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>_all_pass: False  → exit 1   (CI fail, 阻止合并)
 </code></pre></div>
 <blockquote>
-<p>ratchet 真相源当前为本地 <code>.skillprism_baseline.json</code>（原子写 + flock）。
+<p>ratchet 真相源当前为本地 <code>artifacts/&lt;skill&gt;/baseline/baseline.json</code>（原子写 + flock）。
 接 Langfuse 后可迁服务端（见 <code>docs/reference/langfuse-integration.md</code> §9）。</p>
 </blockquote>
 <hr />

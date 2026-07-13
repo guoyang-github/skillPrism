@@ -13,6 +13,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List
 
+from .test_prompts import baseline_dir
+
 
 @dataclass
 class QualityIssue:
@@ -260,7 +262,7 @@ def check_bloat(
 def evaluate_all(skill_path: Path, content: str, name: str, description: str) -> RubricEnhancements:
     """Run all rubric enhancement checks and merge results."""
     result = RubricEnhancements()
-    baseline_path = skill_path / ".skillprism_baseline" / "SKILL.md.bak"
+    baseline_path = baseline_dir(skill_path) / "SKILL.md.bak"
 
     checks = [
         check_frontmatter(name, description),

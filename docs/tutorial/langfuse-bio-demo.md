@@ -161,7 +161,7 @@ event outlier_dropped  level=warning  payload={dim:D2, llm=1, engine=3, reason:"
 
 ```
 Baseline recorded: score=61.4, historical_best=61.4
-  → .skillprism_baseline.json (原子写 + .bak) + Langfuse score[rubric_total]=61.4
+  → artifacts/bio-single-cell-clustering/baseline/baseline.json (原子写 + .bak) + Langfuse score[rubric_total]=61.4
 ```
 
 ◇ **Langfuse 侧**：
@@ -328,7 +328,7 @@ span level2  score[level2_pass]=true  score[ari]=0.83
 span level3  score[level3_pass]=true  (real_data: completion only)
 ```
 
-> baseline 写在 `ci-output/gradual/.baselines/bio-single-cell-clustering/`，不污染 skill 源码树（P2-6）。
+> baseline 写在 `artifacts/bio-single-cell-clustering/ci/gradual/.baselines/bio-single-cell-clustering/`，不污染 skill 源码树（P2-6）。
 
 ---
 

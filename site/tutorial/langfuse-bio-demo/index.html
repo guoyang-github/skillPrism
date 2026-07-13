@@ -2578,7 +2578,7 @@ trace 链接：<code>https://langfuse.internal/bio-skills/traces/&lt;id&gt;</cod
 把 <code>rubric_total</code> 作为 score 发 Langfuse（ratchet 判定仍读本地）。</p>
 <p>▶ <code>improve-skill skills/bio-single-cell-clustering --record-baseline</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Baseline recorded: score=61.4, historical_best=61.4
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  → .skillprism_baseline.json (原子写 + .bak) + Langfuse score[rubric_total]=61.4
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  → artifacts/bio-single-cell-clustering/baseline/baseline.json (原子写 + .bak) + Langfuse score[rubric_total]=61.4
 </code></pre></div>
 <p>◇ <strong>Langfuse 侧</strong>：
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>score[rubric_total]=61.4  metadata={source=local-mirror, commit=a1b2c3, branch=main, ci_run_id=...}
@@ -2690,7 +2690,7 @@ Experiment 视图直接给出每轮 vs baseline 的 diff，<strong>替代了手�
 <a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>span level3  score[level3_pass]=true  (real_data: completion only)
 </code></pre></div></p>
 <blockquote>
-<p>baseline 写在 <code>ci-output/gradual/.baselines/bio-single-cell-clustering/</code>，不污染 skill 源码树（P2-6）。</p>
+<p>baseline 写在 <code>artifacts/bio-single-cell-clustering/ci/gradual/.baselines/bio-single-cell-clustering/</code>，不污染 skill 源码树（P2-6）。</p>
 </blockquote>
 <hr />
 <h2 id="11">11. 反馈闭环：基于历史实验选最弱维度<a class="headerlink" href="#11" title="Permanent link">&para;</a></h2>

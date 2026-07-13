@@ -64,9 +64,11 @@ def test_actionable_specificity_threshold():
 
 
 def test_bloat_guard(tmp_path: Path):
-    baseline_dir = tmp_path / ".skillprism_baseline"
-    baseline_dir.mkdir()
-    baseline_md = baseline_dir / "SKILL.md"
+    from skillprism._baseline import baseline_dir
+
+    snap = baseline_dir(tmp_path)
+    snap.mkdir(parents=True)
+    baseline_md = snap / "SKILL.md"
     baseline_md.write_text("x" * 100, encoding="utf-8")
     (tmp_path / "SKILL.md").write_text("x" * 200, encoding="utf-8")
     result = check_bloat(tmp_path, "x" * 200, baseline_path=baseline_md)

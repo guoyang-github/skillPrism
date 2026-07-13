@@ -25,6 +25,7 @@ from typing import Any, Dict, List, Optional
 
 from .benchmark.runner import _format_benchmark_results, run_benchmarks
 from .gradual import run_gradual_pipeline
+from .test_prompts import artifacts_dir
 
 
 def _run_single(
@@ -169,8 +170,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--suite", help="Run only benchmarks in the named suite")
     parser.add_argument(
         "--output-dir",
-        default="ci-output/test",
-        help="Directory for test artifacts",
+        default=None,
+        help="Directory for test artifacts (default: artifacts/<skill>/ci/test)",
     )
     parser.add_argument(
         "--output",
@@ -252,7 +253,9 @@ def main() -> int:
             agent_command = cmd.split()
 
     registry_path = Path(args.registry)
-    output_dir = Path(args.output_dir)
+    output_dir = (
+        Path(args.output_dir) if args.output_dir else artifacts_dir(Path(skill)) / "ci" / "test"
+    )
 
     if args.mode == "single":
         if args.level is not None and args.max_level != 3:

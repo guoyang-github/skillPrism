@@ -3,7 +3,7 @@
 
 Usage:
     python examples/reporters/visual_result_card.py \
-        --input .skillprism_baseline/optimization_result.json \
+        --input artifacts/<skill>/baseline/optimization_result.json \
         --output result-card.html
 
 Optional:

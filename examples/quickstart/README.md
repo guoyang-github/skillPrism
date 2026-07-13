@@ -39,8 +39,8 @@ bash run_quickstart.sh
 The script will create:
 
 - `quickstart-report.md` — rubric scorecard for `csv-summary`
-- `ci-output/report.*` — CI gate report (static and dynamic)
-- `gradual-output/` — gradual stage artifacts
+- `artifacts/csv-summary/ci/report.*` — CI gate report (static and dynamic)
+- `artifacts/csv-summary/ci/gradual/` — gradual stage artifacts
 
 ## What Each Step Does
 
@@ -57,19 +57,18 @@ calls are made.
 
 ```bash
 skill-ci --skill csv-summary \
-    --registry benchmarks/csv-summary/registry.yaml \
-    --output-dir ci-output
+    --registry benchmarks/csv-summary/registry.yaml
 ```
 
-Runs rubric, smoke, dependency, and security checks.
+Runs rubric, smoke, dependency, and security checks. Artifacts land under
+`artifacts/csv-summary/ci/` by default.
 
 ### 3. Dynamic benchmark
 
 ```bash
 skill-ci --skill csv-summary \
     --registry benchmarks/csv-summary/registry.yaml \
-    --run-benchmark --code sample_skill_code.py \
-    --output-dir ci-output
+    --run-benchmark --code sample_skill_code.py
 ```
 
 Executes `sample_skill_code.py` in a sandbox and compares the generated
@@ -80,7 +79,7 @@ Executes `sample_skill_code.py` in a sandbox and compares the generated
 ```bash
 skill-gradual --skill csv-summary \
     --registry benchmarks/csv-summary/registry.yaml \
-    --output-dir gradual-output --max-level 0 --no-ratchet
+    --max-level 0 --no-ratchet
 ```
 
 Runs the cheapest failure-mode-first stage (unit/boundary) without updating

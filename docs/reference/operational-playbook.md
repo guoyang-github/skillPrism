@@ -313,7 +313,7 @@ test-skill --mode gradual --skill my-skill \
     --max-level 2
 ```
 
-每级通过后会自动把 baseline 保存到 `<skill>/.skillprism_baseline/gradual_baseline_level<N>.yaml`。
+每级通过后会自动把 baseline 保存到 `artifacts/<skill>/ci/gradual/.baselines/<skill>/gradual_baseline_level<N>.yaml`。
 
 ```bash
 # 只跑 smoke suite

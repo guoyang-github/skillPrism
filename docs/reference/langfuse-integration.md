@@ -19,7 +19,7 @@ skillPrism 已是一个成熟的本地评估优化引擎（经最佳实践改造
   回归对比（`benchmark/regression.py`，方向感知）、CI 门控（`ci/pipeline.py`）。
 - **可选能力层**：外部 editor 命令（`--auto-edit`）、LLM-as-judge 命令（`--llm-judge`），
   均为 stdin/stdout 契约，provider 无关。
-- **状态**：`.skillprism_baseline.json` / `artifacts/<skill>/history.jsonl` 本地文件，
+- **状态**：`artifacts/<skill>/baseline/baseline.json` / `artifacts/<skill>/history.jsonl` 本地文件，
   已原子写 + flock，但仍是**单机本地**。
 
 ### 1.2 痛点
@@ -104,7 +104,7 @@ Langfuse 对接落在**可选观测层**，与 editor/judge 同层并列。
 | guard violation | `Event` | name=guard rule，level=warning/error，payload=violation |
 | 优化一轮（auto-edit round） | `Trace`（子）或 `Span` | name=`optimize:<skill>:round-N` |
 | `experiment_history` 一条 record | `Experiment` item | 迁移：本地 jsonl → 服务端 experiment run |
-| `.skillprism_baseline.json` | Langfuse score 历史 | ratchet 真相源改为查服务端上次 `rubric_total` |
+| `artifacts/<skill>/baseline/baseline.json` | Langfuse score 历史 | ratchet 真相源改为查服务端上次 `rubric_total` |
 | test-prompts.json | `Dataset` items | 每个 prompt → dataset item（input=prompt, expected=行为描述） |
 | per-skill task spec (`benchmarks/<skill>/tasks/<task>.yaml`) | `Dataset` items | 每个 task → dataset item（input=task spec, expected=金标准） |
 | editor/judge prompt 模板 | `Prompt` 版本 | 版本化、A/B 测试 |
@@ -236,7 +236,7 @@ improve-skill skills/foo --auto-edit --apply --max-rounds N
         ├─ score score_delta
         └─ 若 keep：baseline 更新 → 下轮；若 revert：见 §5 回滚
   → Langfuse Experiment：各 round 作为 run，与 baseline 对比
-  → 本地 .skillprism_baseline.json（缓存，真相源在服务端）
+  → 本地 artifacts/<skill>/baseline/baseline.json（缓存，真相源在服务端）
 ```
 
 ### 6.3 CI 流
@@ -246,7 +246,7 @@ skill-ci --skill foo --run-benchmark --code <path>
   → CIPipeline.run ──trace──→ Langfuse
       ├─ score ci_pass / rubric_total / benchmark_pass
       └─ 回归对比：查 Langfuse 上次 main 分支的 rubric_total
-          （服务端 ratchet，替代本地 .skillprism_baseline.json）
+          （服务端 ratchet，替代本地 artifacts/<skill>/baseline/baseline.json）
   → exit code 0/1（回归默认 fail，已开）
 ```
 
@@ -308,7 +308,7 @@ skill-ci --skill foo --run-benchmark --code <path>
 ## 9. Ratchet 迁移策略（本地状态 → 服务端真相源）
 
 现状（已改造）：`evaluate_skill_rubric.py` ratchet 路径用 `get_weights(config)` 正确计算，
-对比本地上次 scorecard；`stop_on_regression` 默认 True；`.skillprism_baseline.json` 原子写 + flock；
+对比本地上次 scorecard；`stop_on_regression` 默认 True；`artifacts/<skill>/baseline/baseline.json` 原子写 + flock；
 `historical_best_score` read-modify-write 已用 flock 串行化。
 
 目标：ratchet 真相源迁到 Langfuse 服务端，本地状态降级为**离线缓存**。
@@ -333,7 +333,7 @@ skill-ci --skill foo --run-benchmark --code <path>
 
 **阶段 R3 — 服务端为真相源，本地可选**
 - ratchet 只读服务端 `historical_best`（按 score name 聚合 max）。
-- 本地 `.skillprism_baseline.json` 降级为**纯离线缓存**：仅在无服务端时用，
+- 本地 `artifacts/<skill>/baseline/baseline.json` 降级为**纯离线缓存**：仅在无服务端时用，
   且写入时标 `stale=true`；下次服务端可用时以服务端为准覆盖本地。
 - `historical_best_score` 的 read-modify-write 竞争**彻底消除**（服务端原子聚合）。
 - 可选：`SKILLPRISM_NO_LOCAL_STATE=1` 完全不写本地 JSON（仅服务端）。
@@ -343,7 +343,7 @@ skill-ci --skill foo --run-benchmark --code <path>
 ### 9.2 历史数据导入
 
 - 阶段 R1 上线时，跑一次性 **backfill 脚本**：遍历各 skill 的 `artifacts/<skill>/history.jsonl`
-  与 `.skillprism_baseline/SKILL.md.bak.*`，把历史 `rubric_total` 与 `historical_best_score`
+  与 `artifacts/<skill>/baseline/SKILL.md.bak.*`，把历史 `rubric_total` 与 `historical_best_score`
   作为 score 批量导入 Langfuse（metadata 标 `source=backfill`、`backfilled_at`）。
 - 导入幂等：以 `(skill, commit, timestamp)` 去重，重复导入不产生重复 score
   （Langfuse score 支持 `id` 字段，用确定性 id `<skill>:<commit>`）。

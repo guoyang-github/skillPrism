@@ -250,15 +250,17 @@ skill-pipeline --intent "run full quality pipeline" \
 - `llm_judge`：可选 LLM judge 配置。
 - `editor`：可选自动 editor 配置。
 
-### `.skillprism_baseline.json` & `.skillprism_baseline/`
+### `artifacts/<skill>/baseline/`
 
-每个 Skill 目录下自动生成的 baseline 文件，记录：
+每个 Skill 的 baseline 目录（生成物，位于 skill 树外），记录：
 
-- 当前 Rubric 分数和维度分；
+- 当前 Rubric 分数和维度分（`baseline.json`，原子写 + `.bak`）；
 - benchmark 结果；
 - 历史最高分（用于 ratchet）；
-- 渐进测试模式下每级独立的 baseline（`gradual_baseline_level<N>.yaml`）；
-- SKILL.md 副本与代码资产快照（无 git 时用于回滚）。
+- SKILL.md 副本与滚动备份（`SKILL.md.bak.*`，无 git 时用于回滚）；
+- 代码资产快照（`code_snapshot/`）。
+
+渐进测试每级独立的 baseline 则保存在 `artifacts/<skill>/ci/gradual/.baselines/<skill>/gradual_baseline_level<N>.yaml`。
 
 ---
 

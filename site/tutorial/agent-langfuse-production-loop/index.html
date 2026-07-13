@@ -3097,7 +3097,7 @@
 <a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="n">SKILLS_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SKILLPRISM_SKILLS_DIR&quot;</span><span class="p">,</span> <span class="s2">&quot;./skills&quot;</span><span class="p">))</span>
 <a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="c1"># 注意：registry 现在是 per-skill 的，这里用 {skill} 作为占位符，由 run_test_skill 注入。</span>
 <a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="n">BENCHMARK_REGISTRY_TEMPLATE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SKILLPRISM_BENCHMARK_REGISTRY&quot;</span><span class="p">,</span> <span class="s2">&quot;benchmarks/</span><span class="si">{skill}</span><span class="s2">/registry.yaml&quot;</span><span class="p">)</span>
-<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="n">OUTPUT_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SKILLPRISM_OUTPUT_DIR&quot;</span><span class="p">,</span> <span class="s2">&quot;./ci-output/langfuse-sync&quot;</span><span class="p">))</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="n">OUTPUT_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SKILLPRISM_OUTPUT_DIR&quot;</span><span class="p">,</span> <span class="s2">&quot;./artifacts/langfuse-sync&quot;</span><span class="p">))</span>
 <a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
 <a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="c1"># 多久拉一次 trace</span>
 <a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="n">LOOKBACK_HOURS</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SKILLPRISM_LOOKBACK_HOURS&quot;</span><span class="p">,</span> <span class="s2">&quot;24&quot;</span><span class="p">))</span>
@@ -3285,7 +3285,7 @@
 <p>同步脚本跑完后，你有两种做法：</p>
 <h3 id="a-review">做法 A：人工 review（推荐起步）<a class="headerlink" href="#a-review" title="Permanent link">&para;</a></h3>
 <ol>
-<li>看报告 <code>ci-output/langfuse-sync/report_xxx.json</code>；</li>
+<li>看报告 <code>artifacts/langfuse-sync/report_xxx.json</code>；</li>
 <li>对分数低的 Skill，先记录 baseline：
    <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>improve-skill<span class="w"> </span>skills/&lt;skill-name&gt;<span class="w"> </span>--record-baseline
 </code></pre></div></li>
@@ -3321,9 +3321,9 @@
 <h2 id="ratchet">第五步：用 Ratchet 防止回退<a class="headerlink" href="#ratchet" title="Permanent link">&para;</a></h2>
 <p>每次评估都加上 <code>--ratchet</code>：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>evaluate-skill<span class="w"> </span>skills/&lt;skill-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span>--output<span class="w"> </span>ci-output/scorecard.md<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span>--output<span class="w"> </span>artifacts/&lt;skill-name&gt;/scorecard.md<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>--ratchet<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span>--ratchet-baseline<span class="w"> </span>ci-output/baseline_scorecard.md
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span>--ratchet-baseline<span class="w"> </span>artifacts/&lt;skill-name&gt;/baseline_scorecard.md
 </code></pre></div>
 <p>含义：
 - 如果新分数低于 baseline 分数，skillPrism 返回非 0；
@@ -3395,7 +3395,7 @@
 <a id="__codelineno-16-37" name="__codelineno-16-37" href="#__codelineno-16-37"></a><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
 <a id="__codelineno-16-38" name="__codelineno-16-38" href="#__codelineno-16-38"></a><span class="w">        </span><span class="nt">with</span><span class="p">:</span>
 <a id="__codelineno-16-39" name="__codelineno-16-39" href="#__codelineno-16-39"></a><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">langfuse-sync-report</span>
-<a id="__codelineno-16-40" name="__codelineno-16-40" href="#__codelineno-16-40"></a><span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ci-output/langfuse-sync/</span>
+<a id="__codelineno-16-40" name="__codelineno-16-40" href="#__codelineno-16-40"></a><span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artifacts/langfuse-sync/</span>
 </code></pre></div>
 <h3 id="2webhook">方案 2：Webhook（实时性更好）<a class="headerlink" href="#2webhook" title="Permanent link">&para;</a></h3>
 <p>Langfuse 目前不直接支持 webhook，但你可以：
@@ -3455,7 +3455,7 @@
 <li><strong>不要把用户原始数据写进公开仓库</strong></li>
 <li><code>scripts/langfuse_sync_eval.py</code> 落地到本地的文件，只在本地/CI 临时目录；</li>
 <li>
-<p>不要把 <code>ci-output/langfuse-sync/</code> 提交到 Git（已默认被 <code>.gitignore</code> 忽略）。</p>
+<p>不要把 <code>artifacts/langfuse-sync/</code> 提交到 Git（<code>artifacts/</code> 已默认被 <code>.gitignore</code> 忽略）。</p>
 </li>
 <li>
 <p><strong>Langfuse 上的 trace 也可能含敏感信息</strong></p>

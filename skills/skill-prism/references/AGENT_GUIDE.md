@@ -2,8 +2,6 @@
 
 This guide standardizes how an AI agent should behave when using `skills/skill-prism/SKILL.md` as the unified interface. It complements SKILL.md: SKILL.md maps user intents to engine commands; this guide defines the Agent's tone, approval checkpoints, and reporting conventions.
 
-For the overall system architecture, see [`../../docs/reference/overview.md`](../../docs/reference/overview.md).
-
 ---
 
 ## 1. Greeting & Plan
@@ -119,7 +117,7 @@ When invoking `test-skill --mode gradual`:
 3. **Stop and diagnose** on first failure; never proceed to later levels automatically.
 4. **Real-data benchmarks are completion-only**: report `_all_pass`, not numerical scores.
 5. **Failure diagnosis order**:
-   - Read `ci-output/test/level<N>/results.yaml`.
+   - Read `artifacts/<skill>/ci/test/level<N>/results.yaml`.
    - Identify failing benchmark and whether `_real_data` is true.
    - Check `error` (runtime), `_metric_pass` (regression), or missing benchmark (registry mismatch).
    - Map level to likely cause (level 0 = syntax/shape, level 1 = logic, level 2 = stability, level 3 = real-data/resource).
@@ -136,7 +134,7 @@ Do not expose the user to engine internals unless they ask. Map their request to
 ```text
 User: 给所有 skills 打个分
 Agent: 我来对所有 skills 做 Rubric 评估并生成 scorecard。
-       执行：evaluate-skill --all --skills-dir ./skills --output docs/SKILL_SCORECARD.md
+       执行：evaluate-skill --all --skills-dir ./skills --output reports/SKILL_SCORECARD.md
 ```
 
 If the user's phrasing is ambiguous, confirm the interpreted intent before running the command.

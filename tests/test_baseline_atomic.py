@@ -14,7 +14,7 @@ import sys
 import textwrap
 from pathlib import Path
 
-from skillprism._baseline import _baseline_path, load_baseline, save_baseline
+from skillprism._baseline import _baseline_path, baseline_dir, load_baseline, save_baseline
 from skillprism._locking import atomic_write_text
 from skillprism.evaluate_skill_rubric import DEFAULT_CONFIG, evaluate_skill, load_config
 
@@ -81,7 +81,7 @@ def test_save_baseline_is_atomic(tmp_path: Path) -> None:
     """save_baseline writes a parseable JSON (no truncation) and a .bak."""
     skill_dir = _make_skill(tmp_path)
     primary = _baseline_path(skill_dir)
-    bak = skill_dir / ".skillprism_baseline.json.bak"
+    bak = baseline_dir(skill_dir) / "baseline.json.bak"
     assert primary.exists() and bak.exists()
     # Both must be valid JSON.
     json.loads(primary.read_text(encoding="utf-8"))

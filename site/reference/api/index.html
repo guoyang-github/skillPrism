@@ -3098,11 +3098,11 @@ script) and can be extended without modifying this script.</p>
   <h3 id="skillprism.evaluate_skill_rubric--single-skill-auto-detect-type">Single skill (auto-detect type)<a class="headerlink" href="#skillprism.evaluate_skill_rubric--single-skill-auto-detect-type" title="Permanent link">&para;</a></h3>
 <p>python evaluate_skill_rubric.py skills/bio-single-cell-clustering</p>
 <h3 id="skillprism.evaluate_skill_rubric--evaluate-all-skills-with-smoke-tests-and-dependency-checks">Evaluate all skills with smoke tests and dependency checks<a class="headerlink" href="#skillprism.evaluate_skill_rubric--evaluate-all-skills-with-smoke-tests-and-dependency-checks" title="Permanent link">&para;</a></h3>
-<p>python evaluate_skill_rubric.py --all --skills-dir ./skills         --run-smoke --run-deps --output docs/SKILL_SCORECARD.md</p>
+<p>python evaluate_skill_rubric.py --all --skills-dir ./skills         --run-smoke --run-deps --output reports/SKILL_SCORECARD.md</p>
 <h3 id="skillprism.evaluate_skill_rubric--batch-with-history-tracking">Batch with history tracking<a class="headerlink" href="#skillprism.evaluate_skill_rubric--batch-with-history-tracking" title="Permanent link">&para;</a></h3>
-<p>python evaluate_skill_rubric.py --all --skills-dir ./skills         --output docs/SKILL_SCORECARD.md --output-history docs/skill_history.jsonl</p>
+<p>python evaluate_skill_rubric.py --all --skills-dir ./skills         --output reports/SKILL_SCORECARD.md --output-history artifacts/skill_history.jsonl</p>
 <h3 id="skillprism.evaluate_skill_rubric--ratchet-mode-fail-if-any-skill-regresses-from-previous-scorecard">Ratchet mode: fail if any skill regresses from previous scorecard<a class="headerlink" href="#skillprism.evaluate_skill_rubric--ratchet-mode-fail-if-any-skill-regresses-from-previous-scorecard" title="Permanent link">&para;</a></h3>
-<p>python evaluate_skill_rubric.py --all --skills-dir ./skills         --output docs/SKILL_SCORECARD.md --ratchet</p>
+<p>python evaluate_skill_rubric.py --all --skills-dir ./skills         --output reports/SKILL_SCORECARD.md --ratchet</p>
 </details>
 
 
@@ -3993,7 +3993,8 @@ improve-skill skills/<skill> --auto-edit --apply --max-rounds 3</p>
     <div class="doc doc-contents ">
 
         <p>Judge the current SKILL.md against the stored baseline.</p>
-<p>Public entry point: acquires an advisory lock (<code>.skillprism.lock</code>) so
+<p>Public entry point: acquires an advisory lock (<code>optimize.lock</code> under the
+baseline dir) so
 concurrent optimizers (CI + local dev) cannot race the baseline
 read-modify-write or clobber each other's keep/revert. Internal callers
 that already hold the lock use <code>_judge_candidate_unlocked</code> directly to
@@ -4047,7 +4048,8 @@ avoid re-entrant flock deadlock.</p>
 <span class="normal"><a href="#__codelineno-0-466">466</a></span>
 <span class="normal"><a href="#__codelineno-0-467">467</a></span>
 <span class="normal"><a href="#__codelineno-0-468">468</a></span>
-<span class="normal"><a href="#__codelineno-0-469">469</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-424" name="__codelineno-0-424"></a><span class="k">def</span><span class="w"> </span><span class="nf">judge_candidate</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-469">469</a></span>
+<span class="normal"><a href="#__codelineno-0-470">470</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-424" name="__codelineno-0-424"></a><span class="k">def</span><span class="w"> </span><span class="nf">judge_candidate</span><span class="p">(</span>
 <a id="__codelineno-0-425" name="__codelineno-0-425"></a>    <span class="n">skill_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
 <a id="__codelineno-0-426" name="__codelineno-0-426"></a>    <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <a id="__codelineno-0-427" name="__codelineno-0-427"></a>    <span class="n">baseline</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
@@ -4068,31 +4070,32 @@ avoid re-entrant flock deadlock.</p>
 <a id="__codelineno-0-442" name="__codelineno-0-442"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JudgeResult</span><span class="p">:</span>
 <a id="__codelineno-0-443" name="__codelineno-0-443"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Judge the current SKILL.md against the stored baseline.</span>
 <a id="__codelineno-0-444" name="__codelineno-0-444"></a>
-<a id="__codelineno-0-445" name="__codelineno-0-445"></a><span class="sd">    Public entry point: acquires an advisory lock (``.skillprism.lock``) so</span>
-<a id="__codelineno-0-446" name="__codelineno-0-446"></a><span class="sd">    concurrent optimizers (CI + local dev) cannot race the baseline</span>
-<a id="__codelineno-0-447" name="__codelineno-0-447"></a><span class="sd">    read-modify-write or clobber each other&#39;s keep/revert. Internal callers</span>
-<a id="__codelineno-0-448" name="__codelineno-0-448"></a><span class="sd">    that already hold the lock use ``_judge_candidate_unlocked`` directly to</span>
-<a id="__codelineno-0-449" name="__codelineno-0-449"></a><span class="sd">    avoid re-entrant flock deadlock.</span>
-<a id="__codelineno-0-450" name="__codelineno-0-450"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-451" name="__codelineno-0-451"></a>    <span class="k">with</span> <span class="n">file_lock</span><span class="p">(</span><span class="n">skill_path</span> <span class="o">/</span> <span class="s2">&quot;.skillprism.lock&quot;</span><span class="p">):</span>
-<a id="__codelineno-0-452" name="__codelineno-0-452"></a>        <span class="k">return</span> <span class="n">_judge_candidate_unlocked</span><span class="p">(</span>
-<a id="__codelineno-0-453" name="__codelineno-0-453"></a>            <span class="n">skill_path</span><span class="p">,</span>
-<a id="__codelineno-0-454" name="__codelineno-0-454"></a>            <span class="n">config</span><span class="p">,</span>
-<a id="__codelineno-0-455" name="__codelineno-0-455"></a>            <span class="n">baseline</span><span class="p">,</span>
-<a id="__codelineno-0-456" name="__codelineno-0-456"></a>            <span class="n">benchmark_registry</span><span class="o">=</span><span class="n">benchmark_registry</span><span class="p">,</span>
-<a id="__codelineno-0-457" name="__codelineno-0-457"></a>            <span class="n">benchmark_output_dir</span><span class="o">=</span><span class="n">benchmark_output_dir</span><span class="p">,</span>
-<a id="__codelineno-0-458" name="__codelineno-0-458"></a>            <span class="n">code_path</span><span class="o">=</span><span class="n">code_path</span><span class="p">,</span>
-<a id="__codelineno-0-459" name="__codelineno-0-459"></a>            <span class="n">min_gain</span><span class="o">=</span><span class="n">min_gain</span><span class="p">,</span>
-<a id="__codelineno-0-460" name="__codelineno-0-460"></a>            <span class="n">allow_regression</span><span class="o">=</span><span class="n">allow_regression</span><span class="p">,</span>
-<a id="__codelineno-0-461" name="__codelineno-0-461"></a>            <span class="n">apply</span><span class="o">=</span><span class="n">apply</span><span class="p">,</span>
-<a id="__codelineno-0-462" name="__codelineno-0-462"></a>            <span class="n">ratchet</span><span class="o">=</span><span class="n">ratchet</span><span class="p">,</span>
-<a id="__codelineno-0-463" name="__codelineno-0-463"></a>            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-<a id="__codelineno-0-464" name="__codelineno-0-464"></a>            <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
-<a id="__codelineno-0-465" name="__codelineno-0-465"></a>            <span class="n">llm_judge</span><span class="o">=</span><span class="n">llm_judge</span><span class="p">,</span>
-<a id="__codelineno-0-466" name="__codelineno-0-466"></a>            <span class="n">show_diff</span><span class="o">=</span><span class="n">show_diff</span><span class="p">,</span>
-<a id="__codelineno-0-467" name="__codelineno-0-467"></a>            <span class="n">diff_lines</span><span class="o">=</span><span class="n">diff_lines</span><span class="p">,</span>
-<a id="__codelineno-0-468" name="__codelineno-0-468"></a>            <span class="n">edit_code</span><span class="o">=</span><span class="n">edit_code</span><span class="p">,</span>
-<a id="__codelineno-0-469" name="__codelineno-0-469"></a>        <span class="p">)</span>
+<a id="__codelineno-0-445" name="__codelineno-0-445"></a><span class="sd">    Public entry point: acquires an advisory lock (``optimize.lock`` under the</span>
+<a id="__codelineno-0-446" name="__codelineno-0-446"></a><span class="sd">    baseline dir) so</span>
+<a id="__codelineno-0-447" name="__codelineno-0-447"></a><span class="sd">    concurrent optimizers (CI + local dev) cannot race the baseline</span>
+<a id="__codelineno-0-448" name="__codelineno-0-448"></a><span class="sd">    read-modify-write or clobber each other&#39;s keep/revert. Internal callers</span>
+<a id="__codelineno-0-449" name="__codelineno-0-449"></a><span class="sd">    that already hold the lock use ``_judge_candidate_unlocked`` directly to</span>
+<a id="__codelineno-0-450" name="__codelineno-0-450"></a><span class="sd">    avoid re-entrant flock deadlock.</span>
+<a id="__codelineno-0-451" name="__codelineno-0-451"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-452" name="__codelineno-0-452"></a>    <span class="k">with</span> <span class="n">file_lock</span><span class="p">(</span><span class="n">baseline_dir</span><span class="p">(</span><span class="n">skill_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;optimize.lock&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-453" name="__codelineno-0-453"></a>        <span class="k">return</span> <span class="n">_judge_candidate_unlocked</span><span class="p">(</span>
+<a id="__codelineno-0-454" name="__codelineno-0-454"></a>            <span class="n">skill_path</span><span class="p">,</span>
+<a id="__codelineno-0-455" name="__codelineno-0-455"></a>            <span class="n">config</span><span class="p">,</span>
+<a id="__codelineno-0-456" name="__codelineno-0-456"></a>            <span class="n">baseline</span><span class="p">,</span>
+<a id="__codelineno-0-457" name="__codelineno-0-457"></a>            <span class="n">benchmark_registry</span><span class="o">=</span><span class="n">benchmark_registry</span><span class="p">,</span>
+<a id="__codelineno-0-458" name="__codelineno-0-458"></a>            <span class="n">benchmark_output_dir</span><span class="o">=</span><span class="n">benchmark_output_dir</span><span class="p">,</span>
+<a id="__codelineno-0-459" name="__codelineno-0-459"></a>            <span class="n">code_path</span><span class="o">=</span><span class="n">code_path</span><span class="p">,</span>
+<a id="__codelineno-0-460" name="__codelineno-0-460"></a>            <span class="n">min_gain</span><span class="o">=</span><span class="n">min_gain</span><span class="p">,</span>
+<a id="__codelineno-0-461" name="__codelineno-0-461"></a>            <span class="n">allow_regression</span><span class="o">=</span><span class="n">allow_regression</span><span class="p">,</span>
+<a id="__codelineno-0-462" name="__codelineno-0-462"></a>            <span class="n">apply</span><span class="o">=</span><span class="n">apply</span><span class="p">,</span>
+<a id="__codelineno-0-463" name="__codelineno-0-463"></a>            <span class="n">ratchet</span><span class="o">=</span><span class="n">ratchet</span><span class="p">,</span>
+<a id="__codelineno-0-464" name="__codelineno-0-464"></a>            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+<a id="__codelineno-0-465" name="__codelineno-0-465"></a>            <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
+<a id="__codelineno-0-466" name="__codelineno-0-466"></a>            <span class="n">llm_judge</span><span class="o">=</span><span class="n">llm_judge</span><span class="p">,</span>
+<a id="__codelineno-0-467" name="__codelineno-0-467"></a>            <span class="n">show_diff</span><span class="o">=</span><span class="n">show_diff</span><span class="p">,</span>
+<a id="__codelineno-0-468" name="__codelineno-0-468"></a>            <span class="n">diff_lines</span><span class="o">=</span><span class="n">diff_lines</span><span class="p">,</span>
+<a id="__codelineno-0-469" name="__codelineno-0-469"></a>            <span class="n">edit_code</span><span class="o">=</span><span class="n">edit_code</span><span class="p">,</span>
+<a id="__codelineno-0-470" name="__codelineno-0-470"></a>        <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4178,23 +4181,23 @@ avoid re-entrant flock deadlock.</p>
 <a id="__codelineno-0-82" name="__codelineno-0-82"></a>    <span class="n">payload</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <a id="__codelineno-0-83" name="__codelineno-0-83"></a>
 <a id="__codelineno-0-84" name="__codelineno-0-84"></a>    <span class="c1"># Atomic write of the primary JSON + a .bak for corruption recovery.</span>
-<a id="__codelineno-0-85" name="__codelineno-0-85"></a>    <span class="n">atomic_write_text</span><span class="p">(</span><span class="n">_baseline_path</span><span class="p">(</span><span class="n">skill_path</span><span class="p">),</span> <span class="n">payload</span><span class="p">)</span>
-<a id="__codelineno-0-86" name="__codelineno-0-86"></a>    <span class="n">atomic_write_text</span><span class="p">(</span><span class="n">_baseline_bak_path</span><span class="p">(</span><span class="n">skill_path</span><span class="p">),</span> <span class="n">payload</span><span class="p">)</span>
-<a id="__codelineno-0-87" name="__codelineno-0-87"></a>
-<a id="__codelineno-0-88" name="__codelineno-0-88"></a>    <span class="c1"># Also save a copy of SKILL.md for bloat detection and rollback</span>
-<a id="__codelineno-0-89" name="__codelineno-0-89"></a>    <span class="n">baseline_dir</span> <span class="o">=</span> <span class="n">skill_path</span> <span class="o">/</span> <span class="n">BASELINE_DIR</span>
-<a id="__codelineno-0-90" name="__codelineno-0-90"></a>    <span class="n">baseline_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85"></a>    <span class="n">target_dir</span> <span class="o">=</span> <span class="n">baseline_dir</span><span class="p">(</span><span class="n">skill_path</span><span class="p">)</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86"></a>    <span class="n">target_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87"></a>    <span class="n">atomic_write_text</span><span class="p">(</span><span class="n">_baseline_path</span><span class="p">(</span><span class="n">skill_path</span><span class="p">),</span> <span class="n">payload</span><span class="p">)</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a>    <span class="n">atomic_write_text</span><span class="p">(</span><span class="n">_baseline_bak_path</span><span class="p">(</span><span class="n">skill_path</span><span class="p">),</span> <span class="n">payload</span><span class="p">)</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89"></a>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a>    <span class="c1"># Also save a copy of SKILL.md for bloat detection and rollback</span>
 <a id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="n">skill_md</span> <span class="o">=</span> <span class="n">skill_path</span> <span class="o">/</span> <span class="s2">&quot;SKILL.md&quot;</span>
 <a id="__codelineno-0-92" name="__codelineno-0-92"></a>    <span class="k">if</span> <span class="n">skill_md</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
 <a id="__codelineno-0-93" name="__codelineno-0-93"></a>        <span class="n">content</span> <span class="o">=</span> <span class="n">skill_md</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-94" name="__codelineno-0-94"></a>        <span class="n">atomic_write_text</span><span class="p">(</span><span class="n">baseline_dir</span> <span class="o">/</span> <span class="s2">&quot;SKILL.md&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94"></a>        <span class="n">atomic_write_text</span><span class="p">(</span><span class="n">target_dir</span> <span class="o">/</span> <span class="s2">&quot;SKILL.md&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
 <a id="__codelineno-0-95" name="__codelineno-0-95"></a>        <span class="c1"># Stable backup used by bloat detection and manual recovery.</span>
-<a id="__codelineno-0-96" name="__codelineno-0-96"></a>        <span class="n">atomic_write_text</span><span class="p">(</span><span class="n">baseline_dir</span> <span class="o">/</span> <span class="s2">&quot;SKILL.md.bak&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a>        <span class="n">atomic_write_text</span><span class="p">(</span><span class="n">target_dir</span> <span class="o">/</span> <span class="s2">&quot;SKILL.md.bak&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
 <a id="__codelineno-0-97" name="__codelineno-0-97"></a>        <span class="c1"># Timestamped backup for recovery from corruption</span>
 <a id="__codelineno-0-98" name="__codelineno-0-98"></a>        <span class="n">ts</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">-%H%M%S&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="n">atomic_write_text</span><span class="p">(</span><span class="n">baseline_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;SKILL.md.bak.</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="n">atomic_write_text</span><span class="p">(</span><span class="n">target_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;SKILL.md.bak.</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
 <a id="__codelineno-0-100" name="__codelineno-0-100"></a>        <span class="c1"># Prune rolling backups to the most recent few.</span>
-<a id="__codelineno-0-101" name="__codelineno-0-101"></a>        <span class="n">prune_rolling_backups</span><span class="p">(</span><span class="n">baseline_dir</span><span class="p">,</span> <span class="s2">&quot;SKILL.md.bak.*&quot;</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a>        <span class="n">prune_rolling_backups</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s2">&quot;SKILL.md.bak.*&quot;</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <a id="__codelineno-0-102" name="__codelineno-0-102"></a>    <span class="k">return</span> <span class="n">data</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4275,7 +4278,7 @@ transparently falls back to the <code>.bak</code> written alongside it.</p>
 
         <p>Render a diff between baseline and current SKILL.md.</p>
 <p>Uses <code>difflib</code> against the passed <code>baseline_md</code> (the
-<code>.skillprism_baseline/SKILL.md</code> copy). Previously this ran
+<code>artifacts/&lt;skill&gt;/baseline/SKILL.md</code> copy). Previously this ran
 <code>git add SKILL.md</code> then <code>git diff --cached</code> to compare against HEAD —
 a read-only diff that mutated the git index even in dry-run, and compared
 against the wrong base (HEAD, not the recorded baseline). The difflib path
@@ -4323,7 +4326,7 @@ is side-effect-free and semantically correct.</p>
 <a id="__codelineno-0-392" name="__codelineno-0-392"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Render a diff between baseline and current SKILL.md.</span>
 <a id="__codelineno-0-393" name="__codelineno-0-393"></a>
 <a id="__codelineno-0-394" name="__codelineno-0-394"></a><span class="sd">    Uses ``difflib`` against the passed ``baseline_md`` (the</span>
-<a id="__codelineno-0-395" name="__codelineno-0-395"></a><span class="sd">    ``.skillprism_baseline/SKILL.md`` copy). Previously this ran</span>
+<a id="__codelineno-0-395" name="__codelineno-0-395"></a><span class="sd">    ``artifacts/&lt;skill&gt;/baseline/SKILL.md`` copy). Previously this ran</span>
 <a id="__codelineno-0-396" name="__codelineno-0-396"></a><span class="sd">    ``git add SKILL.md`` then ``git diff --cached`` to compare against HEAD —</span>
 <a id="__codelineno-0-397" name="__codelineno-0-397"></a><span class="sd">    a read-only diff that mutated the git index even in dry-run, and compared</span>
 <a id="__codelineno-0-398" name="__codelineno-0-398"></a><span class="sd">    against the wrong base (HEAD, not the recorded baseline). The difflib path</span>
@@ -4385,7 +4388,7 @@ is side-effect-free and semantically correct.</p>
 <span class="normal"><a href="#__codelineno-0-134">134</a></span>
 <span class="normal"><a href="#__codelineno-0-135">135</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="k">def</span><span class="w"> </span><span class="nf">snapshot_code_assets</span><span class="p">(</span><span class="n">skill_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <a id="__codelineno-0-120" name="__codelineno-0-120"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy editable code assets into the baseline snapshot directory.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-121" name="__codelineno-0-121"></a>    <span class="n">snapshot_dir</span> <span class="o">=</span> <span class="n">skill_path</span> <span class="o">/</span> <span class="n">BASELINE_DIR</span> <span class="o">/</span> <span class="s2">&quot;code_snapshot&quot;</span>
+<a id="__codelineno-0-121" name="__codelineno-0-121"></a>    <span class="n">snapshot_dir</span> <span class="o">=</span> <span class="n">baseline_dir</span><span class="p">(</span><span class="n">skill_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;code_snapshot&quot;</span>
 <a id="__codelineno-0-122" name="__codelineno-0-122"></a>    <span class="k">if</span> <span class="n">snapshot_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
 <a id="__codelineno-0-123" name="__codelineno-0-123"></a>        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">snapshot_dir</span><span class="p">)</span>
 <a id="__codelineno-0-124" name="__codelineno-0-124"></a>    <span class="n">snapshot_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -4451,7 +4454,7 @@ is side-effect-free and semantically correct.</p>
 <a id="__codelineno-0-140" name="__codelineno-0-140"></a>
 <a id="__codelineno-0-141" name="__codelineno-0-141"></a><span class="sd">    Returns True if a snapshot existed and was restored, False otherwise.</span>
 <a id="__codelineno-0-142" name="__codelineno-0-142"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-143" name="__codelineno-0-143"></a>    <span class="n">snapshot_dir</span> <span class="o">=</span> <span class="n">skill_path</span> <span class="o">/</span> <span class="n">BASELINE_DIR</span> <span class="o">/</span> <span class="s2">&quot;code_snapshot&quot;</span>
+<a id="__codelineno-0-143" name="__codelineno-0-143"></a>    <span class="n">snapshot_dir</span> <span class="o">=</span> <span class="n">baseline_dir</span><span class="p">(</span><span class="n">skill_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;code_snapshot&quot;</span>
 <a id="__codelineno-0-144" name="__codelineno-0-144"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">snapshot_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
 <a id="__codelineno-0-145" name="__codelineno-0-145"></a>        <span class="k">return</span> <span class="kc">False</span>
 <a id="__codelineno-0-146" name="__codelineno-0-146"></a>

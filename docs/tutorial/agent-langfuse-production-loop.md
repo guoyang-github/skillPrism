@@ -267,7 +267,7 @@ LANGFUSE_SECRET_KEY = os.environ["LANGFUSE_SECRET_KEY"]
 SKILLS_DIR = Path(os.environ.get("SKILLPRISM_SKILLS_DIR", "./skills"))
 # 注意：registry 现在是 per-skill 的，这里用 {skill} 作为占位符，由 run_test_skill 注入。
 BENCHMARK_REGISTRY_TEMPLATE = os.environ.get("SKILLPRISM_BENCHMARK_REGISTRY", "benchmarks/{skill}/registry.yaml")
-OUTPUT_DIR = Path(os.environ.get("SKILLPRISM_OUTPUT_DIR", "./ci-output/langfuse-sync"))
+OUTPUT_DIR = Path(os.environ.get("SKILLPRISM_OUTPUT_DIR", "./artifacts/langfuse-sync"))
 
 # 多久拉一次 trace
 LOOKBACK_HOURS = int(os.environ.get("SKILLPRISM_LOOKBACK_HOURS", "24"))
@@ -462,7 +462,7 @@ python scripts/langfuse_sync_eval.py
 
 ### 做法 A：人工 review（推荐起步）
 
-1. 看报告 `ci-output/langfuse-sync/report_xxx.json`；
+1. 看报告 `artifacts/langfuse-sync/report_xxx.json`；
 2. 对分数低的 Skill，先记录 baseline：
    ```bash
    improve-skill skills/<skill-name> --record-baseline
@@ -511,9 +511,9 @@ improve-skill skills/<skill-name> \
 
 ```bash
 evaluate-skill skills/<skill-name> \
-  --output ci-output/scorecard.md \
+  --output artifacts/<skill-name>/scorecard.md \
   --ratchet \
-  --ratchet-baseline ci-output/baseline_scorecard.md
+  --ratchet-baseline artifacts/<skill-name>/baseline_scorecard.md
 ```
 
 含义：
@@ -578,7 +578,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: langfuse-sync-report
-          path: ci-output/langfuse-sync/
+          path: artifacts/langfuse-sync/
 ```
 
 ### 方案 2：Webhook（实时性更好）
@@ -651,7 +651,7 @@ while True:
 
 1. **不要把用户原始数据写进公开仓库**
    - `scripts/langfuse_sync_eval.py` 落地到本地的文件，只在本地/CI 临时目录；
-   - 不要把 `ci-output/langfuse-sync/` 提交到 Git（已默认被 `.gitignore` 忽略）。
+   - 不要把 `artifacts/langfuse-sync/` 提交到 Git（`artifacts/` 已默认被 `.gitignore` 忽略）。
 
 2. **Langfuse 上的 trace 也可能含敏感信息**
    - 如果担心，可以在 Agent 端对 input/output 做脱敏；

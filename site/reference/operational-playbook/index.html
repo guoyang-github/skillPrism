@@ -3978,7 +3978,7 @@
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>--code<span class="w"> </span>sample_skill_code.py<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>--max-level<span class="w"> </span><span class="m">2</span>
 </code></pre></div>
-<p>每级通过后会自动把 baseline 保存到 <code>&lt;skill&gt;/.skillprism_baseline/gradual_baseline_level&lt;N&gt;.yaml</code>。</p>
+<p>每级通过后会自动把 baseline 保存到 <code>artifacts/&lt;skill&gt;/ci/gradual/.baselines/&lt;skill&gt;/gradual_baseline_level&lt;N&gt;.yaml</code>。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># 只跑 smoke suite</span>
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>test-skill<span class="w"> </span>--mode<span class="w"> </span>single<span class="w"> </span>--skill<span class="w"> </span>my-skill<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span>--registry<span class="w"> </span>benchmarks/my-skill/registry.yaml<span class="w"> </span><span class="se">\</span>
