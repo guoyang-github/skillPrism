@@ -2631,8 +2631,8 @@
 </tr>
 <tr>
 <td><code>--prompts-dir &lt;path&gt;</code></td>
-<td>test-prompts.json 读写目录（默认 skill 目录；与 <code>--output</code> 解耦）</td>
-<td>多 skill 项目隔离产物</td>
+<td>test-prompts.json 读写目录（默认 <code>artifacts/&lt;skill&gt;/</code>）</td>
+<td>覆盖默认落点</td>
 </tr>
 <tr>
 <td><code>--no-generate-prompts</code></td>
@@ -2656,7 +2656,7 @@
 <blockquote>
 <ul>
 <li><code>--all</code> 批量评估会<strong>自动跳过 <code>skill-prism</code> 元 skill</strong>（它是 Agent harness，不是被测 skill）。</li>
-<li>未传 <code>--prompts-verification</code> 时，引擎自动尝试 <code>{skill}/.skillprism_prompts_verification.json</code>。</li>
+<li>未传 <code>--prompts-verification</code> 时，引擎自动发现 <code>artifacts/&lt;skill&gt;/prompts_verification.json</code>（with/without 验证流程见 skill 的 <code>references/PROMPTS_VERIFICATION.md</code>）。</li>
 <li>生成物按 skill 隔离到 <code>artifacts/&lt;skill&gt;/</code>，跨 skill 汇总放 <code>reports/</code>。</li>
 </ul>
 </blockquote>

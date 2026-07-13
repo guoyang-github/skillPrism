@@ -5,7 +5,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from skillprism.evaluate_skill_rubric import DimensionResult, SkillReport, load_config
+from skillprism.evaluate_skill_rubric import (
+    DEFAULT_CONFIG,
+    DimensionResult,
+    SkillReport,
+    load_config,
+)
 from skillprism.optimize_skill import select_weakest_dimension
 
 
@@ -21,7 +26,7 @@ def _report(scores: dict[str, int]) -> SkillReport:
 
 
 def test_select_blocker_dimension_first() -> None:
-    config = load_config(Path("skill_rubric_types.yaml"))
+    config = load_config(DEFAULT_CONFIG)
     config["optimization"] = {
         "priority": {
             "blockers": ["D9"],
@@ -37,7 +42,7 @@ def test_select_blocker_dimension_first() -> None:
 
 
 def test_select_high_roi_when_no_blocker() -> None:
-    config = load_config(Path("skill_rubric_types.yaml"))
+    config = load_config(DEFAULT_CONFIG)
     config["optimization"] = {
         "priority": {
             "blockers": ["D9"],
@@ -53,7 +58,7 @@ def test_select_high_roi_when_no_blocker() -> None:
 
 
 def test_fallback_to_lowest_score() -> None:
-    config = load_config(Path("skill_rubric_types.yaml"))
+    config = load_config(DEFAULT_CONFIG)
     config["optimization"] = {
         "priority": {
             "blockers": ["D9"],

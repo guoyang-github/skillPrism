@@ -45,7 +45,7 @@
 | 层级 | 职责 | 是否调用 LLM | 代表实体 |
 |---|---|---|---|
 | **Agent 层** | 理解用户意图，翻译为命令；按需调用 LLM 生成验证结果 | ✅ 可以 | `skills/skill-prism/SKILL.md` |
-| **交换层** | 结构化文件，承载验证结果和历史，供引擎消费 | ❌ 不调用 | `.skillprism_history.jsonl`、`.skillprism_llm_judgments.json`、`.skillprism_prompts_verification.json` |
+| **交换层** | 结构化文件，承载验证结果和历史，供引擎消费 | ❌ 不调用 | `artifacts/<skill>/history.jsonl`、`artifacts/<skill>/llm_judgments.json`、`artifacts/<skill>/prompts_verification.json` |
 | **引擎层** | 确定性评分、benchmark、回归、报告生成、优化策略 | ❌ 不调用 | `evaluate-skill`、`test-skill`、`improve-skill`、`skill-pipeline`、`skill-ci` |
 
 ## 4. 统一 Agent 入口：`skill-prism`
@@ -70,7 +70,7 @@
 | "探索性重写" | `improve-skill <skill> --explore-rewrite --apply` |
 | "跑完整流水线" | `skill-pipeline --intent "run full quality pipeline"` |
 | "再深入看看可读性和准确性" | `evaluate-skill <skill> --llm-judge --llm-judge-count 3` |
-| "验证 test-prompts" | `evaluate-skill <skill> --prompts-verification .skillprism_prompts_verification.json` |
+| "验证 test-prompts" | `evaluate-skill <skill> --prompts-verification artifacts/<skill>/prompts_verification.json` |
 
 ## 5. 引擎核心能力
 
@@ -83,7 +83,7 @@
 - Runtime neutrality 红灯扫描
 - test-prompts.json 存在性检查；缺失时自动生成 3 个 prompts
 - 安全扫描
-- 记录基线到 `.skillprism_history.jsonl`
+- 记录基线到 `artifacts/<skill>/history.jsonl`
 
 可选启用：
 - `--llm-judge`：调用外部 LLM judge 命令，默认 2 个独立评委
@@ -98,7 +98,7 @@
 3. Agent 或外部 editor 编辑 SKILL.md（单轮单维度约束）
 4. `--judge`：对比 baseline，决定 keep / revert / human-decide
 5. `--apply`：应用决策
-6. `--history`：查看 `.skillprism_history.jsonl`
+6. `--history`：查看 `artifacts/<skill>/history.jsonl`
 
 异常处理：
 - 不在 git 仓库时自动 `git init`
@@ -114,7 +114,7 @@
 
 ## 6. 结构化交换文件
 
-### 6.1 `.skillprism_history.jsonl`
+### 6.1 `artifacts/<skill>/history.jsonl`
 
 每行一条 JSON，记录每次 evaluate / improve 尝试。
 
@@ -132,7 +132,7 @@
 }
 ```
 
-### 6.2 `.skillprism_llm_judgments.json`
+### 6.2 `artifacts/<skill>/llm_judgments.json`
 
 多评委 LLM judge 结果。
 
@@ -150,7 +150,7 @@
 }
 ```
 
-### 6.3 `.skillprism_prompts_verification.json`
+### 6.3 `artifacts/<skill>/prompts_verification.json`
 
 test-prompts 验证结果，包含 `eval_mode`（full_test / dry_run）和 dry_run 比例。
 
@@ -208,14 +208,16 @@ skills/
 
 <skill-path>/
 ├── SKILL.md
-├── test-prompts.json             # 自动生成或手工维护
-├── .skillprism_history.jsonl     # 优化历史
-├── .skillprism_llm_judgments.json          # 可选
-├── .skillprism_prompts_verification.json   # 可选
 └── .skillprism_baseline/         # baseline 与备份
     ├── SKILL.md
     ├── SKILL.md.bak.<timestamp>
     └── optimization_result.json
+
+artifacts/<skill>/                # 生成物（gitignored），skill 树保持只读
+├── test-prompts.json
+├── llm_judgments.json            # 可选
+├── prompts_verification.json     # 可选
+└── history.jsonl                 # 优化历史
 ```
 
 ## 9. 总结

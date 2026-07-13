@@ -2736,9 +2736,9 @@
 - 与 <code>skills/</code> 目录共存，不破坏 skillPrism 自身的目录约定</p>
 <p><strong>注意事项</strong>：
 - 文件必须放在 <code>.claude/skills/</code> 下且以 <code>.md</code> 结尾；Claude Code 才会自动识别。
-- <strong>只需要复制 <code>SKILL.md</code> 这一个文件</strong>。<code>skills/skill-prism/</code> 目录下的 <code>test-prompts.json</code>、<code>.skillprism_baseline/</code>、<code>.skillprism_history.jsonl</code> 等是 skillPrism 引擎运行后产生或读取的数据，不需要放到 <code>.claude/skills/</code> 里。
+- <strong>复制整个 <code>skill-prism/</code> 目录到 <code>.claude/skills/skill-prism/</code></strong>（<code>SKILL.md</code> + <code>references/</code>；references 是 LLM judge 与 prompts 验证的协议文档，SKILL.md 会引用）。引擎生成物（test-prompts.json、history.jsonl 等）默认写入项目根的 <code>artifacts/&lt;skill&gt;/</code>，不在 skill 树中。
 - 如果 skill 文件很大，会占用一部分上下文窗口。skill-prism SKILL.md 约 300 行，通常可接受。
-- 同样地，具体业务 Skill 也可以放到 <code>.claude/skills/</code>，例如 <code>.claude/skills/my-skill.md</code>；但业务 Skill 的工作目录仍建议保留在 <code>skills/my-skill/</code>，供 <code>evaluate-skill</code> / <code>improve-skill</code> 读写历史数据。</p>
+- 同样地，具体业务 Skill 也可以放到 <code>.claude/skills/</code>，例如 <code>.claude/skills/my-skill.md</code>；但业务 Skill 的工作目录仍建议保留在 <code>skills/my-skill/</code>，供 <code>evaluate-skill</code> 评估、<code>improve-skill</code> 读写 baseline（历史等生成物在项目根的 <code>artifacts/&lt;skill&gt;/</code>）。</p>
 <p><strong>两个目录的职责区分</strong>：</p>
 <table>
 <thead>

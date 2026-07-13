@@ -12,12 +12,12 @@ Usage:
 
     python scripts/generate_llm_judgments.py skills/my-skill \
         --dimensions D2 D5 \
-        --count 2 \
-        --output .skillprism_llm_judgments.json
+        --count 2
 
-Then run the engine with the pre-computed file:
+Output defaults to artifacts/<skill>/llm_judgments.json (override with --output).
+The engine auto-discovers that file; to consume it explicitly:
 
-    evaluate-skill skills/my-skill --llm-judgments .skillprism_llm_judgments.json
+    evaluate-skill skills/my-skill --llm-judgments artifacts/my-skill/llm_judgments.json
 
 Install dependencies:
     pip install openai
@@ -169,8 +169,8 @@ def main() -> int:
     )
     parser.add_argument(
         "--output",
-        default=".skillprism_llm_judgments.json",
-        help="Output JSON path (default: .skillprism_llm_judgments.json)",
+        default=None,
+        help="Output JSON path (default: artifacts/<skill>/llm_judgments.json)",
     )
     args = parser.parse_args()
 
@@ -211,7 +211,12 @@ def main() -> int:
             }
         )
 
-    output_path = Path(args.output)
+    output_path = (
+        Path(args.output)
+        if args.output
+        else Path("artifacts") / skill_path.name / "llm_judgments.json"
+    )
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         json.dumps({"judges": judges}, ensure_ascii=False, indent=2),
         encoding="utf-8",

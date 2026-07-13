@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Atomic file writes and advisory locking for optimizer state files.
 
-``.skillprism_baseline.json`` and ``.skillprism_history.jsonl`` were previously
+``.skillprism_baseline.json`` and ``history.jsonl`` were previously
 written with ``Path.write_text`` (truncate-then-write), so a crash mid-write
 left a truncated file that crashed every subsequent ``--judge`` / ``--auto-edit``
 run via ``JSONDecodeError``. Concurrent optimizers (CI + local dev) could also

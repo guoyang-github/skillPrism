@@ -5,7 +5,7 @@
 ## Agent 决策规则
 
 1. 若配置了 `SKILLPRISM_LLM_JUDGE_COMMAND` 或 `skill_rubric_types.yaml` 中 `llm_judge.command`，使用 `evaluate-skill --llm-judge`。
-2. 否则 Agent 自己生成 `.skillprism_llm_judgments.json`，再使用 `evaluate-skill --llm-judgments .skillprism_llm_judgments.json`。
+2. 否则 Agent 自己生成 `artifacts/<skill>/llm_judgments.json`；引擎自动发现该文件，也可显式 `evaluate-skill --llm-judgments artifacts/<skill>/llm_judgments.json`。
 
 ## Judgments 文件格式
 
@@ -44,9 +44,10 @@ export OPENAI_MODEL=moonshot-v1-8k
 python scripts/generate_llm_judgments.py skills/my-skill \
     --dimensions D2 D5 \
     --count 2 \
-    --aggregate median \
-    --output .skillprism_llm_judgments.json
+    --aggregate median
 ```
+
+默认输出 `artifacts/my-skill/llm_judgments.json`（`--output` 可覆盖），引擎自动发现该文件。
 
 脚本位置：`scripts/generate_llm_judgments.py`。
 

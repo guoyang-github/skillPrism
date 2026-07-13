@@ -37,4 +37,4 @@ Warning: multiple dimensions changed significantly ['D2', 'D3']; consider a narr
 
 ## 实验历史
 
-所有尝试（包括 error、revert）都会写入 `.skillprism_history.jsonl`，方便排查问题。
+所有尝试（包括 error、revert）都会写入 `artifacts/<skill>/history.jsonl`，方便排查问题。

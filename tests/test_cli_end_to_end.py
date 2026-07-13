@@ -4,8 +4,11 @@
 from __future__ import annotations
 
 import subprocess
+from pathlib import Path
 
 import pytest
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 @pytest.mark.parametrize(
@@ -24,8 +27,9 @@ def test_cli_help(cmd: list[str]) -> None:
     assert "usage:" in result.stdout.lower()
 
 
-def test_evaluate_skill_single() -> None:
+def test_evaluate_skill_single(monkeypatch: pytest.MonkeyPatch) -> None:
     """Run the rubric on the built-in skill-prism skill."""
+    monkeypatch.chdir(REPO_ROOT)  # CLI args below are repo-relative
     result = subprocess.run(
         [
             "evaluate-skill",

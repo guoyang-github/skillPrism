@@ -81,7 +81,7 @@
 | `--run-deps` | 检查依赖是否可安装 | CI / 可复现性 |
 | `--llm-judge` | 主观维度第二意见 | D2/D5 需要更细判断 |
 | `--llm-judge-count N` | 评委数量（默认 2） | 提高主观评分稳定性 |
-| `--prompts-dir <path>` | test-prompts.json 读写目录（默认 skill 目录；与 `--output` 解耦） | 多 skill 项目隔离产物 |
+| `--prompts-dir <path>` | test-prompts.json 读写目录（默认 `artifacts/<skill>/`） | 覆盖默认落点 |
 | `--no-generate-prompts` | 不自动生成 test-prompts.json | 只读评估 |
 | `--output-history <path>` | 写入全局趋势 JSONL | 追踪历史变化 |
 
@@ -95,7 +95,7 @@ evaluate-skill --all --skills-dir ./skills \
 ```
 
 > - `--all` 批量评估会**自动跳过 `skill-prism` 元 skill**（它是 Agent harness，不是被测 skill）。
-> - 未传 `--prompts-verification` 时，引擎自动尝试 `{skill}/.skillprism_prompts_verification.json`。
+> - 未传 `--prompts-verification` 时，引擎自动发现 `artifacts/<skill>/prompts_verification.json`（with/without 验证流程见 skill 的 `references/PROMPTS_VERIFICATION.md`）。
 > - 生成物按 skill 隔离到 `artifacts/<skill>/`，跨 skill 汇总放 `reports/`。
 
 ---

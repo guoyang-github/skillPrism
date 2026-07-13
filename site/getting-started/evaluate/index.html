@@ -2204,7 +2204,7 @@
 <li>test-prompts.json 存在性检查；缺失时自动生成 3 个 prompts</li>
 <li><strong>runtime neutrality 红灯扫描</strong></li>
 <li>安全扫描</li>
-<li>将基线写入 <code>.skillprism_history.jsonl</code></li>
+<li>将基线写入 <code>artifacts/&lt;skill&gt;/history.jsonl</code></li>
 </ul>
 <h2 id="_2">完整评估（可选增强）<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <p>默认评估对客观维度已经足够。如果你或 Agent 希望主观维度（D2 可读性、D5 领域准确性）有第二意见，可以启用多评委打分：</p>
@@ -2218,7 +2218,7 @@
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--llm-judge-aggregate<span class="w"> </span>median
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># 验证 test-prompts</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>evaluate-skill<span class="w"> </span>skills/my-skill<span class="w"> </span>--prompts-verification<span class="w"> </span>.skillprism_prompts_verification.json
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>evaluate-skill<span class="w"> </span>skills/my-skill<span class="w"> </span>--prompts-verification<span class="w"> </span>artifacts/my-skill/prompts_verification.json
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># 同时启用 smoke 和依赖检查</span>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>evaluate-skill<span class="w"> </span>skills/my-skill<span class="w"> </span>--run-smoke<span class="w"> </span>--run-deps
@@ -2232,11 +2232,11 @@
 <h2 id="_4">评估消费的结构化文件<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>当 Agent 完成主观维度复核或 prompts 验证后，会生成以下文件：</p>
 <ul>
-<li><code>.skillprism_llm_judgments.json</code>：多评委评分结果</li>
-<li><code>.skillprism_prompts_verification.json</code>：prompts 验证结果</li>
-<li><code>.skillprism_history.jsonl</code>：优化历史</li>
+<li><code>artifacts/&lt;skill&gt;/llm_judgments.json</code>：多评委评分结果</li>
+<li><code>artifacts/&lt;skill&gt;/prompts_verification.json</code>：prompts 验证结果</li>
+<li><code>artifacts/&lt;skill&gt;/history.jsonl</code>：优化历史</li>
 </ul>
-<p>引擎通过 <code>--llm-judgments</code> 和 <code>--prompts-verification</code> 参数消费它们。</p>
+<p>引擎通过 <code>--llm-judgments</code> 和 <code>--prompts-verification</code> 参数消费它们；不传参时自动发现 <code>artifacts/&lt;skill&gt;/</code> 下的对应文件。</p>
 
 
 

@@ -105,12 +105,12 @@ project/
 └── ci-output/                    # CI artifacts (gitignored)
 ```
 
-Generated measurement files stay **beside the report**, not inside the skill
-source tree:
+Generated measurement files stay under `artifacts/<skill>/`, not inside the
+skill source tree:
 
-- `.skillprism_llm_judgments.json`
-- `.skillprism_prompts_verification.json`
-- `.skillprism_history.jsonl`
+- `artifacts/<skill>/llm_judgments.json`
+- `artifacts/<skill>/prompts_verification.json`
+- `artifacts/<skill>/history.jsonl`
 
 ---
 
@@ -122,14 +122,13 @@ When the user asks for an LLM judge (e.g. "用 LLM judge 再看看"):
    ```bash
    evaluate-skill skills/<skill> --llm-judge --detailed
    ```
-2. Otherwise, the Agent generates `.skillprism_llm_judgments.json` and the
-   engine consumes it:
+2. Otherwise, the Agent generates `artifacts/<skill>/llm_judgments.json` and the
+   engine auto-discovers it (or pass it explicitly):
    ```bash
-   evaluate-skill skills/<skill> --llm-judgments .skillprism_llm_judgments.json --detailed
+   evaluate-skill skills/<skill> --llm-judgments artifacts/<skill>/llm_judgments.json --detailed
    ```
 
-The same rule should apply to `improve-skill` once `--llm-judgments` is
-implemented there.
+The same rule applies to `improve-skill --llm-judgments`.
 
 ---
 

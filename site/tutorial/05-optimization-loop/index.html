@@ -2468,7 +2468,7 @@
 <h2 id="54-baseline">5.4 记录 Baseline<a class="headerlink" href="#54-baseline" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>improve-skill<span class="w"> </span>skills/my-first-analysis<span class="w"> </span>--record-baseline
 </code></pre></div>
-<p>这会保存当前 <code>SKILL.md</code> 的 Rubric 分数、benchmark 结果到 <code>.skillprism_baseline/</code>，并写入 <code>.skillprism_history.jsonl</code>。</p>
+<p>这会保存当前 <code>SKILL.md</code> 的 Rubric 分数、benchmark 结果到 <code>.skillprism_baseline/</code>，并写入 <code>artifacts/&lt;skill&gt;/history.jsonl</code>。</p>
 <h2 id="55">5.5 识别短板<a class="headerlink" href="#55" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>improve-skill<span class="w"> </span>skills/my-first-analysis<span class="w"> </span>--suggest
 </code></pre></div>
@@ -2636,7 +2636,7 @@
 <li><code>--apply</code> 真正执行 keep/revert。</li>
 <li><code>--auto-edit</code> 让 editor（通常是 LLM）自动改写。</li>
 <li><code>--explore-rewrite</code> 用于 hill-climbing 触顶时跳出局部最优。</li>
-<li><code>--history</code> 查看 <code>.skillprism_history.jsonl</code>。</li>
+<li><code>--history</code> 查看 <code>artifacts/&lt;skill&gt;/history.jsonl</code>。</li>
 <li><strong>引擎不调用 LLM；LLM 只出现在 <code>--auto-edit</code> 和 Agent 生成的环节中。</strong></li>
 </ul>
 <h2 id="513">5.13 练习<a class="headerlink" href="#513" title="Permanent link">&para;</a></h2>

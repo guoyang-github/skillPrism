@@ -12,7 +12,7 @@ from skillprism.experiment_history import (
 
 
 def test_history_path(tmp_path: Path):
-    assert history_path(tmp_path) == tmp_path / ".skillprism_history.jsonl"
+    assert history_path(tmp_path) == Path("artifacts") / tmp_path.name / "history.jsonl"
 
 
 def test_record_baseline(tmp_path: Path):
@@ -31,7 +31,9 @@ def test_record_attempt(tmp_path: Path):
 
 
 def test_load_history_ignores_bad_lines(tmp_path: Path):
-    history_path(tmp_path).write_text("not json\n", encoding="utf-8")
+    path = history_path(tmp_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("not json\n", encoding="utf-8")
     records = load_history(tmp_path)
     assert records == []
 

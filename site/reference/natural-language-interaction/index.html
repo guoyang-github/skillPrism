@@ -2508,12 +2508,12 @@ fully deterministic and LLM-free.</p>
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   └── SKILL_SCORECARD.md        # Auto-generated report
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>└── ci-output/                    # CI artifacts (gitignored)
 </code></pre></div>
-<p>Generated measurement files stay <strong>beside the report</strong>, not inside the skill
-source tree:</p>
+<p>Generated measurement files stay under <code>artifacts/&lt;skill&gt;/</code>, not inside the
+skill source tree:</p>
 <ul>
-<li><code>.skillprism_llm_judgments.json</code></li>
-<li><code>.skillprism_prompts_verification.json</code></li>
-<li><code>.skillprism_history.jsonl</code></li>
+<li><code>artifacts/&lt;skill&gt;/llm_judgments.json</code></li>
+<li><code>artifacts/&lt;skill&gt;/prompts_verification.json</code></li>
+<li><code>artifacts/&lt;skill&gt;/history.jsonl</code></li>
 </ul>
 <hr />
 <h2 id="7-llm-judge-decision-rule">7. LLM Judge Decision Rule<a class="headerlink" href="#7-llm-judge-decision-rule" title="Permanent link">&para;</a></h2>
@@ -2522,13 +2522,12 @@ source tree:</p>
 <li>If <code>SKILLPRISM_LLM_JUDGE_COMMAND</code> or <code>llm_judge.command</code> in config is set:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>evaluate-skill<span class="w"> </span>skills/&lt;skill&gt;<span class="w"> </span>--llm-judge<span class="w"> </span>--detailed
 </code></pre></div></li>
-<li>Otherwise, the Agent generates <code>.skillprism_llm_judgments.json</code> and the
-   engine consumes it:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>evaluate-skill<span class="w"> </span>skills/&lt;skill&gt;<span class="w"> </span>--llm-judgments<span class="w"> </span>.skillprism_llm_judgments.json<span class="w"> </span>--detailed
+<li>Otherwise, the Agent generates <code>artifacts/&lt;skill&gt;/llm_judgments.json</code> and the
+   engine auto-discovers it (or pass it explicitly):
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>evaluate-skill<span class="w"> </span>skills/&lt;skill&gt;<span class="w"> </span>--llm-judgments<span class="w"> </span>artifacts/&lt;skill&gt;/llm_judgments.json<span class="w"> </span>--detailed
 </code></pre></div></li>
 </ol>
-<p>The same rule should apply to <code>improve-skill</code> once <code>--llm-judgments</code> is
-implemented there.</p>
+<p>The same rule applies to <code>improve-skill --llm-judgments</code>.</p>
 <hr />
 <h2 id="8-standard-conversation-flows">8. Standard Conversation Flows<a class="headerlink" href="#8-standard-conversation-flows" title="Permanent link">&para;</a></h2>
 <h3 id="81-evaluate">8.1 Evaluate<a class="headerlink" href="#81-evaluate" title="Permanent link">&para;</a></h3>

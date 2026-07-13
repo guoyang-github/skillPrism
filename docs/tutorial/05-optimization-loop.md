@@ -65,7 +65,7 @@ Agent：
 improve-skill skills/my-first-analysis --record-baseline
 ```
 
-这会保存当前 `SKILL.md` 的 Rubric 分数、benchmark 结果到 `.skillprism_baseline/`，并写入 `.skillprism_history.jsonl`。
+这会保存当前 `SKILL.md` 的 Rubric 分数、benchmark 结果到 `.skillprism_baseline/`，并写入 `artifacts/<skill>/history.jsonl`。
 
 ## 5.5 识别短板
 
@@ -224,7 +224,7 @@ improve-skill skills/my-first-analysis --history
 - `--apply` 真正执行 keep/revert。
 - `--auto-edit` 让 editor（通常是 LLM）自动改写。
 - `--explore-rewrite` 用于 hill-climbing 触顶时跳出局部最优。
-- `--history` 查看 `.skillprism_history.jsonl`。
+- `--history` 查看 `artifacts/<skill>/history.jsonl`。
 - **引擎不调用 LLM；LLM 只出现在 `--auto-edit` 和 Agent 生成的环节中。**
 
 ## 5.13 练习

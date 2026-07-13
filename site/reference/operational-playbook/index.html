@@ -3873,7 +3873,7 @@
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">实验历史</p>
-<p>每次 <code>evaluate-skill</code> 都会自动写入 <code>&lt;skill&gt;/.skillprism_history.jsonl</code>，不需要手动指定路径。<code>--output-history</code> 是另一个用于趋势跟踪的全局 JSONL 文件。</p>
+<p>每次 <code>evaluate-skill</code> 都会自动写入 <code>artifacts/&lt;skill&gt;/history.jsonl</code>，不需要手动指定路径。<code>--output-history</code> 是另一个用于趋势跟踪的全局 JSONL 文件。</p>
 </div>
 <h3 id="33">3.3 结果解读<a class="headerlink" href="#33" title="Permanent link">&para;</a></h3>
 <table>
@@ -4094,7 +4094,7 @@
 <h4 id="9">第 9 步：查看优化历史<a class="headerlink" href="#9" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>improve-skill<span class="w"> </span>skills/my-skill<span class="w"> </span>--history
 </code></pre></div>
-<p>会输出 <code>.skillprism_history.jsonl</code> 中的尝试记录。</p>
+<p>会输出 <code>artifacts/&lt;skill&gt;/history.jsonl</code> 中的尝试记录。</p>
 <h3 id="52-editor">5.2 一键自动优化（需配置 editor）<a class="headerlink" href="#52-editor" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SKILLPRISM_EDITOR_COMMAND</span><span class="o">=</span><span class="s2">&quot;python examples/editor_wrappers/openai_editor.py&quot;</span>
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>

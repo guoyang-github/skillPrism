@@ -215,7 +215,7 @@ evaluate-skill skills/my-skill --no-generate-prompts
 ```
 
 !!! note "实验历史"
-    每次 `evaluate-skill` 都会自动写入 `<skill>/.skillprism_history.jsonl`，不需要手动指定路径。`--output-history` 是另一个用于趋势跟踪的全局 JSONL 文件。
+    每次 `evaluate-skill` 都会自动写入 `artifacts/<skill>/history.jsonl`，不需要手动指定路径。`--output-history` 是另一个用于趋势跟踪的全局 JSONL 文件。
 
 ### 3.3 结果解读
 
@@ -477,7 +477,7 @@ improve-skill skills/my-skill --explore-rewrite --apply
 improve-skill skills/my-skill --history
 ```
 
-会输出 `.skillprism_history.jsonl` 中的尝试记录。
+会输出 `artifacts/<skill>/history.jsonl` 中的尝试记录。
 
 ### 5.2 一键自动优化（需配置 editor）
 

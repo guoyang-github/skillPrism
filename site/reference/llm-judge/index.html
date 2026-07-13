@@ -2269,20 +2269,20 @@
 <ol>
 <li>检查环境是否配置了 <code>SKILLPRISM_LLM_JUDGE_COMMAND</code> 或 <code>skill_rubric_types.yaml</code> 中 <code>llm_judge.command</code>。</li>
 <li><strong>如果已配置</strong>：直接调用 <code>evaluate-skill --llm-judge</code>。</li>
-<li><strong>如果未配置</strong>：Agent 自己调用 LLM 生成 <code>.skillprism_llm_judgments.json</code>，然后调用 <code>evaluate-skill --llm-judgments &lt;file&gt;</code>。</li>
+<li><strong>如果未配置</strong>：Agent 自己调用 LLM 生成 <code>artifacts/&lt;skill&gt;/llm_judgments.json</code>（引擎自动发现，也可显式 <code>--llm-judgments &lt;file&gt;</code>）。</li>
 </ol>
 <p>第二种方式不需要用户配置任何外部命令，是 Agent 自包含的 fallback。</p>
 <h2 id="_2">使用方式<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <h3 id="agent-judgments">方式一：Agent 生成 judgments 文件（推荐）<a class="headerlink" href="#agent-judgments" title="Permanent link">&para;</a></h3>
-<p>Agent 直接调用 LLM，生成 <code>.skillprism_llm_judgments.json</code>，然后让引擎消费。此方式不需要配置 <code>SKILLPRISM_LLM_JUDGE_COMMAND</code>。</p>
+<p>Agent 直接调用 LLM，生成 <code>artifacts/&lt;skill&gt;/llm_judgments.json</code>，然后让引擎消费。此方式不需要配置 <code>SKILLPRISM_LLM_JUDGE_COMMAND</code>。</p>
 <p><strong>Agent 工作流</strong>：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. 读取 skills/my-skill/SKILL.md
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>2. 为 D2 / D5 构造 judge prompt
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>3. 对每个维度独立调用 2 次 LLM（不通过引擎）
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>4. 解析每个返回的 {&quot;score&quot;: int, &quot;reason&quot;: str}
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>5. 按 median/mean/min/max 聚合
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>6. 写入 .skillprism_llm_judgments.json
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>7. 调用 evaluate-skill --llm-judgments .skillprism_llm_judgments.json
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>6. 写入 artifacts/&lt;skill&gt;/llm_judgments.json
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>7. 调用 evaluate-skill（引擎自动发现该文件）
 </code></pre></div>
 <p><strong>文件格式</strong>：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
@@ -2298,7 +2298,7 @@
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">}</span>
 </code></pre></div>
 <p><strong>引擎消费</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>evaluate-skill<span class="w"> </span>skills/my-skill<span class="w"> </span>--llm-judgments<span class="w"> </span>.skillprism_llm_judgments.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>evaluate-skill<span class="w"> </span>skills/my-skill<span class="w"> </span>--llm-judgments<span class="w"> </span>artifacts/my-skill/llm_judgments.json
 </code></pre></div>
 <p><strong>辅助脚本</strong>：</p>
 <p>仓库提供了 <code>scripts/generate_llm_judgments.py</code>，把上述流程自动化：</p>
@@ -2309,9 +2309,9 @@
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>python<span class="w"> </span>scripts/generate_llm_judgments.py<span class="w"> </span>skills/my-skill<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>--dimensions<span class="w"> </span>D2<span class="w"> </span>D5<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span>--count<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>--aggregate<span class="w"> </span>median<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>--output<span class="w"> </span>.skillprism_llm_judgments.json
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>--aggregate<span class="w"> </span>median
 </code></pre></div>
+<p>默认输出 <code>artifacts/my-skill/llm_judgments.json</code>（<code>--output</code> 可覆盖），引擎自动发现该文件。</p>
 <h3 id="judge">方式二：引擎直接调用外部 judge<a class="headerlink" href="#judge" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SKILLPRISM_LLM_JUDGE_COMMAND</span><span class="o">=</span><span class="s2">&quot;python examples/editor_wrappers/openai_compatible_judge.py&quot;</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>evaluate-skill<span class="w"> </span>skills/my-skill<span class="w"> </span>--llm-judge<span class="w"> </span>--llm-judge-count<span class="w"> </span><span class="m">3</span>

@@ -1389,10 +1389,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#61-skillprism_historyjsonl" class="md-nav__link">
+  <a href="#61-artifactsskillhistoryjsonl" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.1 .skillprism_history.jsonl
+        6.1 artifacts/&lt;skill&gt;/history.jsonl
       
     </span>
   </a>
@@ -1400,10 +1400,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#62-skillprism_llm_judgmentsjson" class="md-nav__link">
+  <a href="#62-artifactsskillllm_judgmentsjson" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.2 .skillprism_llm_judgments.json
+        6.2 artifacts/&lt;skill&gt;/llm_judgments.json
       
     </span>
   </a>
@@ -1411,10 +1411,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#63-skillprism_prompts_verificationjson" class="md-nav__link">
+  <a href="#63-artifactsskillprompts_verificationjson" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.3 .skillprism_prompts_verification.json
+        6.3 artifacts/&lt;skill&gt;/prompts_verification.json
       
     </span>
   </a>
@@ -2362,10 +2362,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#61-skillprism_historyjsonl" class="md-nav__link">
+  <a href="#61-artifactsskillhistoryjsonl" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.1 .skillprism_history.jsonl
+        6.1 artifacts/&lt;skill&gt;/history.jsonl
       
     </span>
   </a>
@@ -2373,10 +2373,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#62-skillprism_llm_judgmentsjson" class="md-nav__link">
+  <a href="#62-artifactsskillllm_judgmentsjson" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.2 .skillprism_llm_judgments.json
+        6.2 artifacts/&lt;skill&gt;/llm_judgments.json
       
     </span>
   </a>
@@ -2384,10 +2384,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#63-skillprism_prompts_verificationjson" class="md-nav__link">
+  <a href="#63-artifactsskillprompts_verificationjson" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.3 .skillprism_prompts_verification.json
+        6.3 artifacts/&lt;skill&gt;/prompts_verification.json
       
     </span>
   </a>
@@ -2513,7 +2513,7 @@
 <td><strong>交换层</strong></td>
 <td>结构化文件，承载验证结果和历史，供引擎消费</td>
 <td>❌ 不调用</td>
-<td><code>.skillprism_history.jsonl</code>、<code>.skillprism_llm_judgments.json</code>、<code>.skillprism_prompts_verification.json</code></td>
+<td><code>artifacts/&lt;skill&gt;/history.jsonl</code>、<code>artifacts/&lt;skill&gt;/llm_judgments.json</code>、<code>artifacts/&lt;skill&gt;/prompts_verification.json</code></td>
 </tr>
 <tr>
 <td><strong>引擎层</strong></td>
@@ -2576,7 +2576,7 @@
 </tr>
 <tr>
 <td>"验证 test-prompts"</td>
-<td><code>evaluate-skill &lt;skill&gt; --prompts-verification .skillprism_prompts_verification.json</code></td>
+<td><code>evaluate-skill &lt;skill&gt; --prompts-verification artifacts/&lt;skill&gt;/prompts_verification.json</code></td>
 </tr>
 </tbody>
 </table>
@@ -2589,7 +2589,7 @@
 - Runtime neutrality 红灯扫描
 - test-prompts.json 存在性检查；缺失时自动生成 3 个 prompts
 - 安全扫描
-- 记录基线到 <code>.skillprism_history.jsonl</code></p>
+- 记录基线到 <code>artifacts/&lt;skill&gt;/history.jsonl</code></p>
 <p>可选启用：
 - <code>--llm-judge</code>：调用外部 LLM judge 命令，默认 2 个独立评委
 - <code>--prompts-verification</code>：消费 Agent 生成的 prompts 验证结果
@@ -2601,7 +2601,7 @@
 3. Agent 或外部 editor 编辑 SKILL.md（单轮单维度约束）
 4. <code>--judge</code>：对比 baseline，决定 keep / revert / human-decide
 5. <code>--apply</code>：应用决策
-6. <code>--history</code>：查看 <code>.skillprism_history.jsonl</code></p>
+6. <code>--history</code>：查看 <code>artifacts/&lt;skill&gt;/history.jsonl</code></p>
 <p>异常处理：
 - 不在 git 仓库时自动 <code>git init</code>
 - <code>git revert</code> 失败时尝试 stash fallback
@@ -2614,7 +2614,7 @@
 <li><code>--mode quick</code>：level 0 + level 1 快速 gate</li>
 </ul>
 <h2 id="6">6. 结构化交换文件<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
-<h3 id="61-skillprism_historyjsonl">6.1 <code>.skillprism_history.jsonl</code><a class="headerlink" href="#61-skillprism_historyjsonl" title="Permanent link">&para;</a></h3>
+<h3 id="61-artifactsskillhistoryjsonl">6.1 <code>artifacts/&lt;skill&gt;/history.jsonl</code><a class="headerlink" href="#61-artifactsskillhistoryjsonl" title="Permanent link">&para;</a></h3>
 <p>每行一条 JSON，记录每次 evaluate / improve 尝试。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-06-22T12:00:00Z&quot;</span><span class="p">,</span>
@@ -2628,7 +2628,7 @@
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="nt">&quot;eval_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;static&quot;</span>
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">}</span>
 </code></pre></div>
-<h3 id="62-skillprism_llm_judgmentsjson">6.2 <code>.skillprism_llm_judgments.json</code><a class="headerlink" href="#62-skillprism_llm_judgmentsjson" title="Permanent link">&para;</a></h3>
+<h3 id="62-artifactsskillllm_judgmentsjson">6.2 <code>artifacts/&lt;skill&gt;/llm_judgments.json</code><a class="headerlink" href="#62-artifactsskillllm_judgmentsjson" title="Permanent link">&para;</a></h3>
 <p>多评委 LLM judge 结果。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;skill&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;skills/my-skill&quot;</span><span class="p">,</span>
@@ -2642,7 +2642,7 @@
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">}</span>
 </code></pre></div>
-<h3 id="63-skillprism_prompts_verificationjson">6.3 <code>.skillprism_prompts_verification.json</code><a class="headerlink" href="#63-skillprism_prompts_verificationjson" title="Permanent link">&para;</a></h3>
+<h3 id="63-artifactsskillprompts_verificationjson">6.3 <code>artifacts/&lt;skill&gt;/prompts_verification.json</code><a class="headerlink" href="#63-artifactsskillprompts_verificationjson" title="Permanent link">&para;</a></h3>
 <p>test-prompts 验证结果，包含 <code>eval_mode</code>（full_test / dry_run）和 dry_run 比例。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;skill&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;skills/my-skill&quot;</span><span class="p">,</span>
@@ -2738,14 +2738,16 @@
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>&lt;skill-path&gt;/
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>├── SKILL.md
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>├── test-prompts.json             # 自动生成或手工维护
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>├── .skillprism_history.jsonl     # 优化历史
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>├── .skillprism_llm_judgments.json          # 可选
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>├── .skillprism_prompts_verification.json   # 可选
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>└── .skillprism_baseline/         # baseline 与备份
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    ├── SKILL.md
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    ├── SKILL.md.bak.&lt;timestamp&gt;
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    └── optimization_result.json
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>└── .skillprism_baseline/         # baseline 与备份
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    ├── SKILL.md
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    ├── SKILL.md.bak.&lt;timestamp&gt;
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    └── optimization_result.json
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>artifacts/&lt;skill&gt;/                # 生成物（gitignored），skill 树保持只读
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>├── test-prompts.json
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>├── llm_judgments.json            # 可选
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>├── prompts_verification.json     # 可选
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>└── history.jsonl                 # 优化历史
 </code></pre></div>
 <h2 id="9">9. 总结<a class="headerlink" href="#9" title="Permanent link">&para;</a></h2>
 <blockquote>

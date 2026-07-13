@@ -4,7 +4,7 @@
 This module defines the structured exchange format for prompt verification.
 The engine itself does not execute prompts; the Agent (or an external script)
 runs each prompt with and without the skill, then writes the results to
-``{skill_path}/.skillprism_prompts_verification.json``. The engine consumes that
+``artifacts/<skill>/prompts_verification.json``. The engine consumes that
 file during evaluation.
 """
 

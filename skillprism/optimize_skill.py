@@ -1264,7 +1264,8 @@ def main() -> int:
     )
     parser.add_argument(
         "--llm-judgments",
-        help="Path to pre-computed .skillprism_llm_judgments.json (Agent-generated)",
+        help="Path to pre-computed llm_judgments.json (Agent-generated; "
+        "default: artifacts/<skill>/llm_judgments.json)",
     )
     parser.add_argument("--auto", action="store_true", help="Deprecated; use --apply instead")
     parser.add_argument(

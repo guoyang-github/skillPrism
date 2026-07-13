@@ -6,7 +6,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from skillprism.evaluate_skill_rubric import (
+    DEFAULT_CONFIG,
     DimensionResult,
     SkillReport,
     load_config,
@@ -18,7 +21,7 @@ from skillprism.optimize_skill import (
 
 
 def test_judge_result_to_dict(tmp_path: Path) -> None:
-    config = load_config(Path("skill_rubric_types.yaml"))
+    config = load_config(DEFAULT_CONFIG)
     report = SkillReport(
         name="test-skill",
         path=tmp_path,
@@ -53,9 +56,11 @@ def test_judge_result_to_dict(tmp_path: Path) -> None:
     assert data["guard_violations"] == []
 
 
-def test_optimize_skill_cli_writes_json(tmp_path: Path) -> None:
+def test_optimize_skill_cli_writes_json(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """End-to-end test that --output-json produces valid JSON."""
     import subprocess
+
+    monkeypatch.chdir(Path(__file__).resolve().parent.parent)  # --config is repo-relative
 
     skill_dir = tmp_path / "test-skill"
     skill_dir.mkdir()

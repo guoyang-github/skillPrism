@@ -50,8 +50,31 @@ def _extract_frontmatter(skill_path: Path) -> Dict[str, Any]:
         return {}
 
 
+def artifacts_dir(skill_path: Path) -> Path:
+    """Default directory for generated artifacts: ``artifacts/<skill>/``.
+
+    Relative to the current working directory (the project root), so each
+    skill's generated files stay isolated and the skill source tree remains
+    read-only.
+    """
+    return Path("artifacts") / skill_path.name
+
+
+def default_prompts_dir(skill_path: Path) -> Path:
+    """Default directory for prompt artifacts: ``artifacts/<skill>/``.
+
+    Pass the skill directory as ``--prompts-dir`` to opt into storing prompts
+    inside the skill tree.
+    """
+    return artifacts_dir(skill_path)
+
+
 def generate_test_prompts(skill_path: Path) -> List[Dict[str, Any]]:
-    """Generate 3 representative test prompts from SKILL.md content.
+    """Generate 3 template test prompts from SKILL.md content.
+
+    Fallback only: these are generic placeholders ("Use the X skill to ...")
+    without concrete inputs or verifiable expected outputs. Prefer
+    agent-authored prompts created per ``references/PROMPTS_VERIFICATION.md``.
 
     Uses the skill name, description, and first workflow section to create:
     1. A happy-path prompt
@@ -146,5 +169,8 @@ def format_test_prompts_report(skill_path: Path, prompts_dir: Path | None = None
     """Return a human-readable summary of test prompts for a skill."""
     count = count_test_prompts(skill_path, prompts_dir=prompts_dir)
     if count == 0:
-        return "Test prompts: missing (suggest creating test-prompts.json)"
+        return (
+            "Test prompts: missing — create test-prompts.json per "
+            "references/PROMPTS_VERIFICATION.md"
+        )
     return f"Test prompts: {count} prompt(s) ready for effect verification"

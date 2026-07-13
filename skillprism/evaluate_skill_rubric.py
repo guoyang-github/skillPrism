@@ -73,7 +73,11 @@ from .runtime_neutrality import check_runtime_neutrality, format_runtime_neutral
 from .security_evaluator import evaluate_d9_security, format_findings
 from .skill_lens_checks import evaluate_skill_lens, format_skill_lens_report
 from .smoke_test_runner import format_smoke_report, run_smoke_tests
-from .test_prompts import ensure_test_prompts, format_test_prompts_report
+from .test_prompts import (
+    default_prompts_dir,
+    ensure_test_prompts,
+    format_test_prompts_report,
+)
 from .utils import _glob_skill, _log, _read_frontmatter
 from .utils import read_skill_md as _read_skill_md
 
@@ -420,7 +424,13 @@ def evaluate_skill(
     except Exception as e:
         report.errors.append(f"security findings failed: {e}")
 
-    # Apply pre-computed multi-judge LLM judgments if provided.
+    # Apply pre-computed multi-judge LLM judgments if provided; otherwise
+    # auto-discover ``artifacts/<skill>/llm_judgments.json`` (relative to the
+    # current working directory).
+    if llm_judgments is None:
+        auto_judgments_path = default_prompts_dir(skill_path) / "llm_judgments.json"
+        if auto_judgments_path.exists():
+            llm_judgments = _load_llm_judgments(str(auto_judgments_path))
     if llm_judgments:
         report.llm_judgments = llm_judgments
         for dim in report.dimensions:
@@ -436,10 +446,11 @@ def evaluate_skill(
                 dim.score = blended
 
     # Apply pre-computed prompts verification if provided; otherwise auto-discover
-    # the per-skill default ``{skill_path}/.skillprism_prompts_verification.json``.
+    # the per-skill default ``artifacts/<skill>/prompts_verification.json``
+    # (relative to the current working directory).
     if prompts_verification is None:
         prompts_verification = load_prompts_verification(
-            skill_path / ".skillprism_prompts_verification.json"
+            default_prompts_dir(skill_path) / "prompts_verification.json"
         )
     if prompts_verification:
         report.prompts_verification = prompts_verification
@@ -516,11 +527,20 @@ def evaluate_skill(
         report.errors.append(f"Runtime neutrality check failed: {e}")
 
     # Test prompts summary (always generated, lightweight). ``prompts_dir`` decouples
-    # where test-prompts.json lives from the --output report path.
+    # where test-prompts.json lives from the --output report path; it defaults to
+    # ``artifacts/<skill>/`` so the skill source tree stays read-only.
     try:
+        prompts_dir = prompts_dir or default_prompts_dir(skill_path)
+        prompt_file = prompts_dir / "test-prompts.json"
+        existed = prompt_file.exists()
         if auto_generate_prompts:
             ensure_test_prompts(skill_path, auto_generate=True, output_dir=prompts_dir)
         report.test_prompts_report = format_test_prompts_report(skill_path, prompts_dir=prompts_dir)
+        if auto_generate_prompts and not existed and prompt_file.exists():
+            report.test_prompts_report += (
+                "\n⚠️ Auto-generated template prompts are placeholders only. "
+                "Have the agent author real prompts per references/PROMPTS_VERIFICATION.md."
+            )
     except Exception as e:
         report.errors.append(f"Test prompts check failed: {e}")
 
@@ -616,11 +636,13 @@ def _build_evaluate_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--llm-judgments",
-        help="Path to pre-computed .skillprism_llm_judgments.json",
+        help="Path to pre-computed llm_judgments.json "
+        "(default: artifacts/<skill>/llm_judgments.json)",
     )
     parser.add_argument(
         "--prompts-verification",
-        help="Path to pre-computed .skillprism_prompts_verification.json",
+        help="Path to prompts verification JSON "
+        "(default: artifacts/<skill>/prompts_verification.json)",
     )
     parser.add_argument(
         "--no-generate-prompts",
@@ -629,8 +651,9 @@ def _build_evaluate_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--prompts-dir",
-        help="Directory to read/write test-prompts.json (default: the skill directory). "
-        "Decouples prompt location from --output.",
+        help="Directory to read/write test-prompts.json "
+        "(default: artifacts/<skill>/ under the project root). "
+        "Pass the skill directory explicitly to store prompts in the skill tree.",
     )
     return parser
 
@@ -702,6 +725,11 @@ def _run_evaluations(
     reports: List[SkillReport] = []
     for sp in skill_paths:
         _log(f"Evaluating {sp.name}...", args.verbose)
+        # With --all, keep each skill's prompts in its own subdirectory so
+        # multiple skills do not overwrite each other's test-prompts.json.
+        per_skill_dir = (
+            prompts_dir / sp.name if prompts_dir and len(skill_paths) > 1 else prompts_dir
+        )
         report = evaluate_skill(
             sp,
             config,
@@ -714,7 +742,7 @@ def _run_evaluations(
             llm_judgments=llm_judgments,
             prompts_verification=prompts_verification,
             auto_generate_prompts=not args.no_generate_prompts,
-            prompts_dir=prompts_dir,
+            prompts_dir=per_skill_dir,
         )
         reports.append(report)
     return reports

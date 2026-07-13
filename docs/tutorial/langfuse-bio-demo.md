@@ -248,7 +248,7 @@ experiment optimize:bio-single-cell-clustering
 
 **Agent**：3 轮里 round-1/2/3 保留（D5 连续提升，ari 0.78→0.83），第 4 次（标 round-3b，攻 D6）
 未达 `min_gain` 且略 regress，**自动回滚**到 round-2 版本。当前 baseline = 75.2。
-Experiment 视图直接给出每轮 vs baseline 的 diff，**替代了手写 `.skillprism_history.jsonl` 比对**。
+Experiment 视图直接给出每轮 vs baseline 的 diff，**替代了手写 `history.jsonl` 比对**。
 
 ---
 

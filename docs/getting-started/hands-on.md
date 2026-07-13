@@ -172,7 +172,7 @@ Next recommended action: improve-skill skills/csv-summary-skill --judge
 # 1. Agent 调用 LLM 多次，生成 judgments 文件
 # 2. 引擎消费 judgments 文件
 evaluate-skill skills/csv-summary-skill \
-  --llm-judgments .skillprism_llm_judgments.json
+  --llm-judgments artifacts/csv-summary-skill/llm_judgments.json
 ```
 
 ## 0.6 可选：验证 test-prompts
@@ -191,7 +191,7 @@ evaluate-skill skills/csv-summary-skill \
 # 3. 生成 verification 文件
 # 4. 引擎消费
 evaluate-skill skills/csv-summary-skill \
-  --prompts-verification .skillprism_prompts_verification.json
+  --prompts-verification artifacts/csv-summary-skill/prompts_verification.json
 ```
 
 ## 下一步

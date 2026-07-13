@@ -8,6 +8,7 @@ from pathlib import Path
 from skillprism.dimensions.d1_structure import evaluate_d1_structure
 from skillprism.evaluate_skill_rubric import (
     BUILTIN_DIMENSION_EVALUATORS,
+    DEFAULT_CONFIG,
     evaluate_skill,
     get_dimension_evaluators,
     load_config,
@@ -25,7 +26,7 @@ def _make_skill(tmp_path: Path, content: str = "# Test\n") -> Path:
 
 
 def test_get_dimension_evaluators_default(tmp_path: Path) -> None:
-    config = load_config(Path("skill_rubric_types.yaml"))
+    config = load_config(DEFAULT_CONFIG)
     evaluators = get_dimension_evaluators(config, "analysis")
     assert len(evaluators) == 9
 

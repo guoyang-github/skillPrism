@@ -3,7 +3,7 @@
 skillPrism 默认在每次 `evaluate-skill` 和 `improve-skill` 运行后追加一条记录到：
 
 ```
-skills/my-skill/.skillprism_history.jsonl
+artifacts/my-skill/history.jsonl
 ```
 
 ## 记录格式

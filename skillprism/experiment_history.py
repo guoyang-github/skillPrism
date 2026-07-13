@@ -3,7 +3,8 @@
 
 Inspired by darwin-skill's results.tsv, but using JSONL for easier parsing
 and integration with Python tooling. Each evaluate-skill and improve-skill
-run appends a record to `<skill_path>/.skillprism_history.jsonl`.
+run appends a record to ``artifacts/<skill>/history.jsonl`` (relative to the
+current working directory), keeping the skill source tree read-only.
 """
 
 from __future__ import annotations
@@ -13,6 +14,8 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+from .test_prompts import artifacts_dir
 
 
 @dataclass
@@ -33,11 +36,11 @@ class OptimizationRecord:
         return data
 
 
-HISTORY_FILENAME = ".skillprism_history.jsonl"
+HISTORY_FILENAME = "history.jsonl"
 
 
 def history_path(skill_path: Path) -> Path:
-    return skill_path / HISTORY_FILENAME
+    return artifacts_dir(skill_path) / HISTORY_FILENAME
 
 
 def load_history(skill_path: Path) -> List[OptimizationRecord]:
@@ -63,6 +66,7 @@ def load_history(skill_path: Path) -> List[OptimizationRecord]:
 
 def append_record(skill_path: Path, record: OptimizationRecord) -> Path:
     path = history_path(skill_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record.to_dict(), ensure_ascii=False) + "\n")
     return path

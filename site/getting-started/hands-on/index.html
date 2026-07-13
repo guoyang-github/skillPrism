@@ -2372,7 +2372,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1. Agent 调用 LLM 多次，生成 judgments 文件</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># 2. 引擎消费 judgments 文件</span>
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>evaluate-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>--llm-judgments<span class="w"> </span>.skillprism_llm_judgments.json
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>--llm-judgments<span class="w"> </span>artifacts/csv-summary-skill/llm_judgments.json
 </code></pre></div>
 <h2 id="06-test-prompts">0.6 可选：验证 test-prompts<a class="headerlink" href="#06-test-prompts" title="Permanent link">&para;</a></h2>
 <p><strong>用户目标</strong>：验证 skill 的 prompts 在不同场景下是否有效。</p>
@@ -2386,7 +2386,7 @@
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># 3. 生成 verification 文件</span>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 4. 引擎消费</span>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>evaluate-skill<span class="w"> </span>skills/csv-summary-skill<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--prompts-verification<span class="w"> </span>.skillprism_prompts_verification.json
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--prompts-verification<span class="w"> </span>artifacts/csv-summary-skill/prompts_verification.json
 </code></pre></div>
 <h2 id="_2">下一步<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <ul>

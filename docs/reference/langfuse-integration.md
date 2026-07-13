@@ -19,14 +19,14 @@ skillPrism 已是一个成熟的本地评估优化引擎（经最佳实践改造
   回归对比（`benchmark/regression.py`，方向感知）、CI 门控（`ci/pipeline.py`）。
 - **可选能力层**：外部 editor 命令（`--auto-edit`）、LLM-as-judge 命令（`--llm-judge`），
   均为 stdin/stdout 契约，provider 无关。
-- **状态**：`.skillprism_baseline.json` / `.skillprism_history.jsonl` 本地文件，
+- **状态**：`.skillprism_baseline.json` / `artifacts/<skill>/history.jsonl` 本地文件，
   已原子写 + flock，但仍是**单机本地**。
 
 ### 1.2 痛点
 
 | 维度 | 本地现状 | 问题 |
 |---|---|---|
-| 优化历史 | `.skillprism_history.jsonl` 单机 | 团队不可共享、不可查询、不可跨 skill 对比 |
+| 优化历史 | `history.jsonl` 单机 | 团队不可共享、不可查询、不可跨 skill 对比 |
 | Ratchet 真相源 | 本地 JSON | 跨机器不一致；CI 与本地可能用不同 baseline |
 | LLM-judge 治理 | outlier 静默丢弃、wrapper 静默兜底 | 已改为日志，但无集中分析；人类评分无法注入 |
 | 回归诊断 | 本地 YAML diff | 无可视化、无跨时间趋势 |
@@ -292,7 +292,7 @@ skill-ci --skill foo --run-benchmark --code <path>
 - `improve-skill --auto-edit --max-rounds N` 每轮 candidate 作为一个 Experiment run
   （`langfuse.experiment(name=f"optimize:{skill}", run_name=f"round-{N}")`）。
 - baseline 作为对照 run。Langfuse Experiment 视图直接给「第 K 轮 vs baseline」的
-  逐维度/逐指标 diff —— **替代当前 `.skillprism_history.jsonl` + 回归 YAML 比对**。
+  逐维度/逐指标 diff —— **替代当前 `history.jsonl` + 回归 YAML 比对**。
 - `format_history_table`（`experiment_history.py`）增加一个 Langfuse 后端读取分支，
   从服务端拉历史 run 渲染表格。
 
@@ -342,7 +342,7 @@ skill-ci --skill foo --run-benchmark --code <path>
 
 ### 9.2 历史数据导入
 
-- 阶段 R1 上线时，跑一次性 **backfill 脚本**：遍历各 skill 的 `.skillprism_history.jsonl`
+- 阶段 R1 上线时，跑一次性 **backfill 脚本**：遍历各 skill 的 `artifacts/<skill>/history.jsonl`
   与 `.skillprism_baseline/SKILL.md.bak.*`，把历史 `rubric_total` 与 `historical_best_score`
   作为 score 批量导入 Langfuse（metadata 标 `source=backfill`、`backfilled_at`）。
 - 导入幂等：以 `(skill, commit, timestamp)` 去重，重复导入不产生重复 score

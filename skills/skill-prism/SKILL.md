@@ -62,7 +62,7 @@ skillPrism answers three questions:
 | 产物 | 位置 | 控制参数 |
 |---|---|---|
 | scorecard / report | `artifacts/<skill>/scorecard.md` | `--output` |
-| test-prompts.json | `artifacts/<skill>/` | `--prompts-dir` |
+| test-prompts.json | `artifacts/<skill>/`（默认） | 自动生成仅兜底；`--prompts-dir` 覆盖落点 |
 | LLM judgments | `artifacts/<skill>/llm_judgments.json` | Agent 写 → `--llm-judgments` |
 | prompts verification | `artifacts/<skill>/prompts_verification.json` | Agent 写 → `--prompts-verification` |
 | optimization history | `artifacts/<skill>/history.jsonl` | `--output-history` |
@@ -96,7 +96,7 @@ skillPrism answers three questions:
 | CI | "CI 静态门控" | `skill-ci --skill <skill>` |
 | CI | "CI 里也跑 benchmark" | `skill-ci --skill <skill> --registry benchmarks/<skill>/registry.yaml --run-benchmark --code <path>` |
 
-> 没有配置外部 judge 命令时，Agent 自己生成 `./.skillprism_llm_judgments.json` 并把 Evaluate/Improve 里的 `--llm-judge` 换成 `--llm-judgments ./.skillprism_llm_judgments.json`，对用户说法表现一致。详见各节 decision rule。
+> 没有配置外部 judge 命令时，Agent 自己生成 `artifacts/<skill>/llm_judgments.json`；不传 `--llm-judgments` 时引擎自动发现该文件，对用户说法表现一致。详见各节 decision rule。
 
 ---
 
@@ -123,12 +123,12 @@ evaluate-skill skills/my-skill
 | "LLM judge"、"主观维度"、"第二意见" | `--llm-judge` | 对主观维度启用 LLM judge（外部命令） |
 | "judge 次数" | `--llm-judge-count N` | judge 数量（默认 2） |
 | "Agent 已生成 judgments" | `--llm-judgments <path>` | 消费 Agent 预生成的 judgments 文件 |
-| "已验证 prompts" | `--prompts-verification <path>` | 消费预生成的 prompt 验证结果 |
+| "已验证 prompts"、"验证 prompt 效果" | `--prompts-verification <path>` | 消费 prompt 验证结果（不传则自动发现 `artifacts/<skill>/prompts_verification.json`）；执行流程见 [`references/PROMPTS_VERIFICATION.md`](references/PROMPTS_VERIFICATION.md) |
 | "对比 baseline"、"别 regress" | `--ratchet` | 分数退步即失败 |
 | "输出报告"、"生成 scorecard" | `--output <path>` | 写 scorecard/report（单 skill 建议 `artifacts/<skill>/scorecard.md`；跨 skill 汇总用 `reports/`） |
 | "追踪历史"、"趋势" | `--output-history <path>` | 追加到 JSONL 趋势文件（建议 `artifacts/<skill>/history.jsonl`） |
 | "不要生成 test prompts" | `--no-generate-prompts` | 跳过 prompt 生成 |
-| "prompts 放指定目录" | `--prompts-dir <path>` | test-prompts.json 读写目录（默认 skill 目录；与 `--output` 解耦） |
+| "prompts 放指定目录" | `--prompts-dir <path>` | test-prompts.json 读写目录（默认 `artifacts/<skill>/`；传 skill 目录才写进 skill 树） |
 | "看进度" | `--verbose` / `-v` | 打印详细进度 |
 
 **Common combinations**（本环节最常用场景）：
@@ -144,7 +144,7 @@ evaluate-skill skills/my-skill --detailed --llm-judge
 evaluate-skill --all --skills-dir ./skills --output ./reports/SKILL_SCORECARD.md
 
 # Agent 已生成 judgments 文件，引擎直接消费（无需配置外部命令）
-evaluate-skill skills/my-skill --llm-judgments ./.skillprism_llm_judgments.json
+evaluate-skill skills/my-skill --llm-judgments artifacts/my-skill/llm_judgments.json
 
 # CI 前完整检查
 evaluate-skill skills/my-skill --detailed --run-smoke --run-deps --ratchet
@@ -153,14 +153,15 @@ evaluate-skill skills/my-skill --detailed --run-smoke --run-deps --ratchet
 **Side effects and output directory**:
 
 - 默认 `evaluate-skill` **不**修改 skill 源码树。
-- `test-prompts.json` 落点由 `--prompts-dir` 控制（与 `--output` 解耦）：不传则写入 skill 目录；多 skill 项目建议 `--prompts-dir artifacts/<skill>`。
+- `test-prompts.json` 默认写 `artifacts/<skill>/`（与 `--output` 解耦）；`--prompts-dir` 覆盖落点，传 skill 目录才会写进 skill 树。
+- 自动生成的 template prompts 只是占位符（报告带 ⚠️ 标记）；正式 prompt 由 Agent 按 [`references/PROMPTS_VERIFICATION.md`](references/PROMPTS_VERIFICATION.md) 撰写。
 - `--output` 只管 scorecard/report 路径，不再影响 prompt 落点。
-- 用 `--no-generate-prompts` 完全跳过 prompt 生成。
+- 用 `--no-generate-prompts` 完全跳过 prompt 生成（缺失时报告提示按协议创建）。
 
 **Agent decision rule for LLM judge**:
 
 - 若 `SKILLPRISM_LLM_JUDGE_COMMAND` 或 `skill_rubric_types.yaml` 中 `llm_judge.command` 有值，用 `--llm-judge`，引擎通过子进程调用外部 judge 命令。
-- 否则，Agent 自己生成 `./.skillprism_llm_judgments.json`，再用 `--llm-judgments <file>`。
+- 否则，Agent 自己生成 `artifacts/<skill>/llm_judgments.json`（引擎自动发现，也可显式 `--llm-judgments <file>`）。
 - 两条路径对用户请求表现一致："用 LLM judge 再看看"。
 
 **路径 A：Agent 生成 judgments 文件**
@@ -168,7 +169,7 @@ evaluate-skill skills/my-skill --detailed --run-smoke --run-deps --ratchet
 - 默认评估 **D2 和 D5**（可选 D6、D8）。
 - 每个维度调用 **2 个独立 judge**，每次必须是独立子 agent / 独立 LLM 请求，不能共享推理上下文。
 - 必须使用 [`references/LLM_JUDGE.md`](references/LLM_JUDGE.md) 中的 prompt 模板，不得修改 JSON 输出要求。
-- 用 `mean` 聚合 2 个分数，写入 `./.skillprism_llm_judgments.json`。
+- 用 `mean` 聚合 2 个分数，写入 `artifacts/<skill>/llm_judgments.json`。
 
 **路径 B：外部 judge 命令**
 
@@ -176,6 +177,12 @@ evaluate-skill skills/my-skill --detailed --run-smoke --run-deps --ratchet
 - 配置：环境变量 `export SKILLPRISM_LLM_JUDGE_COMMAND="python path/to/judge.py"`，或 `skill_rubric_types.yaml` 的 `llm_judge.command`。
 - 启用：`evaluate-skill skills/<skill> --llm-judge --llm-judge-count 2`。
 - 完整接口规范与 prompt 模板见 [`references/LLM_JUDGE.md`](references/LLM_JUDGE.md)。
+
+**Agent prompts verification（D8 实测）**:
+
+- 用户说"验证 prompt 效果"、"带不带 skill 差多少"时，按 [`references/PROMPTS_VERIFICATION.md`](references/PROMPTS_VERIFICATION.md) 执行：每条 prompt 起 with/without 两个独立子 agent 执行，第三个 judge 子 agent 打分。
+- 结果写 `artifacts/<skill>/prompts_verification.json`；`evaluate-skill` 不传 `--prompts-verification` 时自动发现该文件。
+- 能真实执行就必须 `full_test`；`dry_run` 占比 > 30% 引擎会报警。
 
 ---
 
@@ -519,11 +526,11 @@ improve-skill skills/my-skill --judge --apply
 | "换 judge 命令" | `--llm-judge-command` | 覆盖 LLM judge 命令 |
 | "Agent 已生成 judgments" | `--llm-judgments <path>` | 消费 Agent 预生成的 judgments |
 
-**Agent decision rule for LLM judge**: 与 `evaluate-skill` 相同——有外部 judge 命令用 `--llm-judge`，否则 Agent 生成 `./.skillprism_llm_judgments.json` 并用 `--llm-judgments <file>`。模板与接口见 [`references/LLM_JUDGE.md`](references/LLM_JUDGE.md)。
+**Agent decision rule for LLM judge**: 与 `evaluate-skill` 相同——有外部 judge 命令用 `--llm-judge`，否则 Agent 生成 `artifacts/<skill>/llm_judgments.json`（引擎自动发现，也可显式 `--llm-judgments <file>`）。模板与接口见 [`references/LLM_JUDGE.md`](references/LLM_JUDGE.md)。
 
 **What it does**:
 
-- 在 `./.skillprism_history.jsonl` 记录 baseline scorecard + benchmark 结果
+- 在 `artifacts/<skill>/history.jsonl` 记录 baseline scorecard + benchmark 结果
 - 给出 P0–P3 优化策略
 - 编辑 SKILL.md / 代码（Agent 或外部 editor），每轮限一个维度
 - 重新评估与测试
@@ -688,11 +695,11 @@ improve-skill skills/my-skill --judge --apply
 | Artifact | Default location | When produced |
 |---|---|---|
 | scorecard / report | `artifacts/<skill>/scorecard.md` | `evaluate-skill --output` |
-| `test-prompts.json` | `artifacts/<skill>/` | `evaluate-skill --prompts-dir`（生成 prompts 时） |
+| `test-prompts.json` | `artifacts/<skill>/`（默认） | `evaluate-skill` 自动生成（template 兜底）；Agent 按协议撰写 |
 | baseline | `benchmarks/<skill>/baselines/<name>.yaml` | `improve-skill --record-baseline` / `--ratchet` |
 | history | `artifacts/<skill>/history.jsonl` | 每次 evaluate/improve（`--output-history`） |
 | LLM judgments | `artifacts/<skill>/llm_judgments.json` | Agent LLM judge（`--llm-judgments` 消费） |
-| prompts verification | `artifacts/<skill>/prompts_verification.json` | Agent prompts verification（`--prompts-verification` 消费） |
+| prompts verification | `artifacts/<skill>/prompts_verification.json` | Agent 按 PROMPTS_VERIFICATION 协议执行（自动发现或 `--prompts-verification` 消费） |
 | test / CI artifacts | `artifacts/<skill>/ci/` | `test-skill` / `skill-ci --output-dir` |
 
 ---
@@ -729,7 +736,7 @@ improve-skill skills/my-skill --judge --apply
    - **不要**用 `evaluate-skill-rubric`、`run-skill-benchmark`、`--verify-only`（已改名为 `--results`）；这些已废弃。
 
 6. **把产物写进 skill 树或 skill-prism 文件夹**
-   - 生成物按 skill 放 `artifacts/<skill>/`：scorecard 用 `--output`，prompts 用 `--prompts-dir`，artifacts 用 `--output-dir`；跨 skill 汇总放 `reports/`。
+   - 生成物按 skill 放 `artifacts/<skill>/`：scorecard 用 `--output`，test-prompts.json 默认已落此处（`--prompts-dir` 仅覆盖），artifacts 用 `--output-dir`；跨 skill 汇总放 `reports/`。
    - baseline 放 `benchmarks/<skill>/baselines/`。
    - **绝不**写进 `skills/skill-prism/`；目标 skill 源码树保持只读，除非明确在编辑其 SKILL.md 或代码资产。
 
@@ -740,3 +747,4 @@ improve-skill skills/my-skill --judge --apply
 
 - `references/AGENT_GUIDE.md`: Agent 调用 skillPrism 时的交互行为规范（必须加载）。
 - `references/LLM_JUDGE.md`: LLM judge 的 prompt 模板、外部 judge 命令接口与配置。
+- `references/PROMPTS_VERIFICATION.md`: test-prompts 撰写规范与 with/without 验证执行协议（D8 实测）。

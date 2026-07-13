@@ -40,7 +40,7 @@ evaluate-skill skills/my-skill
 - test-prompts.json 存在性检查；缺失时自动生成 3 个 prompts
 - **runtime neutrality 红灯扫描**
 - 安全扫描
-- 将基线写入 `.skillprism_history.jsonl`
+- 将基线写入 `artifacts/<skill>/history.jsonl`
 
 ## 完整评估（可选增强）
 
@@ -57,7 +57,7 @@ evaluate-skill skills/my-skill \
   --llm-judge-aggregate median
 
 # 验证 test-prompts
-evaluate-skill skills/my-skill --prompts-verification .skillprism_prompts_verification.json
+evaluate-skill skills/my-skill --prompts-verification artifacts/my-skill/prompts_verification.json
 
 # 同时启用 smoke 和依赖检查
 evaluate-skill skills/my-skill --run-smoke --run-deps
@@ -76,8 +76,8 @@ evaluate-skill skills/my-skill --output docs/scorecard.md --detailed
 
 当 Agent 完成主观维度复核或 prompts 验证后，会生成以下文件：
 
-- `.skillprism_llm_judgments.json`：多评委评分结果
-- `.skillprism_prompts_verification.json`：prompts 验证结果
-- `.skillprism_history.jsonl`：优化历史
+- `artifacts/<skill>/llm_judgments.json`：多评委评分结果
+- `artifacts/<skill>/prompts_verification.json`：prompts 验证结果
+- `artifacts/<skill>/history.jsonl`：优化历史
 
-引擎通过 `--llm-judgments` 和 `--prompts-verification` 参数消费它们。
+引擎通过 `--llm-judgments` 和 `--prompts-verification` 参数消费它们；不传参时自动发现 `artifacts/<skill>/` 下的对应文件。

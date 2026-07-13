@@ -39,7 +39,7 @@ Agent 对每个 prompt：
 结果写入：
 
 ```json
-// .skillprism_prompts_verification.json
+// artifacts/<skill>/prompts_verification.json
 {
   "skill": "skills/my-skill",
   "results": [
@@ -67,7 +67,7 @@ Agent 对每个 prompt：
 引擎消费：
 
 ```bash
-evaluate-skill skills/my-skill --prompts-verification .skillprism_prompts_verification.json
+evaluate-skill skills/my-skill --prompts-verification artifacts/my-skill/prompts_verification.json
 ```
 
 ## 干跑比例控制
